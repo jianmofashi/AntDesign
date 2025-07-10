@@ -1,0 +1,21 @@
+#include "AboutPage.h"
+#include <QVBoxLayout>
+#include <QLabel>
+
+AboutPage::AboutPage(QWidget* parent)
+    : QWidget(parent)
+{
+    QLabel* label = new QLabel("ABOUT", this);
+    QFont font = label->font();
+    font.setPointSize(52);
+    font.setBold(true);
+    label->setFont(font);
+    label->setAlignment(Qt::AlignCenter);
+
+    QVBoxLayout* layout = new QVBoxLayout(this);
+    layout->addWidget(label);
+    setStyleSheet("background-color: #A0C4A0;");
+}
+AboutPage::~AboutPage()
+{}
+

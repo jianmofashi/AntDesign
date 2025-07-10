@@ -1,0 +1,29 @@
+<RCC>
+    <qresource prefix="/">
+        <file>fonts/NotoSansSC-Bold.ttf</file>
+        <file>fonts/NotoSansSC-Medium.ttf</file>
+        <file>fonts/NotoSansSC-Regular.ttf</file>
+        <file>Imgs/cat.svg</file>
+        <file>Imgs/error.svg</file>
+        <file>Imgs/github.svg</file>
+        <file>Imgs/info.svg</file>
+        <file>Imgs/nav_icon_avatar_nor.svg</file>
+        <file>Imgs/noLogin.svg</file>
+        <file>Imgs/true.svg</file>
+        <file>Imgs/warning.svg</file>
+        <file>Imgs/eye-filled.svg</file>
+        <file>Imgs/eye-slash-filled.svg</file>
+        <file>Imgs/logo.png</file>
+        <file>Imgs/about.svg</file>
+        <file>Imgs/home.svg</file>
+        <file>Imgs/settings.svg</file>
+        <file>Imgs/about_active.svg</file>
+        <file>Imgs/home_active.svg</file>
+        <file>Imgs/settings_active.svg</file>
+        <file>Imgs/Maximize-1.svg</file>
+        <file>Imgs/Maximize-3.svg</file>
+        <file>Imgs/Minimize-2.svg</file>
+        <file>Imgs/Shut down-2.svg</file>
+        <file>Imgs/noData.svg</file>
+    </qresource>
+</RCC>
