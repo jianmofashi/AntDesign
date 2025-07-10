@@ -139,6 +139,9 @@
     <ClCompile Include="AnimatedNumber.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SkeletonWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StyleSheet.h">
@@ -243,6 +246,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="AnimatedNumber.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="SkeletonWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

@@ -120,6 +120,7 @@
     <ClCompile Include="RegisterPageWidget.cpp" />
     <ClCompile Include="Ripple.cpp" />
     <ClCompile Include="SettingsPage.cpp" />
+    <ClCompile Include="SkeletonWidget.cpp" />
     <ClCompile Include="SlideStackedWidget.cpp" />
     <ClCompile Include="StandardDialogPage.cpp" />
     <ClCompile Include="UserInfoBubble.cpp" />
@@ -170,6 +171,7 @@
     <QtMoc Include="AntSlider.h" />
     <QtMoc Include="NoDataWidget.h" />
     <QtMoc Include="AnimatedNumber.h" />
+    <QtMoc Include="SkeletonWidget.h" />
     <ClInclude Include="StyleSheet.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

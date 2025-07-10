@@ -12,6 +12,8 @@
 #include "AntSlider.h"
 #include "NoDataWidget.h"
 #include "AnimatedNumber.h"
+#include "SkeletonWidget.h"
+#include "AntButton.h"
 
 HomePage::HomePage(QWidget* parent)
 	: QWidget(parent)
@@ -83,6 +85,67 @@ HomePage::HomePage(QWidget* parent)
 	animNum->setFontSzie(16);
 	animNum->animateTo(12345);
 
+	// 骨架屏
+	AntButton* skeletonDescBtn = new AntButton("骨架屏启动", 12, w1);
+	skeletonDescBtn->setFixedSize(120, 50);
+	QHBoxLayout* row3Layout = new QHBoxLayout(w1);
+	row3Layout->setSpacing(16);
+	row3Layout->setContentsMargins(0, 0, 0, 0);
+
+	QList<QIcon> icons = {
+		QIcon(":/Imgs/undraw_book-lover_f1dq.svg"),
+		QIcon(":/Imgs/undraw_developer-avatar_f6ac.svg"),
+		QIcon(":/Imgs/undraw_loving-it_hspq.svg"),
+		QIcon(":/Imgs/undraw_stock-prices_8nuz.svg")
+	};
+
+	QList<QLabel*> iconLabels;
+	QList<SkeletonWidget*> skeletons;
+
+	for (const QIcon& icon : icons)
+	{
+		SkeletonWidget* skeleton = new SkeletonWidget(QSize(300, 200), 8, this);
+		row3Layout->addWidget(skeleton);
+		skeletons.append(skeleton);  // 保存骨架指针
+
+		QLabel* iconLabel = new QLabel(this);
+		iconLabel->setAlignment(Qt::AlignCenter);
+		iconLabel->setPixmap(icon.pixmap(300, 200));
+		iconLabel->hide();  // 初始隐藏
+		iconLabels.append(iconLabel);
+		row3Layout->addWidget(iconLabel);
+	}
+
+	connect(skeletonDescBtn, &AntButton::clicked, this, [this, skeletonDescBtn, iconLabels, skeletons]()
+		{
+			skeletonDescBtn->setEnabled(false);  // 禁用按钮，防止重复点击
+			// 启动骨架动画
+			for (int i = 0; i < iconLabels.size(); ++i)
+			{
+				iconLabels[i]->hide();  // 隐藏真实图标
+			}
+
+			for (SkeletonWidget* skeleton : skeletons)
+			{
+				skeleton->startSkeleton();
+			}
+
+			// 延迟2秒后隐藏骨架，显示图标
+			QTimer::singleShot(3000, this, [=]()
+				{
+					for (int i = 0; i < skeletons.size(); ++i)
+					{
+						skeletons[i]->stopSkeleton();   // 停止并隐藏骨架
+					}
+
+					for (int i = 0; i < iconLabels.size(); ++i)
+					{
+						iconLabels[i]->show();
+					}
+					skeletonDescBtn->setEnabled(true);
+				});
+		});
+
 	// 添加到水平布局
 	row1Layout->addWidget(labelList[0]);
 	row1Layout->addSpacing(20);
@@ -110,6 +173,8 @@ HomePage::HomePage(QWidget* parent)
 	w1Lay->addLayout(row1Layout);
 	w1Lay->addSpacing(20);
 	w1Lay->addLayout(row2Layout);
+	w1Lay->addWidget(skeletonDescBtn);
+	w1Lay->addLayout(row3Layout);
 	w1Lay->addStretch();
 }
 
