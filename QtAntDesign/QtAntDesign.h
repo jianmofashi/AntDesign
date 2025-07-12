@@ -6,8 +6,19 @@
 #include "CircularAvatar.h"
 #include "CustomToolButton.h"
 #include <QLabel>
-#include <QMainWindow>
+#include <QTimer>
+
+// 判断是否在windows平台
+#ifdef Q_OS_WIN
+
 #include <windows.h>
+#include <dwmapi.h>
+#include <windowsx.h>
+
+#pragma comment(lib, "Dwmapi.lib")
+
+#endif  // Q_OS_WIN
+
 
 // 检测鼠标是否在边缘
 enum ResizeRegion {
@@ -22,39 +33,22 @@ public:
 	QtAntDesign(QWidget* parent = nullptr);
 	~QtAntDesign();
 protected:
-	void mousePressEvent(QMouseEvent* e) override;
-	void mouseMoveEvent(QMouseEvent* e) override;
-	void mouseReleaseEvent(QMouseEvent*) override;
-	void paintEvent(QPaintEvent*) override;
-	bool eventFilter(QObject* obj, QEvent* event) override;
 	void resizeEvent(QResizeEvent* event) override;
 	bool nativeEvent(const QByteArray& eventType, void* message, qintptr* result) override;
-	void changeEvent(QEvent* event);
+	void showEvent(QShowEvent* event) override;
 signals:
 	void resized(int parentW, int parentH);
 	void playMaximizeAnim();
 	void showStandardDialog(int parentW, int parentH, int dialogW, int dialogH, QString title, QString text);
 private:
-	ResizeRegion hitTest(const QPoint& pos);
-	void adjustCursorStyle(ResizeRegion region);
-	void initWindowAnimation();
-	// 最大化动画
-	void playMaxAnim();
-	// 还原动画
-	void playRstoreAnim();
-	// 最小化动画
-	void playMiniAnim();
-	void onMaximizeButtonClicked();
-	// 缓存阴影图
-	void updateShadowCache();
 private:
 	Ui::QtAntDesignClass ui;
+	HWND m_hwnd;
 	QPoint dragPos;
-	QPixmap m_shadowCache;  // 缓存阴影图
-	int     m_shadowRadius;    // 阴影厚度
-	QPoint  m_offset;          // 阴影偏移
-	QColor  m_color;           // 阴影颜色 & 初始 alpha
-	qreal   m_cornerRadius;    // 圆角半径
+	QColor m_color;
+	int m_titleBarHeight = 60;	// 标题栏高度
+	int m_naviWidth = 62;		// 导航栏宽度
+	int m_widgetTotalWidth = 0;		// 标题栏上控件总宽度
 	bool	m_disableShadow = false;
 	bool	m_beforeMax = false;	// 最小化之前是最大化的窗口状态
 
@@ -82,4 +76,9 @@ private:
 	QToolButton* btnMin = nullptr;
 	QToolButton* btnMax = nullptr;
 	QToolButton* btnClose = nullptr;
+
+	QRect m_minRect;
+	QRect m_maxRect;
+	QRect m_closeRect;
+
 };

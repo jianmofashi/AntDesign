@@ -12,19 +12,16 @@
 #include "AboutPage.h"
 #include <QToolButton>
 #include <QLabel>
+#include <QShowEvent>
 
 QtAntDesign::QtAntDesign(QWidget* parent)
 	: QWidget(parent),
-	m_shadowRadius(15),
-	m_offset(0, 0),
-	m_color(150, 150, 150, 38),
-	m_cornerRadius(10)
+	m_color(150, 150, 150, 38)
 {
 	ui.setupUi(this);
 
 	setObjectName("QtAntDesign");
 	setWindowFlags(Qt::FramelessWindowHint);
-	setAttribute(Qt::WA_TranslucentBackground);
 	setMinimumSize(1100, 750);
 
 	ui.main_widget->setStyleSheet(StyleSheet::mainQss());
@@ -35,23 +32,19 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 	if (screen)
 	{
 		QSize screenSize = screen->availableGeometry().size();  // 可用屏幕大小，不包括任务栏
-		w = int(screenSize.width() * 0.51);  // % 宽度
-		h = int(screenSize.height() * 0.62); // % 高度
+		w = int(screenSize.width() * 0.50);  // % 宽度
+		h = int(screenSize.height() * 0.60); // % 高度
 		resize(w, h);
 	}
-	setContentsMargins(15, 15, 15, 15);
+	setContentsMargins(0, 0, 0, 0);
 
 	// 任务栏 内容区域 导航栏 布局调整
-	ui.navi_widget->setFixedWidth(60); // 希望的宽度
+	ui.navi_widget->setFixedWidth(m_naviWidth); // 希望的宽度
 	ui.navi_widget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);	// 水平方向缩放策略固定
 	ui.navi_widget->setStyleSheet(StyleSheet::naviQss());
 	ui.titleBar->setStyleSheet(StyleSheet::titleBarQss());
 	ui.central->setStyleSheet(StyleSheet::centralQss());
-	ui.titleBar->setFixedHeight(50);
-
-	// 开启悬浮事件处理鼠标边界样式变化
-	setAttribute(Qt::WA_Hover, true);
-	installEventFilter(this);
+	ui.titleBar->setFixedHeight(m_titleBarHeight);
 
 	// 标题栏
 	QHBoxLayout* titleLay = new QHBoxLayout(ui.titleBar);
@@ -75,9 +68,12 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 	btnMax->setStyleSheet(StyleSheet::toolBtnQss());
 	btnClose->setStyleSheet(StyleSheet::toolBtnQss());
 	// 设置固定大小（根据图标适当调整）
-	btnMin->setFixedSize(36, 36);
-	btnMax->setFixedSize(36, 36);
-	btnClose->setFixedSize(36, 36);
+	btnMin->setFixedSize(32, 32);
+	btnMax->setFixedSize(32, 32);
+	btnClose->setFixedSize(34, 34);
+	int extraWidth = 100;	// 额外的间距宽度: 是控件间距以及标题栏两端的间距 自己根据标题栏所有控件的宽度调整
+	m_widgetTotalWidth = btnMin->width() + btnMax->width() + btnClose->width() + extraWidth;
+
 	// 将标题和按钮添加到布局
 	titleLay->addWidget(title);
 	titleLay->addStretch();
@@ -103,13 +99,13 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 	stackedWidget->addWidget(aboutPage);
 	// 导航按钮
 	const int naviWidth = ui.navi_widget->width();  // 动态获取导航栏宽度
-	const double iconSizeRatio = 0.56;  // 图标占按钮的比例
+	const double iconSizeRatio = 0.56;				// 图标占按钮的比例
 	const int buttonSize = naviWidth;
 	const int iconSize = static_cast<int>(buttonSize * iconSizeRatio);
 	CustomToolButton* btnHome = new CustomToolButton(QSize(iconSize, iconSize), ui.navi_widget);
 	CustomToolButton* btnSettings = new CustomToolButton(QSize(iconSize, iconSize), ui.navi_widget);
 	CustomToolButton* btnAbout = new CustomToolButton(QSize(iconSize, iconSize), ui.navi_widget);
-	// 设置统一样式
+	// 设置导航按钮样式
 	buttonInfos = {
 	{btnHome, ":/Imgs/home.svg", ":/Imgs/home_active.svg", homePage},
 	{btnSettings, ":/Imgs/settings.svg", ":/Imgs/settings_active.svg", settingsPage},
@@ -168,18 +164,33 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 	connect(this, &QtAntDesign::resized, mDialog, &DialogViewController::getParentSize);
 	connect(mDialog, &DialogViewController::successLogin, avatar, &CircularAvatar::allowLogin);
 
-	// 窗口动画
-	initWindowAnimation();
-
 	// 信号连接
 	connect(btnMax, &QToolButton::clicked, this, [this]()
 		{
-			onMaximizeButtonClicked();
+			// 每次使用时重新获取窗口句柄，可以确保你拿到的是当前最新、有效的窗口句柄。避免使用缓存失效的句柄造成崩溃。
+			HWND hwnd = reinterpret_cast<HWND>(winId());
+
+			// 如果当前最大化，点击恢复；否则最大化
+			WINDOWPLACEMENT wp;
+			wp.length = sizeof(WINDOWPLACEMENT);
+			GetWindowPlacement(hwnd, &wp);
+
+			if (wp.showCmd == SW_MAXIMIZE)
+			{
+				ShowWindow(hwnd, SW_RESTORE);
+				btnMax->setIcon(QIcon(":/Imgs/Maximize-1.svg"));
+			}
+			else
+			{
+				ShowWindow(hwnd, SW_MAXIMIZE);
+				btnMax->setIcon(QIcon(":/Imgs/Maximize-3.svg"));
+			}
 		});
 
 	connect(btnMin, &QToolButton::clicked, this, [this]()
 		{
-			playMiniAnim();
+			HWND hwnd = reinterpret_cast<HWND>(winId());
+			ShowWindow(hwnd, SW_MINIMIZE);
 		});
 
 	connect(btnClose, &QToolButton::clicked, this, [this, w, h]()
@@ -194,381 +205,129 @@ QtAntDesign::~QtAntDesign()
 {
 }
 
-void QtAntDesign::initWindowAnimation()
-{
-	// 最大化缩放
-	maxScaleAnim = new QPropertyAnimation(this, "geometry");
-	maxScaleAnim->setDuration(300);
-	maxScaleAnim->setEasingCurve(QEasingCurve::InOutSine);
-	// 最小化缩放
-	miniScaleAnim = new QPropertyAnimation(this, "geometry");
-	miniScaleAnim->setDuration(300);
-	miniScaleAnim->setEasingCurve(QEasingCurve::InOutSine);
-
-	connect(maxScaleAnim, &QPropertyAnimation::finished, this, [this]()
-		{
-			// 完成最大化窗口动画
-			if (maxScaleAnim->direction() == QAbstractAnimation::Forward)
-			{
-				// 更新按钮图标
-				btnMax->setIcon(QIcon(":/Imgs/Maximize-3.svg"));
-				showMaximized();
-			}
-			// 完成还原窗口动画
-			else
-			{
-				// 更新按钮图标
-				btnMax->setIcon(QIcon(":/Imgs/Maximize-1.svg"));
-				showNormal();
-			}
-
-			m_disableShadow = false;
-
-			// 模拟 resizeEvent 以更新阴影缓存
-			QResizeEvent event(size(), size());
-			resizeEvent(&event);
-
-			// 触发窗口重绘，让 paintEvent 执行绘制阴影
-			update();
-		});
-
-	connect(miniScaleAnim, &QPropertyAnimation::finished, this, [this]()
-		{
-			setMinimumSize(1100, 750);
-			m_disableShadow = false;
-
-			// 第一步：先最小化，窗口立即隐藏
-			showMinimized();
-			// 因为他在屏幕外面 因此要把它拉回来
-			setGeometry(m_windowStartRect);
-		});
-}
-
-void QtAntDesign::playMiniAnim()
-{
-	if (isMinimized()) return;
-
-	m_beforeMax = (windowState() & Qt::WindowMaximized);	//判断当前是否是最大化状态
-	m_disableShadow = true;
-
-	setMinimumSize(0, 0);
-	qreal scaleFactor = 0.3; // 缩小比例
-	QRect availableGeometry = screen()->availableGeometry();
-	m_windowStartRect = geometry();
-	QRect startRect = geometry();
-
-	int endWidth = startRect.width() * scaleFactor;
-	int endHeight = startRect.height() * scaleFactor;
-
-	int endX = availableGeometry.center().x() - endWidth / 2;
-	int endY = availableGeometry.bottom(); // 屏幕底部
-
-	QRect endRect(endX, endY, endWidth, endHeight);
-
-	miniScaleAnim->stop();
-	miniScaleAnim->setStartValue(startRect);
-	miniScaleAnim->setEndValue(endRect);
-	miniScaleAnim->start();
-}
-
-// 你的最大化按钮的槽函数
-void QtAntDesign::onMaximizeButtonClicked()
-{
-	// 如果当前已经是最大化，则还原。否则，请求最大化。
-	if (isMaximized())
-	{
-		playRstoreAnim();
-	}
-	else
-	{
-		playMaxAnim();
-	}
-}
-
-void QtAntDesign::playMaxAnim()
-{
-	if (isMaximized()) return;
-
-	// 获取当前窗口和屏幕信息
-	QRect startRect = this->geometry();
-	QScreen* scr = this->screen();
-	if (!scr) return;
-
-	QRect availableGeometry = scr->availableGeometry(); // 不含任务栏
-
-	// 以当前中心点为中心，构造最大化目标矩形
-	QRect endRect = availableGeometry; // 左上角对齐，大小等于屏幕可用区域
-
-	// 禁用阴影防止他使缩放动画抖动
-	m_disableShadow = true;
-
-	// 动画配置
-	maxScaleAnim->setDirection(QAbstractAnimation::Forward);
-	maxScaleAnim->stop();
-	maxScaleAnim->setStartValue(startRect);
-	maxScaleAnim->setEndValue(endRect);
-	maxScaleAnim->start();
-}
-
-void QtAntDesign::playRstoreAnim()
-{
-	maxScaleAnim->stop();
-	maxScaleAnim->setDirection(QAbstractAnimation::Backward);
-	maxScaleAnim->start();
-}
-
-ResizeRegion QtAntDesign::hitTest(const QPoint& pos)
-{
-	const int broderWidth = 20; // 边界宽度
-	int x = pos.x();
-	int y = pos.y();
-	int width = this->width();
-	int height = this->height();
-
-	bool onLeft = (x >= 0 && x < broderWidth);
-	bool onRight = (x > width - broderWidth && x < width);
-	bool onTop = (y >= 0 && y < broderWidth);
-	bool onBottom = (y > height - broderWidth && y < height);
-
-	if (onLeft && onTop) return TopLeft;
-	if (onLeft && onBottom) return BottomLeft;
-	if (onRight && onTop) return TopRight;
-	if (onRight && onBottom) return BottomRight;
-	if (onLeft) return Left;
-	if (onRight) return Right;
-	if (onTop) return Top;
-	if (onBottom) return Bottom;
-
-	return None;
-}
-
-void QtAntDesign::adjustCursorStyle(ResizeRegion region)
-{
-	switch (region)
-	{
-	case TopLeft:
-	case BottomRight: setCursor(Qt::SizeFDiagCursor); break;
-	case TopRight:
-	case BottomLeft: setCursor(Qt::SizeBDiagCursor); break;
-	case Left:
-	case Right: setCursor(Qt::SizeHorCursor); break;
-	case Top:
-	case Bottom: setCursor(Qt::SizeVerCursor); break;
-	default: setCursor(Qt::ArrowCursor); break;
-	}
-}
-
-void QtAntDesign::mousePressEvent(QMouseEvent* e)
-{
-	if (e->button() == Qt::LeftButton)
-	{
-		// 保存初始几何状态
-		m_initialGeometry = geometry();
-		m_isLockCursor = true;
-		m_resizeRegion = hitTest(e->pos());
-		adjustCursorStyle(m_resizeRegion);
-		m_dragStartPos = e->globalPosition().toPoint();
-
-		// 标题栏拖动逻辑
-		if (m_resizeRegion == None && e->pos().y() < ui.titleBar->height())
-		{
-			dragPos = e->globalPosition().toPoint() - frameGeometry().topLeft();
-		}
-	}
-}
-
-void QtAntDesign::mouseMoveEvent(QMouseEvent* e)
-{
-	// 处理窗口移动
-	if ((e->buttons() & Qt::LeftButton) &&
-		e->pos().y() < ui.titleBar->height() &&
-		m_resizeRegion == None)
-	{
-		move(e->globalPosition().toPoint() - dragPos);
-		return;
-	}
-	// 处理窗口缩放
-	if ((e->buttons() & Qt::LeftButton) && m_resizeRegion != None)
-	{
-		QPoint offset = e->globalPosition().toPoint() - m_dragStartPos;
-		QRect newGeom = m_initialGeometry;
-
-		switch (m_resizeRegion)
-		{
-		case Left:
-			newGeom.setLeft(newGeom.left() + offset.x());
-			break;
-		case Right:
-			newGeom.setRight(newGeom.right() + offset.x());
-			break;
-		case Top:
-			newGeom.setTop(newGeom.top() + offset.y());
-			break;
-		case Bottom:
-			newGeom.setBottom(newGeom.bottom() + offset.y());
-			break;
-		case TopLeft:
-			newGeom.setTopLeft(newGeom.topLeft() + offset);
-			break;
-		case TopRight:
-			newGeom.setTopRight(newGeom.topRight() + offset);
-			break;
-		case BottomLeft:
-			newGeom.setBottomLeft(newGeom.bottomLeft() + offset);
-			break;
-		case BottomRight:
-			newGeom.setBottomRight(newGeom.bottomRight() + offset);
-			break;
-		default:
-			break;
-		}
-
-		// 应用最小尺寸限制（带方向修正）
-		if (newGeom.width() < minimumWidth())
-		{
-			if (m_resizeRegion == Left || m_resizeRegion == TopLeft || m_resizeRegion == BottomLeft)
-			{
-				newGeom.setLeft(newGeom.right() - minimumWidth());
-			}
-			else
-			{
-				newGeom.setWidth(minimumWidth());
-			}
-		}
-
-		if (newGeom.height() < minimumHeight())
-		{
-			if (m_resizeRegion == Top || m_resizeRegion == TopLeft || m_resizeRegion == TopRight)
-			{
-				newGeom.setTop(newGeom.bottom() - minimumHeight());
-			}
-			else
-			{
-				newGeom.setHeight(minimumHeight());
-			}
-		}
-
-		setGeometry(newGeom);
-	}
-}
-
-void QtAntDesign::mouseReleaseEvent(QMouseEvent* event)
-{
-	if (event->button() == Qt::LeftButton) // 只处理左键释放
-	{
-		m_isLockCursor = false;
-		ResizeRegion region = hitTest(event->pos());
-		adjustCursorStyle(region);
-	}
-}
-
-void QtAntDesign::paintEvent(QPaintEvent*)
-{
-	if (!m_disableShadow)
-	{
-		QPainter p(this);
-		p.drawPixmap(0, 0, m_shadowCache);
-	}
-}
-
-bool QtAntDesign::eventFilter(QObject* obj, QEvent* event)
-{
-	if (event->type() == QEvent::HoverMove && !m_isLockCursor)
-	{
-		QHoverEvent* hoverEvent = static_cast<QHoverEvent*>(event);
-		QPoint pos = hoverEvent->position().toPoint();
-		ResizeRegion region = hitTest(pos);
-		adjustCursorStyle(region);
-		return true; // 表示事件已处理
-	}
-
-	return QObject::eventFilter(obj, event);
-}
-
 void QtAntDesign::resizeEvent(QResizeEvent* event)
 {
 	QWidget::resizeEvent(event);
-	if (!m_disableShadow)
-	{
-		updateShadowCache();
-		// 调整对话框尺寸
-		emit resized(ui.main_widget->width(), ui.main_widget->height());
-	}
+
+	// 调整对话框尺寸
+	emit resized(ui.main_widget->width(), ui.main_widget->height());
 }
 
 bool QtAntDesign::nativeEvent(const QByteArray& eventType, void* message, qintptr* result)
 {
-	if (eventType == "windows_generic_MSG" || eventType == "windows_dispatcher_MSG")
-	{
-		MSG* msg = reinterpret_cast<MSG*>(message);
-		if (msg->message == WM_WINDOWPOSCHANGING)
-		{
-			WINDOWPOS* wp = reinterpret_cast<WINDOWPOS*>(msg->lParam);
-			if (wp != nullptr && (wp->flags & SWP_NOSIZE) == 0)
-			{
-				// 加上 SWP_NOCOPYBITS，减少抖动
-				wp->flags |= SWP_NOCOPYBITS;
+#ifdef Q_OS_WIN
+	MSG* msg = static_cast<MSG*>(message);
 
-				// 调用系统默认窗口过程，得到默认结果
-				*result = ::DefWindowProcW(msg->hwnd, msg->message, msg->wParam, msg->lParam);
-
-				// 返回 1 表示消息已处理，Qt 不会再处理
-				return true;
-			}
-			// 没满足条件时返回 0 表示未处理，让 Qt 处理
+	switch (msg->message) {
+	case WM_NCCALCSIZE: {
+		// 去掉非客户区，让客户区占满整个窗口（无边框）
+		if (msg->wParam) {
 			*result = 0;
-			return false;
+			return true;
 		}
+		break;
 	}
+	case WM_NCHITTEST: {
+		// 处理拖拽和缩放区域
+		const LONG borderWidth = 8; // 拖拽缩放边框宽度
+		RECT winRect;
+		GetWindowRect(HWND(winId()), &winRect);
+
+		// 获取鼠标全局坐标
+		const LONG x = GET_X_LPARAM(msg->lParam);
+		const LONG y = GET_Y_LPARAM(msg->lParam);
+
+		// 允许缩放的条件（根据窗口最小最大宽高判断）
+		const bool canResizeWidth = minimumWidth() != maximumWidth();
+		const bool canResizeHeight = minimumHeight() != maximumHeight();
+
+		// 左上角
+		if (canResizeWidth && canResizeHeight &&
+			x >= winRect.left && x < winRect.left + borderWidth &&
+			y >= winRect.top && y < winRect.top + borderWidth) {
+			*result = HTTOPLEFT;
+			return true;
+		}
+		// 右上角
+		if (canResizeWidth && canResizeHeight &&
+			x >= winRect.right - borderWidth && x < winRect.right &&
+			y >= winRect.top && y < winRect.top + borderWidth) {
+			*result = HTTOPRIGHT;
+			return true;
+		}
+		// 左下角
+		if (canResizeWidth && canResizeHeight &&
+			x >= winRect.left && x < winRect.left + borderWidth &&
+			y >= winRect.bottom - borderWidth && y < winRect.bottom) {
+			*result = HTBOTTOMLEFT;
+			return true;
+		}
+		// 右下角
+		if (canResizeWidth && canResizeHeight &&
+			x >= winRect.right - borderWidth && x < winRect.right &&
+			y >= winRect.bottom - borderWidth && y < winRect.bottom) {
+			*result = HTBOTTOMRIGHT;
+			return true;
+		}
+		// 左边
+		if (canResizeWidth &&
+			x >= winRect.left && x < winRect.left + borderWidth) {
+			*result = HTLEFT;
+			return true;
+		}
+		// 右边
+		if (canResizeWidth &&
+			x >= winRect.right - borderWidth && x < winRect.right) {
+			*result = HTRIGHT;
+			return true;
+		}
+		// 上边
+		if (canResizeHeight &&
+			y >= winRect.top && y < winRect.top + borderWidth) {
+			*result = HTTOP;
+			return true;
+		}
+		// 下边
+		if (canResizeHeight &&
+			y >= winRect.bottom - borderWidth && y < winRect.bottom) {
+			*result = HTBOTTOM;
+			return true;
+		}
+
+		// 设置标题栏拖动区域 只有该区域内才允许拖动窗口
+		if (x > winRect.left + m_naviWidth && x < winRect.right - m_widgetTotalWidth
+			&& y > winRect.top && y < winRect.top + m_titleBarHeight)
+		{
+			*result = HTCAPTION;
+			return true;
+		}
+
+		// 其余地方交给默认处理
+		break;
+	}
+	default:
+		break;
+	}
+#endif // Q_OS_WIN
 	return QWidget::nativeEvent(eventType, message, result);
 }
 
-void QtAntDesign::changeEvent(QEvent* event)
+void QtAntDesign::showEvent(QShowEvent* event)
 {
-	QWidget::changeEvent(event);
+	QWidget::showEvent(event);
 
-	if (event->type() == QEvent::WindowStateChange)
-	{
-		QWindowStateChangeEvent* stateEvent = static_cast<QWindowStateChangeEvent*>(event);
+	m_hwnd = reinterpret_cast<HWND>(winId());
+	if (!m_hwnd) return;
 
-		bool wasMinimized = (stateEvent->oldState() & Qt::WindowMinimized);
-		bool isNowVisible = !(windowState() & Qt::WindowMinimized);
+	LONG style = GetWindowLong(m_hwnd, GWL_STYLE);
 
-		if (wasMinimized && isNowVisible)
-		{
-			// 最小化之前是最大化的窗口状态
-			if (m_beforeMax)
-			{
-				setWindowState(Qt::WindowMaximized);
-				m_beforeMax = false;
-			}
-		}
-	}
-}
+	// 非客户区被隐藏了 但是他还有标题栏、有边框以及最大化最小化功能的标准窗口从而提供windows原生动画和交互
+	style |= WS_CAPTION | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
+	SetWindowLong(m_hwnd, GWL_STYLE, style);
 
-void QtAntDesign::updateShadowCache()
-{
-	if (width() <= 0 || height() <= 0) return;
+	MARGINS margins = { 5,5,5,5 };
+	DwmExtendFrameIntoClientArea(m_hwnd, &margins);
 
-	QPixmap pixmap(size());
-	pixmap.fill(Qt::transparent);
-
-	QPainter p(&pixmap);
-	p.setRenderHint(QPainter::Antialiasing);
-
-	for (int i = m_shadowRadius; i >= 1; --i)
-	{
-		QColor c = m_color;
-		double factor = double(i) / m_shadowRadius;
-		c.setAlphaF(m_color.alphaF() * factor * factor);
-		p.setPen(Qt::NoPen);
-		p.setBrush(c);
-
-		QRectF r = rect().adjusted(i, i, -i, -i);
-		r.translate(m_offset);
-
-		p.drawRoundedRect(r, m_cornerRadius, m_cornerRadius);
-	}
-
-	m_shadowCache = pixmap;
+	DWORD cornerPref = 2;
+	DwmSetWindowAttribute(m_hwnd, 33, &cornerPref, sizeof(cornerPref));
 }
