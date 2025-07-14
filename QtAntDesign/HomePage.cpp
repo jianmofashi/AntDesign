@@ -14,6 +14,7 @@
 #include "AnimatedNumber.h"
 #include "SkeletonWidget.h"
 #include "AntButton.h"
+#include "NotificationManager.h"
 
 HomePage::HomePage(QWidget* parent)
 	: QWidget(parent)
@@ -34,10 +35,10 @@ HomePage::HomePage(QWidget* parent)
 	layout->setContentsMargins(0, 0, 0, 0);
 	layout->addWidget(tabWidget);
 
-	// 页面布局
-	QVBoxLayout* w1Lay = new QVBoxLayout(w1);
-	w1Lay->setSpacing(0);
-	w1Lay->setContentsMargins(8, 8, 8, 8);
+	// 页面内容布局
+	QVBoxLayout* pageLay = new QVBoxLayout(w1);
+	pageLay->setSpacing(0);
+	pageLay->setContentsMargins(0, 0, 0, 0);
 
 	// 添加标题 + 开关按钮
 	QHBoxLayout* row1Layout = new QHBoxLayout();
@@ -66,7 +67,7 @@ HomePage::HomePage(QWidget* parent)
 	// 启动测试模式
 	progress->startTestPattern();
 	// 圆形进度条
-	MaterialSpinner* spinner = new MaterialSpinner(4, QColor(22, 119, 255), this);
+	MaterialSpinner* spinner = new MaterialSpinner(4, DesignSystem::instance()->primaryColor(), this);
 	spinner->setFixedSize(42, 42);
 
 	// 单选按钮
@@ -89,7 +90,7 @@ HomePage::HomePage(QWidget* parent)
 	AntButton* skeletonDescBtn = new AntButton("骨架屏启动", 12, w1);
 	skeletonDescBtn->setFixedSize(120, 50);
 	QHBoxLayout* row3Layout = new QHBoxLayout(w1);
-	row3Layout->setSpacing(16);
+	row3Layout->setSpacing(8);
 	row3Layout->setContentsMargins(0, 0, 0, 0);
 
 	QList<QIcon> icons = {
@@ -104,7 +105,7 @@ HomePage::HomePage(QWidget* parent)
 
 	for (const QIcon& icon : icons)
 	{
-		SkeletonWidget* skeleton = new SkeletonWidget(QSize(300, 200), 8, this);
+		SkeletonWidget* skeleton = new SkeletonWidget(QSize(280, 200), 8, this);
 		row3Layout->addWidget(skeleton);
 		skeletons.append(skeleton);  // 保存骨架指针
 
@@ -146,6 +147,14 @@ HomePage::HomePage(QWidget* parent)
 				});
 		});
 
+	// 任务通知
+	AntButton* taskBtn = new AntButton("任务通知", 12, w1);
+	taskBtn->setFixedSize(120, 50);
+	connect(taskBtn, &AntButton::clicked, this, [this]()
+		{
+			NotificationManager::instance()->showNotification("任务通知");
+		});
+
 	// 添加到水平布局
 	row1Layout->addWidget(labelList[0]);
 	row1Layout->addSpacing(20);
@@ -169,13 +178,14 @@ HomePage::HomePage(QWidget* parent)
 	row2Layout->addStretch();
 
 	// 添加到页面布局
-	w1Lay->addSpacing(20);
-	w1Lay->addLayout(row1Layout);
-	w1Lay->addSpacing(20);
-	w1Lay->addLayout(row2Layout);
-	w1Lay->addWidget(skeletonDescBtn);
-	w1Lay->addLayout(row3Layout);
-	w1Lay->addStretch();
+	pageLay->addSpacing(20);
+	pageLay->addLayout(row1Layout);
+	pageLay->addSpacing(20);
+	pageLay->addLayout(row2Layout);
+	pageLay->addWidget(skeletonDescBtn);
+	pageLay->addLayout(row3Layout);
+	pageLay->addWidget(taskBtn);
+	pageLay->addStretch();
 }
 
 HomePage::~HomePage()

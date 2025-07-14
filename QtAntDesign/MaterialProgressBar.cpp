@@ -3,11 +3,12 @@
 #include <QPaintEvent>
 #include <QTimer>
 #include <QPainterPath>
+#include "DesignSystem.h"
 
 MaterialProgressBar::MaterialProgressBar(QWidget* parent)
 	: QProgressBar(parent),
-	m_backgroundColor(QColor("#e0e0e0")),
-	m_chunkColor(QColor("#1677ff")),
+	m_backgroundColor(DesignSystem::instance()->currentTheme().progressBarBgColor),
+	m_chunkColor(DesignSystem::instance()->primaryColor()),
 	m_animation(new QVariantAnimation(this)) // 初始化动画对象
 {
 	setRange(0, 100);         // 设置默认最小值和最大值

@@ -3,6 +3,7 @@
 #include <QLayout>
 #include <QGraphicsOpacityEffect>
 #include "AntMessageManager.h"
+#include "DesignSystem.h"
 
 MaterialDialog::MaterialDialog(bool loginState, QWidget* parent)
 	: QWidget(parent), m_loginState(loginState)
@@ -22,7 +23,7 @@ MaterialDialog::MaterialDialog(bool loginState, QWidget* parent)
 	// 管理页面
 	stackedWidget = new SlideStackedWidget(this);
 	stackedWidget->setObjectName("myStacked");
-	stackedWidget->setStyleSheet(StyleSheet::myStackedQss());
+	stackedWidget->setStyleSheet(StyleSheet::myStackedQss(DesignSystem::instance()->currentTheme().dialogBgColor));
 	bgLayout->addWidget(stackedWidget);
 
 	// 登录页

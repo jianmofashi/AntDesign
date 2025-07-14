@@ -104,7 +104,9 @@
     <ClCompile Include="AntTooltipManager.cpp" />
     <ClCompile Include="BubbleViewController.cpp" />
     <ClCompile Include="CustomToolButton.cpp" />
+    <ClCompile Include="DesignSystem.cpp" />
     <ClCompile Include="HomePage.cpp" />
+    <ClCompile Include="LoadingArc.cpp" />
     <ClCompile Include="LogoWidget.cpp" />
     <ClCompile Include="DialogViewController.cpp" />
     <ClCompile Include="ErrorTipLabel.cpp" />
@@ -116,6 +118,8 @@
     <ClCompile Include="MaterialSpinner.cpp" />
     <ClCompile Include="MaterialTabWidget.cpp" />
     <ClCompile Include="NoDataWidget.cpp" />
+    <ClCompile Include="NotificationManager.cpp" />
+    <ClCompile Include="NotificationWidget.cpp" />
     <ClCompile Include="ProfilePage.cpp" />
     <ClCompile Include="RegisterPageWidget.cpp" />
     <ClCompile Include="Ripple.cpp" />
@@ -124,7 +128,7 @@
     <ClCompile Include="SlideStackedWidget.cpp" />
     <ClCompile Include="StandardDialogPage.cpp" />
     <ClCompile Include="UserInfoBubble.cpp" />
-    <ClCompile Include="Win11RadioButton.cpp" />
+    <ClCompile Include="Win11CheckButton.cpp" />
     <QtRcc Include="QtAntDesign.qrc" />
     <QtUic Include="QtAntDesign.ui" />
     <QtMoc Include="QtAntDesign.h" />
@@ -138,7 +142,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="Win11RadioButton.h" />
+    <QtMoc Include="Win11CheckButton.h" />
     <QtMoc Include="UserInfoBubble.h" />
     <QtMoc Include="CircularAvatar.h" />
     <QtMoc Include="AntButton.h" />
@@ -172,6 +176,10 @@
     <QtMoc Include="NoDataWidget.h" />
     <QtMoc Include="AnimatedNumber.h" />
     <QtMoc Include="SkeletonWidget.h" />
+    <QtMoc Include="NotificationWidget.h" />
+    <QtMoc Include="NotificationManager.h" />
+    <QtMoc Include="LoadingArc.h" />
+    <QtMoc Include="DesignSystem.h" />
     <ClInclude Include="StyleSheet.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

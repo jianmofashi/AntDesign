@@ -2,12 +2,13 @@
 
 #include <QWidget>
 #include <QVBoxLayout>
-#include <QRadioButton>
+#include <QCheckBox>
 #include <QPainter>
 #include <QPropertyAnimation>
 #include <QPainterPath>
+#include "DesignSystem.h"
 
-class Win11CheckButton : public QRadioButton
+class Win11CheckButton : public QCheckBox
 {
 	Q_OBJECT
 		Q_PROPERTY(qreal progress READ progress WRITE setProgress)
@@ -29,7 +30,7 @@ private:
 private:
 	qreal m_progress;
 	QPropertyAnimation* m_anim;
-	QColor themeBlue = QColor(22, 119, 255);
+	QColor themeColor = DesignSystem::instance()->primaryColor();
 
 	// 可调属性
 	int boxSize = 16;

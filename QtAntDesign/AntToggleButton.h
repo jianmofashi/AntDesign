@@ -1,4 +1,4 @@
-#ifndef ANTTOGGLEBUTTON_H
+ï»¿#ifndef ANTTOGGLEBUTTON_H
 #define ANTTOGGLEBUTTON_H
 
 #include <QWidget>
@@ -29,7 +29,7 @@ public:
 
 	QColor bgColor() const { return m_bgColor; }
 	void setBgColor(const QColor& color) { m_bgColor = color; update(); }
-	// ÊÇ·ñÏÔÊ¾ÉÏÃæµÄÎÄ±¾ÌáÊ¾
+	// æ˜¯å¦æ˜¾ç¤ºä¸Šé¢çš„æ–‡æœ¬æç¤º
 	void setShowText(bool show);
 signals:
 	void toggled(bool checked);

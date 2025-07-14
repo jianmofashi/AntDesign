@@ -13,10 +13,11 @@
 #include <QToolButton>
 #include <QLabel>
 #include <QShowEvent>
+#include "NotificationManager.h"
+#include "DesignSystem.h"
 
 QtAntDesign::QtAntDesign(QWidget* parent)
-	: QWidget(parent),
-	m_color(150, 150, 150, 38)
+	: QWidget(parent)
 {
 	ui.setupUi(this);
 
@@ -154,9 +155,20 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 	naviLay->addWidget(btnAbout, 0, Qt::AlignHCenter);
 	naviLay->addStretch();
 
+	// 初始化全局设计系统
+	DesignSystem::instance()->setThemeMode(DesignSystem::Light);	//默认亮主题
+
 	// 初始化全局消息管理器
 	AntMessageManager::instance()->getMainWindow(ui.main_widget);	// 全局消息
 	AntTooltipManager::instance()->getMainWindow(ui.main_widget);	// 全局提示
+
+	// 初始化通知管理器
+	NotificationManager::instance()->getMainWindow(ui.main_widget);
+	// 调整消息框位置
+	connect(this, &QtAntDesign::resized, this, [=](int w, int h)
+		{
+			NotificationManager::instance()->relayoutNotifications(w, h);
+		});
 
 	// 对话框
 	DialogViewController* mDialog = new DialogViewController(avatar->loginState(), w, h, ui.main_widget);	// 实际登录状态要服务器给予

@@ -3,6 +3,7 @@
 #include <QPainterPath>
 #include <QPaintEvent>
 #include <QMouseEvent>
+#include "DesignSystem.h"
 
 CustomToolButton::CustomToolButton(QSize iconSize, QWidget* parent)
 	: QToolButton(parent), hovered(false), m_iconSize(iconSize)
@@ -63,7 +64,7 @@ void CustomToolButton::paintEvent(QPaintEvent* event)
 	if (hovered || m_checked)
 	{
 		// 背景颜色更亮一些
-		QColor bgColor = QColor(24, 144, 255, 40);
+		QColor bgColor = DesignSystem::instance()->currentTheme().toolBtnBgColor;
 
 		// 缩小绘制圆角背景
 		QRectF rect = this->rect().adjusted(7, 7, -7, -7);

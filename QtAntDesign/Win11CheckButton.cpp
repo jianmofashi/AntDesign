@@ -1,13 +1,13 @@
-﻿#include "Win11RadioButton.h"
+﻿#include "Win11CheckButton.h"
 
 Win11CheckButton::Win11CheckButton(QWidget* parent)
-	: QRadioButton(parent), m_progress(0.0)
+	: QCheckBox(parent), m_progress(0.0)
 {
 	m_anim = new QPropertyAnimation(this, "progress", this);
 	m_anim->setDuration(300);
 	m_anim->setEasingCurve(QEasingCurve::InOutCubic);
 
-	connect(this, &QRadioButton::toggled, this, [this](bool checked) {
+	connect(this, &QCheckBox::toggled, this, [this](bool checked) {
 		m_anim->stop();
 		if (checked) {
 			m_anim->setStartValue(m_progress);
@@ -45,11 +45,13 @@ void Win11CheckButton::paintEvent(QPaintEvent* event)
 	QRect boxRect(boxMarginLeft, y, boxSize, boxSize);
 	int radius = boxSize / 4;
 
+	auto theme = DesignSystem::instance()->currentTheme();
+
 	// 边框颜色
-	QColor borderColor = isChecked() ? themeBlue
-		: (isEnabled() ? QColor(160, 160, 160) : QColor(200, 200, 200));
+	QColor borderColor = isChecked() ? themeColor
+		: (isEnabled() ? theme.checkBoxBorderEnableColor : theme.checkBoxBorderDisableColor);
 	p.setPen(QPen(borderColor, 1.5));
-	p.setBrush(isChecked() ? themeBlue : Qt::white);  // 修改为默认白色填充
+	p.setBrush(isChecked() ? themeColor : theme.checkBoxBgColor);  // 修改为默认白色填充
 	p.drawRoundedRect(boxRect, radius, radius);
 
 	// 对勾动画绘制
@@ -73,7 +75,7 @@ void Win11CheckButton::paintEvent(QPaintEvent* event)
 	}
 
 	// 绘制文字
-	p.setPen(isEnabled() ? Qt::black : QColor(180, 180, 180));
+	p.setPen(isEnabled() ? theme.checkBoxTextColor : theme.checkBoxTextDisableColor);
 	int textX = boxRect.right() + boxSpacing;
 	QRect textRect(textX, -1, w - textX - 4, h);
 	p.drawText(textRect, Qt::AlignVCenter | Qt::AlignLeft, text());

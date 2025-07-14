@@ -1,10 +1,10 @@
-#include "LogoWidget.h"
+ï»¿#include "LogoWidget.h"
 #include <QPainter>
 
 LogoWidget::LogoWidget(QWidget* parent)
     : QWidget(parent)
 {
-    // ¼ÓÔØÍ¼Æ¬×ÊÔ´
+    // åŠ è½½å›¾ç‰‡èµ„æº
     m_logoPixmap.load(":/Imgs/logo.png");
 }
 
@@ -18,13 +18,13 @@ void LogoWidget::paintEvent(QPaintEvent* event)
 
     QSize widgetSize = this->size();
 
-    // ³ËÒÔËõ·Å±ÈÀı£¬±ÈÈç 0.7
+    // ä¹˜ä»¥ç¼©æ”¾æ¯”ä¾‹ï¼Œæ¯”å¦‚ 0.7
     double scaleFactor = 0.7;
     QSize scaledSize = widgetSize * scaleFactor;
 
     QPixmap scaledPixmap = m_logoPixmap.scaled(scaledSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
-    // ¼ÆËã¾ÓÖĞÎ»ÖÃ£¨Ïà¶ÔÓÚ¿Ø¼ş£©
+    // è®¡ç®—å±…ä¸­ä½ç½®ï¼ˆç›¸å¯¹äºæ§ä»¶ï¼‰
     int x = (widgetSize.width() - scaledPixmap.width()) / 2;
     int y = (widgetSize.height() - scaledPixmap.height()) / 2;
 

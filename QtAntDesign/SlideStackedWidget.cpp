@@ -5,6 +5,7 @@ SlideStackedWidget::SlideStackedWidget(QWidget* parent)
 	: QStackedWidget(parent)
 {
 	setFrameShape(QFrame::NoFrame);
+	setContentsMargins(6, 0, 6, 0);
 }
 
 SlideStackedWidget::~SlideStackedWidget()

@@ -5,6 +5,7 @@
 #include <QGraphicsDropShadowEffect>
 #include <QPainterPath>
 #include <QPainter>
+#include "DesignSystem.h"
 
 AntTooltip::AntTooltip(QString text, ArrowDir dir, QWidget* parent)
 	: QWidget(parent), m_arrowDirection(dir), m_text(text)
@@ -274,12 +275,12 @@ void AntTooltip::paintEvent(QPaintEvent*)
 	}
 
 	// 填充气泡主体
-	p.setBrush(Qt::white);
+	p.setBrush(DesignSystem::instance()->currentTheme().toolTipBgColor);
 	p.drawPath(path);
 
 	// 设置字体与颜色
 	p.setFont(m_font);
-	p.setPen(Qt::black);  // 深灰色文本，更柔和
+	p.setPen(DesignSystem::instance()->currentTheme().toolTipTextColor);  // 深灰色文本，更柔和
 
 	// 计算文本区域（在 rectBubble 内部减去 margin）
 	QRect textRect = rectBubble.adjusted(margin, margin, -margin, -margin);

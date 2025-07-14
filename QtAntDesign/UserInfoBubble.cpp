@@ -8,6 +8,7 @@
 #include <QDateTime>
 #include "StyleSheet.h"
 #include "AntMessageManager.h"
+#include "DesignSystem.h"
 
 UserInfoBubble::UserInfoBubble(QWidget* parent)
 	: QWidget(parent)
@@ -164,7 +165,7 @@ void UserInfoBubble::paintEvent(QPaintEvent*)
 	path.lineTo(ax, ay);
 
 	// ---------------- 绘制气泡主体 ----------------
-	p.setBrush(Qt::white);
+	p.setBrush(DesignSystem::instance()->currentTheme().userBubbleBgColor);
 	p.drawPath(path);
 }
 

@@ -1,4 +1,4 @@
-#include "skeletonwidget.h"
+Ôªø#include "skeletonwidget.h"
 #include <QPainter>
 #include <QLinearGradient>
 
@@ -27,7 +27,7 @@ void SkeletonWidget::stopSkeleton()
 	{
 		m_animation->stop();
 	}
-	this->hide();  // “˛≤ÿπ«º‹øÿº˛
+	this->hide();  // ÈöêËóèÈ™®Êû∂Êéß‰ª∂
 }
 
 void SkeletonWidget::startSkeleton()
@@ -37,7 +37,7 @@ void SkeletonWidget::startSkeleton()
 		m_animation->stop();
 		m_animation->start();
 	}
-	this->show();  // “˛≤ÿπ«º‹øÿº˛
+	this->show();  // ÈöêËóèÈ™®Êû∂Êéß‰ª∂
 }
 
 void SkeletonWidget::paintEvent(QPaintEvent*)
@@ -45,16 +45,16 @@ void SkeletonWidget::paintEvent(QPaintEvent*)
 	QPainter p(this);
 	p.setRenderHint(QPainter::Antialiasing);
 
-	// ±≥æ∞…´
+	// ËÉåÊôØËâ≤
 	QRectF rect = this->rect();
 	p.setBrush(QColor("#DCDCDC"));  // RGB(220, 220, 220)
 	p.setPen(Qt::NoPen);
 	p.drawRoundedRect(rect, m_rectRadius, m_rectRadius);
 
-	// ∏ﬂ¡¡∂Øª≠Ãı
+	// È´ò‰∫ÆÂä®ÁîªÊù°
 	QLinearGradient gradient(m_gradientX - 70, 0, m_gradientX + 70, 0);
 	gradient.setColorAt(0.0, QColor(255, 255, 255, 0));
-	gradient.setColorAt(0.5, QColor(255, 255, 255, 80));
+	gradient.setColorAt(0.5, QColor(255, 255, 255, 150));
 	gradient.setColorAt(1.0, QColor(255, 255, 255, 0));
 
 	p.setBrush(gradient);

@@ -1,4 +1,4 @@
-#include "AnimatedNumber.h"
+ï»¿#include "AnimatedNumber.h"
 #include <QPainter>
 #include <QFontMetrics>
 
@@ -30,12 +30,12 @@ void AnimatedNumber::setDisplayedValue(int val)
 void AnimatedNumber::animateTo(int target)
 {
 	int diff = qAbs(target - m_displayedValue);
-	int maxDuration = 10000;   // ×î´ó10Ãë
-	int minDuration = 200;     // ×î¶Ì200ms
+	int maxDuration = 10000;   // æœ€å¤§10ç§’
+	int minDuration = 200;     // æœ€çŸ­200ms
 
-	// ¸ù¾İÊıÖµ²îµ÷ÕûÊ±³¤£¬²îÔ½´ó£¬Ê±¼äÔ½³¤£¬ÏßĞÔÓ³Éä
+	// æ ¹æ®æ•°å€¼å·®è°ƒæ•´æ—¶é•¿ï¼Œå·®è¶Šå¤§ï¼Œæ—¶é—´è¶Šé•¿ï¼Œçº¿æ€§æ˜ å°„
 	int duration = qBound(minDuration, diff * 20, maxDuration);
-	// diff*20ÊÇ¸öÏµÊı£¬¿ÉÒÔµ÷½Ú¶¯»­¿ìÂı
+	// diff*20æ˜¯ä¸ªç³»æ•°ï¼Œå¯ä»¥è°ƒèŠ‚åŠ¨ç”»å¿«æ…¢
 
 	m_animation->stop();
 	m_animation->setDuration(duration);
@@ -59,10 +59,10 @@ void AnimatedNumber::paintEvent(QPaintEvent* event)
 	QString text = QString::number(m_displayedValue);
 	QFontMetrics fm(font);
 
-	// ¼ÆËãÎÄ±¾µÄ±ß½ç¾ØĞÎ
+	// è®¡ç®—æ–‡æœ¬çš„è¾¹ç•ŒçŸ©å½¢
 	QRect textRect = fm.boundingRect(text);
 
-	// ¼ÆËã¾ÓÖĞÎ»ÖÃ
+	// è®¡ç®—å±…ä¸­ä½ç½®
 	QRect drawRect(0, 0, width(), height());
 	p.drawText(drawRect, Qt::AlignCenter, text);
 }
@@ -73,7 +73,7 @@ QSize AnimatedNumber::sizeHint() const
 	font.setPointSize(m_fontSize);
 	font.setBold(true);
 	QFontMetrics fm(font);
-	int h = fm.height() + 10; // ¶îÍâÁôµã¿Õ¼ä
-	int w = m_textWidth;              // ¹Ì¶¨¿í¶È£¬»òÕßËãÒ»¸öºÏÊÊÖµ
+	int h = fm.height() + 10; // é¢å¤–ç•™ç‚¹ç©ºé—´
+	int w = m_textWidth;              // å›ºå®šå®½åº¦ï¼Œæˆ–è€…ç®—ä¸€ä¸ªåˆé€‚å€¼
 	return QSize(w, h);
 }

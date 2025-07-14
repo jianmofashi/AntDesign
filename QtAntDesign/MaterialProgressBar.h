@@ -1,4 +1,4 @@
-#ifndef MATERIALPROGRESSBAR_H
+ï»¿#ifndef MATERIALPROGRESSBAR_H
 #define MATERIALPROGRESSBAR_H
 
 #include <QProgressBar>
@@ -12,9 +12,9 @@ public:
 
 	QSize sizeHint() const override;
 	void setProgressAnimated(int targetValue);
-	// ÉèÖÃ½ø¶È
+	// è®¾ç½®è¿›åº¦
 	void setRealProgress(int targetValue);
-	// ²»È·¶¨¶¯»­
+	// ä¸ç¡®å®šåŠ¨ç”»
 	void startIndeterminate()
 	{
 		if (m_indeterminateAnimation->state() != QAbstractAnimation::Running)
@@ -34,22 +34,22 @@ public:
 			update();
 		}
 	}
-	// ¿ªÆôÑİÊ¾Ä£Ê½ ÑİÊ¾½ø¶ÈÌõ¶¯»­Á÷³Ì Êµ¼Ê¿ª·¢²»ÒªÓÃ
+	// å¼€å¯æ¼”ç¤ºæ¨¡å¼ æ¼”ç¤ºè¿›åº¦æ¡åŠ¨ç”»æµç¨‹ å®é™…å¼€å‘ä¸è¦ç”¨
 	void startTestPattern();
 protected:
 	void paintEvent(QPaintEvent* event) override;
 private:
 	void updateProgress();
 private:
-	QColor m_backgroundColor;  // ±³¾°ÑÕÉ«
-	QColor m_chunkColor;       // ½ø¶ÈÑÕÉ«
+	QColor m_backgroundColor;  // èƒŒæ™¯é¢œè‰²
+	QColor m_chunkColor;       // è¿›åº¦é¢œè‰²
 	QVariantAnimation* m_animation = nullptr;
 
-	// ²»È·¶¨¶¯»­
+	// ä¸ç¡®å®šåŠ¨ç”»
 	bool m_isBeginIndeterminate = false;
 	QVariantAnimation* m_indeterminateAnimation = nullptr;
-	qreal m_indeterminatePosition = 0;  // 0.0 ~ 1.0 ½ø¶ÈÌõ¿í¶È±ÈÀı
-	// ÑİÊ¾ÓÃÖµ
+	qreal m_indeterminatePosition = 0;  // 0.0 ~ 1.0 è¿›åº¦æ¡å®½åº¦æ¯”ä¾‹
+	// æ¼”ç¤ºç”¨å€¼
 	int currentValue = 0;
 };
 

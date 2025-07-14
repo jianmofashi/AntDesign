@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 
 #include <QWidget>
 #include <QVariantAnimation>
@@ -23,6 +23,6 @@ protected:
 private:
 	int m_displayedValue = 0;
 	QVariantAnimation* m_animation = nullptr;
-	int m_fontSize = 15;     //◊÷ÃÂ¥Û–°
+	int m_fontSize = 15;     //Â≠ó‰ΩìÂ§ßÂ∞è
 	int m_textWidth = 150;
 };

@@ -1,4 +1,4 @@
-// AntSlider.h
+ï»¿// AntSlider.h
 #pragma once
 
 #include <QSlider>
@@ -55,12 +55,12 @@ private:
 	bool m_hovered = false;
 	// tooltip
 	DownArrowTooltip* m_tooltip = nullptr;
-	// ---- ¼¸ºÎÅäÖÃ----
+	// ---- å‡ ä½•é…ç½®----
 	const int m_ringWidth = 3;
 	const int m_maxRadius = 8;
-	int       m_margin = m_ringWidth + m_maxRadius;   // ×óÓÒ¿Õ°×
+	int       m_margin = m_ringWidth + m_maxRadius;   // å·¦å³ç©ºç™½
 
-	// Í³Ò»µÄ¹ìµÀ¾ØĞÎ
+	// ç»Ÿä¸€çš„è½¨é“çŸ©å½¢
 	QRect trackRect() const
 	{
 		const int th = 6;

@@ -136,10 +136,12 @@ namespace StyleSheet
         })";
 	}
 
-	inline QString myStackedQss()
+	inline QString myStackedQss(const QColor& bgColor)
 	{
-		return R"(#myStacked{background-color: rgb(255,255,255);
-					border-radius: 8px;})";
+		return QString("#myStacked{background-color: rgb(%1, %2, %3); border-radius: 8px;}")
+			.arg(bgColor.red())
+			.arg(bgColor.green())
+			.arg(bgColor.blue());
 	}
 
 	inline QString lineEditQss(const QColor& borderColor)
@@ -180,27 +182,30 @@ namespace StyleSheet
 	}
 
 	// 水平方向的标签Qss
-	inline QString hTabQss()
+	inline QString hTabQss(const QColor& themeColor, const QColor& textColor)
 	{
 		return QString(R"(
-		 QTabWidget::pane {
-			border: none;          /* 去除tabWidget面板边框 */
-		}
-		QTabBar {
-			border: none;          /* 去除tabBar边框 */
-			padding-left: 0px;
-			padding-right: 0px;
-		}
-		QTabBar::tab {
-			border: none;
-			background: transparent;
-		}
-		QTabBar::tab:hover {
-					color: #1890FF; /* Ant Design 蓝色 */
+        QTabWidget::pane {
+            border: none;
         }
-		QTabBar::tab:selected {
-            color: #1890FF; /* 选中标签蓝色 */
-        })");
+        QTabBar {
+            border: none;
+            padding-left: 0px;
+            padding-right: 0px;
+        }
+        QTabBar::tab {
+            border: none;
+            background: transparent;
+            color: rgb(%1, %2, %3);  /* 普通标签文字颜色 */
+        }
+        QTabBar::tab:hover {
+            color: rgb(%4, %5, %6);  /* hover 时文字颜色 */
+        }
+        QTabBar::tab:selected {
+            color: rgb(%4, %5, %6);  /* 选中标签文字颜色 */
+        })")
+			.arg(textColor.red()).arg(textColor.green()).arg(textColor.blue())
+			.arg(themeColor.red()).arg(themeColor.green()).arg(themeColor.blue());
 	}
 
 	inline QString toolBtnQss(const QColor& defaultColor = QColor("#BFBFBF"), const QColor& hoverColor = QColor("#1677FF"))
@@ -249,5 +254,12 @@ namespace StyleSheet
         QPushButton#ConfirmButton:hover {
             background-color: #4096ff;
         })";
+	}
+
+	inline QString notificationQss()
+	{
+		return "#Notification{ "
+			"border-radius: 8px; "
+			"background-color: white;}";
 	}
 }

@@ -45,8 +45,7 @@ private:
 	Ui::QtAntDesignClass ui;
 	HWND m_hwnd;
 	QPoint dragPos;
-	QColor m_color;
-	int m_titleBarHeight = 60;	// 标题栏高度
+	int m_titleBarHeight = 54;	// 标题栏高度
 	int m_naviWidth = 62;		// 导航栏宽度
 	int m_widgetTotalWidth = 0;		// 标题栏上控件总宽度
 	bool	m_disableShadow = false;

@@ -1,4 +1,4 @@
-// antradiobutton.cpp
+ï»¿// antradiobutton.cpp
 #include "antradiobutton.h"
 #include <QPainter>
 #include <QStyleOptionButton>
@@ -35,10 +35,10 @@ void AntRadioButton::paintEvent(QPaintEvent* event)
 
 	QPointF center(m_marginLeft + circleRadius, circleY + circleRadius);
 
-	// ¸ù¾İĞü¸¡×´Ì¬Ñ¡±ß¿òÑÕÉ«
+	// æ ¹æ®æ‚¬æµ®çŠ¶æ€é€‰è¾¹æ¡†é¢œè‰²
 	QColor borderColor = isEnabled()
 		? (m_hovered ? m_borderColorHover : m_borderColorDefault)
-		: QColor(180, 180, 180);
+		: DesignSystem::instance()->disabledColor();
 
 	painter.setPen(QPen(borderColor, 1.5));
 	painter.setBrush(Qt::NoBrush);
@@ -47,7 +47,7 @@ void AntRadioButton::paintEvent(QPaintEvent* event)
 	painter.drawEllipse(outerCircle);
 
 	if (isChecked()) {
-		// Ìî³äÑÕÉ«ÓÃÖ÷ÌâÉ«
+		// å¡«å……é¢œè‰²ç”¨ä¸»é¢˜è‰²
 		QPainterPath outerPath;
 		outerPath.addEllipse(outerCircle);
 
@@ -65,7 +65,7 @@ void AntRadioButton::paintEvent(QPaintEvent* event)
 		painter.drawPath(ringPath);
 	}
 
-	// ÎÄ×ÖÑÕÉ«±£³ÖÄ¬ÈÏºÚÉ«
+	// æ–‡å­—é¢œè‰²ä¿æŒé»˜è®¤é»‘è‰²
 	painter.setPen(palette().color(QPalette::WindowText));
 
 	int textX = m_marginLeft + m_circleDiameter + m_spacing;
@@ -79,7 +79,7 @@ void AntRadioButton::onToggled(bool checked)
 	m_animation->stop();
 	if (checked) {
 		m_animation->setStartValue(m_innerRatio);
-		m_animation->setEndValue(0.5);  // ×î´óÄÚÔ²°ë¾¶±ÈÀı
+		m_animation->setEndValue(0.5);  // æœ€å¤§å†…åœ†åŠå¾„æ¯”ä¾‹
 	}
 	else {
 		m_animation->setStartValue(m_innerRatio);
@@ -106,7 +106,7 @@ QSize AntRadioButton::sizeHint() const
 void AntRadioButton::enterEvent(QEnterEvent* event)
 {
 	m_hovered = true;
-	update(); // ´¥·¢ÖØ»æ
+	update(); // è§¦å‘é‡ç»˜
 	QRadioButton::enterEvent(event);
 }
 

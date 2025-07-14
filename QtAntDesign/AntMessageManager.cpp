@@ -48,12 +48,11 @@ int AntMessageManager::adjustMsgDuration(int baseDuration)
 		return baseDuration * 1.5;
 	}
 
-	// 从第2条开始衰减：指数下降(开方)，最小保持20%时长v 
-	qreal ratio = qPow(0.5, index);        // 0.5^1, 0.5^2, 0.5^3...
-	ratio = qMax(ratio, 0.3);              // 不低于30%
+	// 从第2条开始衰减：指数下降(开方)，最小保持20%时长
+	qreal ratio = qPow(0.7, index);        // 0.7^1, 0.7^2, 0.7^3...
+	ratio = qMax(ratio, 0.25);              // 不低于25%
 	return static_cast<int>(baseDuration * ratio);
 }
-
 
 void AntMessageManager::showMessage(AntMessage::Type type, const QString& message, int baseDuration)
 {
@@ -128,6 +127,9 @@ void AntMessageManager::removeMessage(AntMessage* message)
 
 	if (m_messages.isEmpty()) return;
 
+	// 优化：使用 QParallelAnimationGroup 协调所有移动动画，确保同步
+	QParallelAnimationGroup* moveGroup = new QParallelAnimationGroup(this);
+
 	// 更新剩余消息位置（向上移动）
 	int x = (m_mainWindow->width() - m_messages[0]->width()) / 2;
 	int y = 10;
@@ -136,9 +138,28 @@ void AntMessageManager::removeMessage(AntMessage* message)
 		QPoint newPos(x, y);
 		msg->setTargetPos(newPos);
 		msg->setCustomOpacity(1.0f);
-		msg->moveTo(newPos);
+
+		// 创建移动动画并加入组
+		QPropertyAnimation* moveAnim = new QPropertyAnimation(msg, "pos");
+		int moveDuration = qBound(200, static_cast<int>(msg->m_duration), 1000);  // 优化：统一延长
+		moveAnim->setDuration(moveDuration);
+		moveAnim->setStartValue(msg->pos());
+		moveAnim->setEndValue(newPos);
+		moveAnim->setEasingCurve(QEasingCurve::InOutCubic);
+		moveGroup->addAnimation(moveAnim);
+
 		y += msg->height() + 10;
 	}
 
-	m_messages[0]->startCloseTimer(); // 更合理：由 AntMessage 自己控制 closeTimer
+	// 启动组动画
+	moveGroup->start(QAbstractAnimation::DeleteWhenStopped);
+
+	// 只有在组动画完成后，才启动下一个 closeTimer（避免连锁卡顿）
+	connect(moveGroup, &QParallelAnimationGroup::finished, this, [this]()
+		{
+			if (!m_messages.isEmpty())
+			{
+				m_messages[0]->startCloseTimer();
+			}
+		});
 }

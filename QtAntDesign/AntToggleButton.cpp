@@ -1,26 +1,27 @@
-#include "AntToggleButton.h"
+ï»¿#include "AntToggleButton.h"
 #include <QPainter>
 #include <QMouseEvent>
+#include "DesignSystem.h"
 
 AntToggleButton::AntToggleButton(QSize size, QWidget* parent)
-	: QWidget(parent), m_checked(false), m_size(size), m_bgColor("#ccc")
+	: QWidget(parent), m_checked(false), m_size(size), m_bgColor(DesignSystem::instance()->currentTheme().toggleButtonBgColor)
 {
 	setFixedSize(m_size);
 
 	m_circleWidth = height() - 6;
 	m_circleX = 3;
 
-	// »¬¿éÎ»ÖÃ¶¯»­
+	// æ»‘å—ä½ç½®åŠ¨ç”»
 	posAnim = new QPropertyAnimation(this, "m_circleX", this);
 	posAnim->setDuration(200);
 	posAnim->setEasingCurve(QEasingCurve::InOutQuad);
 
-	// ±³¾°ÑÕÉ«¶¯»­
+	// èƒŒæ™¯é¢œè‰²åŠ¨ç”»
 	colorAnim = new QPropertyAnimation(this, "m_bgColor", this);
 	colorAnim->setDuration(200);
 	colorAnim->setEasingCurve(QEasingCurve::InOutQuad);
 
-	// ¶¯»­×é
+	// åŠ¨ç”»ç»„
 	groupAnim = new QParallelAnimationGroup(this);
 	groupAnim->addAnimation(posAnim);
 	groupAnim->addAnimation(colorAnim);
@@ -33,7 +34,7 @@ void AntToggleButton::setShowText(bool show)
 	if (m_showText != show)
 	{
 		m_showText = show;
-		update(); // ÖØÐÂ»æÖÆ£¬ÏÔÊ¾»òÒþ²ØÎÄ×Ö
+		update(); // é‡æ–°ç»˜åˆ¶ï¼Œæ˜¾ç¤ºæˆ–éšè—æ–‡å­—
 	}
 }
 
@@ -42,26 +43,26 @@ void AntToggleButton::paintEvent(QPaintEvent*)
 	QPainter p(this);
 	p.setRenderHint(QPainter::Antialiasing);
 
-	// »æÖÆ±³¾°
+	// ç»˜åˆ¶èƒŒæ™¯
 	p.setPen(Qt::NoPen);
 	p.setBrush(m_bgColor);
 	p.drawRoundedRect(rect(), height() / 2, height() / 2);
 
-	// »æÖÆ»¬¿é
-	p.setBrush(Qt::white);
+	// ç»˜åˆ¶æ»‘å—
+	p.setBrush(DesignSystem::instance()->currentTheme().toggleButtonColor);
 	p.drawEllipse(m_circleX, 3, m_circleWidth, height() - 6);
 
-	// Èç¹ûÐèÒªÏÔÊ¾ÎÄ×Ö
+	// å¦‚æžœéœ€è¦æ˜¾ç¤ºæ–‡å­—
 	if (m_showText)
 	{
-		p.setPen(Qt::white);
+		p.setPen(DesignSystem::instance()->currentTheme().textColor);
 		QFont font = p.font();
 		font.setPointSizeF(9.4);
 		font.setBold(true);
 		p.setFont(font);
 
 		QString text = m_checked ? QStringLiteral("ON") : QStringLiteral("OFF");
-		// ÎÄ×ÖÎ»ÖÃ£º»¬¿éÖÐÐÄ¸½½ü£¬ÉÔÎ¢Æ«ÓÒ»òÆ«×óµã£¬¾ßÌå¿Éµ÷Õû
+		// æ–‡å­—ä½ç½®ï¼šæ»‘å—ä¸­å¿ƒé™„è¿‘ï¼Œç¨å¾®åå³æˆ–åå·¦ç‚¹ï¼Œå…·ä½“å¯è°ƒæ•´
 		QFontMetrics fm(font);
 		int textWidth = fm.horizontalAdvance(text);
 		int textHeight = fm.height();
@@ -69,12 +70,12 @@ void AntToggleButton::paintEvent(QPaintEvent*)
 		int xText;
 		if (m_checked)
 		{
-			// »¬¿éÔÚÓÒ±ß£¬ÎÄ×Ö»­ÔÚ»¬¿é×ó±ßÒ»Ð©
+			// æ»‘å—åœ¨å³è¾¹ï¼Œæ–‡å­—ç”»åœ¨æ»‘å—å·¦è¾¹ä¸€äº›
 			xText = m_circleX - textWidth - 2;
 		}
 		else
 		{
-			// »¬¿éÔÚ×ó±ß£¬ÎÄ×Ö»­ÔÚ»¬¿éÓÒ±ßÒ»µã
+			// æ»‘å—åœ¨å·¦è¾¹ï¼Œæ–‡å­—ç”»åœ¨æ»‘å—å³è¾¹ä¸€ç‚¹
 			xText = m_circleX + m_circleWidth + 1;
 		}
 		int yText = (height() + textHeight) / 2 - fm.descent();
@@ -111,7 +112,8 @@ void AntToggleButton::setChecked(bool checked)
 
 		colorAnim->stop();
 		colorAnim->setStartValue(m_bgColor);
-		colorAnim->setEndValue(m_checked ? QColor("#1890ff") : QColor("#ccc"));
+		colorAnim->setEndValue(m_checked ? DesignSystem::instance()->primaryColor()
+			: DesignSystem::instance()->currentTheme().noCheckedColor);
 
 		groupAnim->start();
 

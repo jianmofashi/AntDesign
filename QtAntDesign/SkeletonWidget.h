@@ -1,4 +1,4 @@
-#ifndef SKELETONWIDGET_H
+ï»¿#ifndef SKELETONWIDGET_H
 #define SKELETONWIDGET_H
 
 #include <QWidget>
@@ -15,16 +15,16 @@ public:
 	int gradientX() const { return m_gradientX; }
 	void setGradientX(int x);
 public:
-	// ¼ÓÔØÍê³Éºóµ÷ÓÃ
+	// åŠ è½½å®Œæˆåè°ƒç”¨
 	void stopSkeleton();
-	// Æô¶¯¹Ç¼ÜÆÁ¶¯»­
+	// å¯åŠ¨éª¨æ¶å±åŠ¨ç”»
 	void startSkeleton();
 protected:
 	void paintEvent(QPaintEvent* event) override;
 	void resizeEvent(QResizeEvent* event) override;
 private:
 	int m_gradientX = 0;
-	int m_rectRadius = 0; // Ô²½Ç°ë¾¶
+	int m_rectRadius = 0; // åœ†è§’åŠå¾„
 	QPropertyAnimation* m_animation = nullptr;
 };
 

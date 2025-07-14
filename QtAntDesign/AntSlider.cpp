@@ -1,31 +1,32 @@
-// AntSlider.cpp
+ï»¿// AntSlider.cpp
 #include "AntSlider.h"
 #include <QPainter>
 #include <QStyleOptionSlider>
 #include <QMouseEvent>
 #include <QPainterPath>
 #include <QTimer>
+#include "DesignSystem.h"
 
 AntSlider::AntSlider(int min, int max, int value, QWidget* parent)
 	: QSlider(Qt::Horizontal, parent)
 {
-	// ³õÊ¼»¯·¶Î§ºÍÖµ
+	// åˆå§‹åŒ–èŒƒå›´å’Œå€¼
 	setRange(min, max);
 	setValue(value);
 	setMouseTracking(true);
 	setContentsMargins(m_margin, 0, m_margin, 0);
 
-	// ³õÊ¼»¯ handle ¶¯»­
+	// åˆå§‹åŒ– handle åŠ¨ç”»
 	m_radiusAnimation = new QPropertyAnimation(this, "handleRadius", this);
 	m_radiusAnimation->setDuration(180);
 	m_radiusAnimation->setEasingCurve(QEasingCurve::InOutQuad);
 
-	// ³õÊ¼»¯ tooltip
+	// åˆå§‹åŒ– tooltip
 	m_tooltip = new DownArrowTooltip(nullptr);
 	m_tooltip->setText(QString::number(value));
 	m_tooltip->hide();
 
-	// ²Ûº¯ÊıÁ¬½Ó
+	// æ§½å‡½æ•°è¿æ¥
 	connect(this, &QSlider::sliderPressed, this, [this]() {
 		m_tooltip->setText(QString::number(this->value()));
 		});
@@ -54,7 +55,7 @@ void AntSlider::paintEvent(QPaintEvent*)
 	QPainter p(this);
 	p.setRenderHint(QPainter::Antialiasing);
 
-	// ---- ¹ìµÀ ---------------------------------------------------
+	// ---- è½¨é“ ---------------------------------------------------
 	const QRect tr = trackRect();
 	const int   handleX = tr.left()
 		+ qRound(double(value() - minimum())
@@ -62,32 +63,32 @@ void AntSlider::paintEvent(QPaintEvent*)
 			* tr.width());
 
 	p.setPen(Qt::NoPen);
-	p.setBrush(QColor(200, 200, 200));                // ±³¾°
+	p.setBrush(DesignSystem::instance()->currentTheme().slideBgColor);                // èƒŒæ™¯
 	p.drawRoundedRect(tr, tr.height() / 2, tr.height() / 2);
 
 	QRect fillRect(tr.left(), tr.top(),
 		handleX - tr.left(), tr.height());
-	p.setBrush(QColor(66, 133, 244));                 // ÒÑÍê³É²¿·Ö
+	p.setBrush(DesignSystem::instance()->currentTheme().slideColor);                 // å·²å®Œæˆéƒ¨åˆ†
 	p.drawRoundedRect(fillRect, tr.height() / 2, tr.height() / 2);
 
-	// ---- »¬¿é ---------------------------------------------------
+	// ---- æ»‘å— ---------------------------------------------------
 	const QPointF c(handleX, height() / 2.0);
 	const qreal outerR = m_handleRadius;
 	const qreal ringW = static_cast<qreal>(m_ringWidth);
 	const qreal innerR = outerR - ringW / 2.0;
 
-	QColor ringColor = m_hovered ? QColor(22, 119, 255)
-		: QColor(153, 204, 255);
+	QColor ringColor = m_hovered ? DesignSystem::instance()->currentTheme().ringhoveredColor
+		: DesignSystem::instance()->currentTheme().ringColor;
 
 	p.setBrush(Qt::NoBrush);
 	p.setPen(QPen(ringColor, ringW));
-	p.drawEllipse(c, outerR, outerR);               // Íâ»·
+	p.drawEllipse(c, outerR, outerR);               // å¤–ç¯
 
 	p.setPen(Qt::NoPen);
 	p.setBrush(Qt::white);
-	p.drawEllipse(c, innerR, innerR);               // °×ĞÄ
+	p.drawEllipse(c, innerR, innerR);               // ç™½å¿ƒ
 
-	// ·¢Éä»¬¿éÖĞĞÄ×ø±ê
+	// å‘å°„æ»‘å—ä¸­å¿ƒåæ ‡
 	emit handleMoved(QPoint(handleX, height() / 2));
 }
 
@@ -121,14 +122,14 @@ void AntSlider::mousePressEvent(QMouseEvent* e)
 	{
 		const QRect tr = trackRect();
 		int pos = std::clamp(e->pos().x(), tr.left(), tr.right());
-		// ÓÃÓÚ½«µã»÷Î»ÖÃ pos Ó³ÉäÎª¶ÔÓ¦µÄ»¬¿éÖµ
+		// ç”¨äºå°†ç‚¹å‡»ä½ç½® pos æ˜ å°„ä¸ºå¯¹åº”çš„æ»‘å—å€¼
 		int v = QStyle::sliderValueFromPosition(minimum(), maximum(),
 			pos - tr.left(),
 			tr.width());
 		setValue(v);
 		e->accept();
 	}
-	QSlider::mousePressEvent(e);   // ¼ÌĞøÖ§³ÖÍÏ×§
+	QSlider::mousePressEvent(e);   // ç»§ç»­æ”¯æŒæ‹–æ‹½
 }
 
 QSize AntSlider::sizeHint() const
@@ -147,7 +148,7 @@ DownArrowTooltip::DownArrowTooltip(QWidget* parent)
 	m_font.setPointSize(12);
 	setFont(m_font);
 
-	// ---------- Ìí¼ÓÍ¸Ã÷¶ÈĞ§¹û ----------
+	// ---------- æ·»åŠ é€æ˜åº¦æ•ˆæœ ----------
 	auto* opacityEffect = new QGraphicsOpacityEffect(this);
 	setGraphicsEffect(opacityEffect);
 
@@ -191,7 +192,7 @@ void DownArrowTooltip::paintEvent(QPaintEvent*)
 	QRect bubbleRect(0, 0, width(), height() - arrowHeight);
 	QPainterPath path;
 
-	// Ô²½Ç¾ØĞÎ²¿·Ö
+	// åœ†è§’çŸ©å½¢éƒ¨åˆ†
 	path.moveTo(radius, 0);
 	path.lineTo(width() - radius, 0);
 	path.quadTo(width(), 0, width(), radius);
@@ -202,7 +203,7 @@ void DownArrowTooltip::paintEvent(QPaintEvent*)
 	path.lineTo(0, radius);
 	path.quadTo(0, 0, radius, 0);
 
-	// ÏòÏÂ¼ıÍ·
+	// å‘ä¸‹ç®­å¤´
 	int ax = width() / 2;
 	int ay = bubbleRect.bottom();
 	path.moveTo(ax - arrowWidth / 2, ay);
@@ -210,14 +211,14 @@ void DownArrowTooltip::paintEvent(QPaintEvent*)
 	path.lineTo(ax + arrowWidth / 2, ay);
 	path.closeSubpath();
 
-	// Ìî³ä±³¾°£ººÚÉ«
-	p.setBrush(QColor(30, 30, 30));  // Éî»Ò½Ó½üºÚ
+	// å¡«å……èƒŒæ™¯ï¼šé»‘è‰²
+	p.setBrush(DesignSystem::instance()->currentTheme().hintBgColor);  // æ·±ç°æ¥è¿‘é»‘
 	p.setPen(Qt::NoPen);
 	p.drawPath(path);
 
-	// ÎÄ×Ö£º°×É«
+	// æ–‡å­—ï¼šç™½è‰²
 	p.setFont(m_font);
-	p.setPen(Qt::white);
+	p.setPen(DesignSystem::instance()->currentTheme().textColor);
 	p.drawText(bubbleRect, Qt::AlignCenter, m_text);
 }
 

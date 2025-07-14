@@ -3,11 +3,13 @@
 #include "StyleSheet.h"
 #include <QTimer>
 #include <QVBoxLayout>
+#include "DesignSystem.h"
 
 MaterialTabBar::MaterialTabBar(QWidget* parent)
 	:QTabBar(parent), m_indicatorPosX(0), m_indicatorWidth(0)
 {
-	setStyleSheet(StyleSheet::hTabQss());
+	auto theme = DesignSystem::instance()->currentTheme();
+	setStyleSheet(StyleSheet::hTabQss(theme.primaryColor, theme.tabTextColor));
 	setDrawBase(false);
 	setExpanding(false);
 	QFont font;
@@ -53,7 +55,7 @@ void MaterialTabBar::paintEvent(QPaintEvent* event)
 	QPainter painter(this);
 	painter.setRenderHint(QPainter::Antialiasing);
 	painter.setPen(Qt::NoPen);
-	painter.setBrush(QColor(22, 119, 255)); // 蓝色指示器
+	painter.setBrush(DesignSystem::instance()->primaryColor()); // 蓝色指示器
 	QRect rect(m_indicatorPosX, height() - 3, m_indicatorWidth, 3);
 	painter.drawRect(rect);
 }

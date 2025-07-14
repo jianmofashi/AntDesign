@@ -12,7 +12,7 @@ MaterialLineEdit::MaterialLineEdit(QWidget* parent)
 	m_underlineAnimation(new QPropertyAnimation(this, "underlineProgress", this))
 {
 	setFrame(false);
-	setStyleSheet(StyleSheet::lineEditQss(QColor(210, 210, 210)));
+	setStyleSheet(StyleSheet::lineEditQss(DesignSystem::instance()->currentTheme().lineEditBorderColor));
 	setPlaceholderText("");
 
 	connect(this, &QLineEdit::textChanged, this, &MaterialLineEdit::onTextChanged);
@@ -76,7 +76,7 @@ void MaterialLineEdit::setRightTextBtn(QString text)
 	//右侧文本
 	setCursor(Qt::PointingHandCursor);
 	m_textBtn = new QPushButton(this);
-	m_textBtn->setStyleSheet(StyleSheet::noBorderBtnQss(QColor(24, 144, 255)));
+	m_textBtn->setStyleSheet(StyleSheet::noBorderBtnQss(DesignSystem::instance()->primaryColor()));
 	m_textBtn->setText(text);
 	m_textBtn->setMinimumSize(40, 40);
 	m_textBtn->show();
@@ -121,7 +121,7 @@ void MaterialLineEdit::setUnderlineProgress(qreal progress)
 
 void MaterialLineEdit::focusInEvent(QFocusEvent* event)
 {
-	m_themeColor = QColor(24, 144, 255);
+	m_themeColor = DesignSystem::instance()->primaryColor();
 	m_underlineProgress = 0.0;
 	QLineEdit::focusInEvent(event);
 	if (!m_labelText.isEmpty())
@@ -211,7 +211,7 @@ void MaterialLineEdit::paintEvent(QPaintEvent* event)
 
 	int x = 6;
 
-	QColor startColor(150, 150, 150);
+	QColor startColor(DesignSystem::instance()->currentTheme().lineEditHintColor);
 	QColor endColor = m_themeColor;
 	auto lerp = [](int a, int b, qreal t) { return int(a + (b - a) * t); };
 	QColor currentColor(

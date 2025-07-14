@@ -1,4 +1,4 @@
-#include "MaterialSpinner.h"
+ï»¿#include "MaterialSpinner.h"
 #include <QPainter>
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
@@ -68,7 +68,7 @@ void MaterialSpinner::paintEvent(QPaintEvent*)
 	pen.setWidthF(m_lineWidth);
 	pen.setCapStyle(Qt::RoundCap);
 
-	// ÉèÖÃ¶¯Ì¬ĞéÏß pattern
+	// è®¾ç½®åŠ¨æ€è™šçº¿ pattern
 	QVector<qreal> pattern;
 	pattern << m_dashLength * size / 50.0 << 35 * size / 50.0;
 	pen.setDashPattern(pattern);
@@ -84,7 +84,7 @@ void MaterialSpinner::initAnimations()
 {
 	QParallelAnimationGroup* group = new QParallelAnimationGroup(this);
 
-	// dashLength ¶¯»­
+	// dashLength åŠ¨ç”»
 	QPropertyAnimation* dashLengthAnim = new QPropertyAnimation(this, "dashLength");
 	dashLengthAnim->setDuration(2100);
 	dashLengthAnim->setStartValue(3.0);
@@ -94,7 +94,7 @@ void MaterialSpinner::initAnimations()
 	dashLengthAnim->setEndValue(25);
 	dashLengthAnim->setEasingCurve(QEasingCurve::InOutQuad);
 
-	// dashOffset ¶¯»­
+	// dashOffset åŠ¨ç”»
 	QPropertyAnimation* dashOffsetAnim = new QPropertyAnimation(this, "dashOffset");
 	dashOffsetAnim->setDuration(2100);
 	dashOffsetAnim->setStartValue(0);
@@ -104,7 +104,7 @@ void MaterialSpinner::initAnimations()
 	dashOffsetAnim->setEndValue(-38);
 	dashOffsetAnim->setEasingCurve(QEasingCurve::InOutSine);
 
-	// angle ¶¯»­
+	// angle åŠ¨ç”»
 	QPropertyAnimation* angleAnim = new QPropertyAnimation(this, "angle");
 	angleAnim->setDuration(2100);
 	angleAnim->setStartValue(0);

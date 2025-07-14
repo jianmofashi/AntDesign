@@ -6,6 +6,7 @@
 #include <QColor>
 #include <QPushButton>
 #include "StyleSheet.h"
+#include "DesignSystem.h"
 
 class MaterialLineEdit : public QLineEdit
 {
@@ -68,7 +69,7 @@ private:
 	QPropertyAnimation* m_underlineAnimation;
 	QPropertyAnimation* m_animation;
 
-	QColor m_themeColor = QColor(22, 119, 255);	// 经典蓝
+	QColor m_themeColor = DesignSystem::instance()->primaryColor();	// 经典蓝
 
 	QToolButton* m_togglePasswordButton = nullptr;
 	QPushButton* m_textBtn = nullptr;

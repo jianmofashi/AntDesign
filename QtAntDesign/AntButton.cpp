@@ -2,6 +2,7 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QOverload>
+#include "DesignSystem.h"
 
 AntButton::AntButton(QString btnText, qreal textSize, QWidget* parent)
 	:QPushButton(parent),
@@ -9,7 +10,7 @@ AntButton::AntButton(QString btnText, qreal textSize, QWidget* parent)
 	m_margin(8),
 	m_hovered(false),
 	m_pressed(false),
-	baseColor("#1677ff") // Ant Design 默认主蓝色
+	baseColor(DesignSystem::instance()->primaryColor()) // Ant Design 默认主蓝色
 {
 	setCursor(Qt::PointingHandCursor);
 	QFont font;
@@ -132,7 +133,7 @@ void AntButton::paintEvent(QPaintEvent* event)
 	painter.drawRoundedRect(buttonRect, m_radius, m_radius);
 
 	// 2. 绘制文字
-	painter.setPen(Qt::white);
+	painter.setPen(DesignSystem::instance()->currentTheme().textColor);
 	painter.setFont(font());
 	painter.drawText(buttonRect, Qt::AlignCenter, text());
 

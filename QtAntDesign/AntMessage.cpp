@@ -7,6 +7,7 @@
 #include <QSvgRenderer>
 #include <QFontMetrics>
 #include <QFont>
+#include "DesignSystem.h"
 
 AntMessage::AntMessage(QWidget* parent, Type type, const QString& message, int duration)
 	: QWidget(parent),
@@ -165,7 +166,7 @@ void AntMessage::paintEvent(QPaintEvent* event)
 	painter.setOpacity(m_customOpacity);
 
 	// 背景圆角绘制
-	painter.setBrush(QColor(255, 255, 255));
+	painter.setBrush(DesignSystem::instance()->backgroundColor());
 	painter.setPen(Qt::NoPen);
 	painter.drawRoundedRect(rect(), 8, 8);
 
@@ -182,7 +183,7 @@ void AntMessage::paintEvent(QPaintEvent* event)
 	QFont font;
 	font.setPointSizeF(10.5);
 	painter.setFont(font);
-	painter.setPen(QColor(30, 30, 30));
+	painter.setPen(DesignSystem::instance()->currentTheme().msgTextColor);
 	painter.drawText(textRect, Qt::AlignVCenter | Qt::AlignLeft, m_message);
 }
 

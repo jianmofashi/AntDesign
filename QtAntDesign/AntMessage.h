@@ -32,6 +32,8 @@ public:
 	void setEndPos(const QPoint& pos) { m_endPos = pos; }
 	QPoint startPos() const { return m_startPos; }
 	QPoint endPos() const { return m_endPos; }
+public:
+	int m_duration;
 signals:
 	void closed(AntMessage* self);
 	void destroySelf(AntMessage* self);
@@ -42,7 +44,6 @@ private:
 	void initResources();
 	void setupAnimations();
 
-	int m_duration;
 	QPoint m_targetPos;
 	QPoint m_startPos;
 	QPoint m_endPos;
