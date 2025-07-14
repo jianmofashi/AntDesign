@@ -154,6 +154,9 @@
     <ClCompile Include="DesignSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AntInputNumber.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StyleSheet.h">
@@ -273,6 +276,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="DesignSystem.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="AntInputNumber.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

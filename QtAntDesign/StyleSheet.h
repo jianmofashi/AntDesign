@@ -262,4 +262,22 @@ namespace StyleSheet
 			"border-radius: 8px; "
 			"background-color: white;}";
 	}
+
+	inline QString antInputNumberQss(
+		const QColor& normalBorder,
+		const QColor& hoverBorder)
+	{
+		return QString(R"(
+        AntInputNumber {
+            border: 2px solid %1;
+            border-radius: 8px;
+        }
+
+        AntInputNumber:hover {
+            border: 2px solid %2;
+        }
+    )")
+			.arg(normalBorder.name())
+			.arg(hoverBorder.name());
+	}
 }

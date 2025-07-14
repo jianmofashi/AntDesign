@@ -95,6 +95,7 @@
     <ClCompile Include="AboutPage.cpp" />
     <ClCompile Include="AnimatedNumber.cpp" />
     <ClCompile Include="AntButton.cpp" />
+    <ClCompile Include="AntInputNumber.cpp" />
     <ClCompile Include="AntMessage.cpp" />
     <ClCompile Include="AntMessageManager.cpp" />
     <ClCompile Include="AntRadioButton.cpp" />
@@ -180,6 +181,7 @@
     <QtMoc Include="NotificationManager.h" />
     <QtMoc Include="LoadingArc.h" />
     <QtMoc Include="DesignSystem.h" />
+    <QtMoc Include="AntInputNumber.h" />
     <ClInclude Include="StyleSheet.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

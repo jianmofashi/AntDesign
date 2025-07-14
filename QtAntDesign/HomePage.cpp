@@ -15,6 +15,7 @@
 #include "SkeletonWidget.h"
 #include "AntButton.h"
 #include "NotificationManager.h"
+#include "AntInputNumber.h"
 
 HomePage::HomePage(QWidget* parent)
 	: QWidget(parent)
@@ -148,12 +149,27 @@ HomePage::HomePage(QWidget* parent)
 		});
 
 	// 任务通知
+	QHBoxLayout* row4Layout = new QHBoxLayout(w1);
+	row4Layout->setSpacing(12);
+	row4Layout->setContentsMargins(0, 0, 0, 0);
+
 	AntButton* taskBtn = new AntButton("任务通知", 12, w1);
 	taskBtn->setFixedSize(120, 50);
 	connect(taskBtn, &AntButton::clicked, this, [this]()
 		{
 			NotificationManager::instance()->showNotification("任务通知");
 		});
+
+	// 数字输入框
+	AntInputNumber* spinBox = new AntInputNumber(this);
+	spinBox->setFixedSize(85, 35); // 设置最小尺寸
+	spinBox->setRange(0, 100);	// 调整数值范围
+	spinBox->setValue(10);		// 设置初始值
+	QLabel* spinBoxLabel = new QLabel("数字输入框", this);
+	row4Layout->addWidget(taskBtn);
+	row4Layout->addWidget(spinBoxLabel);
+	row4Layout->addWidget(spinBox);
+	row4Layout->addStretch();
 
 	// 添加到水平布局
 	row1Layout->addWidget(labelList[0]);
@@ -184,7 +200,7 @@ HomePage::HomePage(QWidget* parent)
 	pageLay->addLayout(row2Layout);
 	pageLay->addWidget(skeletonDescBtn);
 	pageLay->addLayout(row3Layout);
-	pageLay->addWidget(taskBtn);
+	pageLay->addLayout(row4Layout);
 	pageLay->addStretch();
 }
 
