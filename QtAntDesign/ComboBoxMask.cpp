@@ -1,4 +1,4 @@
-#include "ComboBoxMask.h"
+ï»¿#include "ComboBoxMask.h"
 #include <QApplication>
 #include <QScreen>
 #include <QMouseEvent>
@@ -11,7 +11,7 @@ ComboBoxMask::ComboBoxMask(QWidget* parent)
 	setAttribute(Qt::WA_TranslucentBackground);
 	setObjectName("ComboBoxMask");
 
-	// ÉèÖÃÎªÈ«ÆÁÕÚÕÖ
+	// è®¾ç½®ä¸ºå…¨å±é®ç½©
 	if (parent)
 	{
 		resize(parent->width(), parent->height());
@@ -22,19 +22,19 @@ ComboBoxMask::ComboBoxMask(QWidget* parent)
 void ComboBoxMask::mousePressEvent(QMouseEvent* event)
 {
 	Q_UNUSED(event);
-	emit clickedOutside();  // Í¨ÖªÍâ²¿¹Ø±Õµ¯´°µÈ²Ù×÷
-	event->accept();		// ×èÖ¹ÊÂ¼ş¼ÌĞø´«µİ
+	emit clickedOutside();  // é€šçŸ¥å¤–éƒ¨å…³é—­å¼¹çª—ç­‰æ“ä½œ
+	event->accept();		// é˜»æ­¢äº‹ä»¶ç»§ç»­ä¼ é€’
 }
 
 void ComboBoxMask::paintEvent(QPaintEvent* event)
 {
 	Q_UNUSED(event);
 
-	// µ÷ÊÔÓÃ¸ø¸ö±³¾°ÑÕÉ« ·½±ã²é¿´ÕÚÕÖÊÇ·ñ¸²¸Ç
+	// è°ƒè¯•ç”¨ç»™ä¸ªèƒŒæ™¯é¢œè‰² æ–¹ä¾¿æŸ¥çœ‹é®ç½©æ˜¯å¦è¦†ç›–
 	//QPainter painter(this);
 	//painter.setRenderHint(QPainter::Antialiasing, true);
 
-	//// »æÖÆÒ»¸ö°ëÍ¸Ã÷»ÒÉ«±³¾°
+	//// ç»˜åˆ¶ä¸€ä¸ªåŠé€æ˜ç°è‰²èƒŒæ™¯
 	//QColor maskColor(0, 0, 200, 80);
 	//painter.fillRect(rect(), maskColor);
 }

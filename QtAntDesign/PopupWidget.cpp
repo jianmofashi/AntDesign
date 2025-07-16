@@ -1,4 +1,4 @@
-#include "PopupWidget.h"
+ï»¿#include "PopupWidget.h"
 #include <QVBoxLayout>
 #include <QGraphicsDropShadowEffect>
 #include <QApplication>
@@ -10,7 +10,7 @@ PopupWidget::PopupWidget(int height, bool enableMultiLevel, QWidget* parent)
 	m_enableMultiLevel(enableMultiLevel),
 	m_popupHeight(height)
 {
-	// Qt::ToolTip Ê¼ÖÕÔÚ×î¶¥²ã ²»»á±»ÕÚµ²
+	// Qt::ToolTip å§‹ç»ˆåœ¨æœ€é¡¶å±‚ ä¸ä¼šè¢«é®æŒ¡
 	setWindowFlags(Qt::ToolTip | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
 	setAttribute(Qt::WA_TranslucentBackground);
 	m_listView = new QListView(this);
@@ -21,15 +21,15 @@ PopupWidget::PopupWidget(int height, bool enableMultiLevel, QWidget* parent)
 	auto theme = DesignSystem::instance()->currentTheme();
 	m_listView->setStyleSheet(StyleSheet::vListViewQss(theme.popupBgColor, theme.popupScrollBarColor));
 
-	// ÉèÖÃ×Ô¶¨Òå Item Delegate
+	// è®¾ç½®è‡ªå®šä¹‰ Item Delegate
 	m_listView->setItemDelegate(new ListItemDelegate(36, enableMultiLevel, this));
 
-	// ²¼¾Ö
+	// å¸ƒå±€
 	auto* layout = new QVBoxLayout(this);
-	layout->setContentsMargins(10, 10, 10, 10);  // Áô³öÒõÓ°¿Õ¼ä
+	layout->setContentsMargins(10, 10, 10, 10);  // ç•™å‡ºé˜´å½±ç©ºé—´
 	layout->addWidget(m_listView);
 
-	// ¶¯»­
+	// åŠ¨ç”»
 	m_anim = new QPropertyAnimation(this, "popupHeight", this);
 	m_anim->setDuration(300);
 	m_anim->setEasingCurve(QEasingCurve::OutCubic);
@@ -41,7 +41,7 @@ PopupWidget::PopupWidget(int height, bool enableMultiLevel, QWidget* parent)
 	m_listView->setGraphicsEffect(shadowEffect);
 
 	QFont font = m_listView->font();
-	font.setPointSize(11);   // µ÷´ó×ÖÌå
+	font.setPointSize(11);   // è°ƒå¤§å­—ä½“
 	m_listView->setFont(font);
 
 	connect(m_listView, &QListView::clicked, this, [this, enableMultiLevel](const QModelIndex& idx)
@@ -66,30 +66,30 @@ void PopupWidget::setModel(QAbstractItemModel* model)
 void PopupWidget::showAnimated(const QPoint& pos, int width)
 {
 	if (m_anim->state() == QAbstractAnimation::Running)
-		return;  // Èç¹û¶¯»­ÕıÔÚÔËĞĞ£¬Ö±½Ó·µ»Ø
+		return;  // å¦‚æœåŠ¨ç”»æ­£åœ¨è¿è¡Œï¼Œç›´æ¥è¿”å›
 
 	setFixedWidth(width);
-	setPopupHeight(0);							// ¸ß¶È 0
-	// Èç¹ûÔÚ show() Ö®Ç°µ÷ÓÃ move()£¬Qt »á¼ÇÂ¼Î»ÖÃ£¬µ« OS ´°¿Ú¹ÜÀíÆ÷¿ÉÄÜºöÂÔ»ò¸²¸Ç¸ÃÎ»ÖÃ£¬ÓÈÆäÊÇÊ×´ÎÏÔÊ¾¡£
+	setPopupHeight(0);							// é«˜åº¦ 0
+	// å¦‚æœåœ¨ show() ä¹‹å‰è°ƒç”¨ move()ï¼ŒQt ä¼šè®°å½•ä½ç½®ï¼Œä½† OS çª—å£ç®¡ç†å™¨å¯èƒ½å¿½ç•¥æˆ–è¦†ç›–è¯¥ä½ç½®ï¼Œå°¤å…¶æ˜¯é¦–æ¬¡æ˜¾ç¤ºã€‚
 	show();
-	move(pos.x(), pos.y() - 8);					// -8 ÏñËØ£¬ÊÓ¾õÉÏ¸üÃÀ¹Û
+	move(pos.x(), pos.y() - 8);					// -8 åƒç´ ï¼Œè§†è§‰ä¸Šæ›´ç¾è§‚
 
-	// »ñÈ¡È«¾ÖÎ»ÖÃ
+	// è·å–å…¨å±€ä½ç½®
 	QPoint mainWindowGlobalPos = DesignSystem::instance()->getMainWindow()->mapToGlobal(QPoint(0, 0));
 	QPoint globalPos = QPoint(pos.x(), pos.y() - 8);
-	m_offset = globalPos - mainWindowGlobalPos;  // ¼ÆËãÆ«ÒÆÁ¿
+	m_offset = globalPos - mainWindowGlobalPos;  // è®¡ç®—åç§»é‡
 
 	m_isVisible = true;
 	m_anim->stop();
 	m_anim->setStartValue(0);
-	m_anim->setEndValue(m_popupHeight);			// Ä¿±ê¸ß¶È
+	m_anim->setEndValue(m_popupHeight);			// ç›®æ ‡é«˜åº¦
 	m_anim->start();
 }
 
 void PopupWidget::hideAnimated()
 {
 	if (m_anim->state() == QAbstractAnimation::Running)
-		return;  // Èç¹û¶¯»­ÕıÔÚÔËĞĞ£¬Ö±½Ó·µ»Ø
+		return;  // å¦‚æœåŠ¨ç”»æ­£åœ¨è¿è¡Œï¼Œç›´æ¥è¿”å›
 
 	m_isVisible = false;
 	m_anim->stop();
@@ -114,5 +114,5 @@ void PopupWidget::setCurrentIndex(const QModelIndex& index)
 
 void PopupWidget::removeAppEventFilter()
 {
-	qApp->removeEventFilter(this);	// Ğ¶ÔØÈ«¾ÖÊÂ¼ş¹ıÂËÆ÷
+	qApp->removeEventFilter(this);	// å¸è½½å…¨å±€äº‹ä»¶è¿‡æ»¤å™¨
 }

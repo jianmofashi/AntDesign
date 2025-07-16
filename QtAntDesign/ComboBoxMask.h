@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <QWidget>
 
@@ -9,7 +9,7 @@ public:
 	explicit ComboBoxMask(QWidget* parent);
 
 signals:
-	void clickedOutside(); // µã»÷ÕÚÕÖÇøÓò·¢³öĞÅºÅ
+	void clickedOutside(); // ç‚¹å‡»é®ç½©åŒºåŸŸå‘å‡ºä¿¡å·
 
 protected:
 	void mousePressEvent(QMouseEvent* event) override;

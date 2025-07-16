@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <QWidget>
 #include <QListView>
@@ -8,29 +8,29 @@
 #include <QPainter>
 #include "DesignSystem.h"
 
-// ×Ô¶¨Òå Item Delegate À´¿ØÖÆ ListItem µÄ´óĞ¡
+// è‡ªå®šä¹‰ Item Delegate æ¥æ§åˆ¶ ListItem çš„å¤§å°
 class ListItemDelegate : public QStyledItemDelegate
 {
 public:
 	explicit ListItemDelegate(int itemHieght = 36, bool enableMultiLevel = false, QObject* parent = nullptr)
 		: QStyledItemDelegate(parent), m_itemHeight(itemHieght), m_enableMultiLevel(enableMultiLevel)
 	{
-		// Ñ¡ÖĞµÄ±³¾°ÑÕÉ«
+		// é€‰ä¸­çš„èƒŒæ™¯é¢œè‰²
 		QColor color = DesignSystem::instance()->primaryColor();
 		color.setAlpha(30);
 		m_curIdxBgColor = color;
-		// »ñÈ¡Ä¬ÈÏµÄ±³¾°É«
+		// è·å–é»˜è®¤çš„èƒŒæ™¯è‰²
 		m_bgColor = DesignSystem::instance()->currentTheme().popupItemBgColor;
-		// »ñÈ¡Ä¬ÈÏµÄÎÄ±¾ÑÕÉ«
+		// è·å–é»˜è®¤çš„æ–‡æœ¬é¢œè‰²
 		m_textColor = DesignSystem::instance()->currentTheme().popupTextColor;
 	}
 
-	// ÖØĞ´ sizeHint À´Ö¸¶¨Ã¿¸ö item µÄ´óĞ¡
+	// é‡å†™ sizeHint æ¥æŒ‡å®šæ¯ä¸ª item çš„å¤§å°
 	QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override
 	{
-		// »ñÈ¡Ô­Ê¼µÄ½¨Òé´óĞ¡
+		// è·å–åŸå§‹çš„å»ºè®®å¤§å°
 		QSize originalSize = QStyledItemDelegate::sizeHint(option, index);
-		// ÉèÖÃÒ»¸ö¹Ì¶¨µÄ¡¢¸ü´óµÄ¸ß¶È£¬ÀıÈç 36px¡£Äã¿ÉÒÔ¸ù¾İĞèÒªµ÷Õû¡£
+		// è®¾ç½®ä¸€ä¸ªå›ºå®šçš„ã€æ›´å¤§çš„é«˜åº¦ï¼Œä¾‹å¦‚ 36pxã€‚ä½ å¯ä»¥æ ¹æ®éœ€è¦è°ƒæ•´ã€‚
 		return QSize(originalSize.width(), m_itemHeight);
 	}
 
@@ -47,7 +47,7 @@ public:
 		bool isHovered = option.state & QStyle::State_MouseOver;
 		bool isCurrent = index == currentIndex;
 
-		// »­±³¾°
+		// ç”»èƒŒæ™¯
 		if (isCurrent) 
 		{
 			painter->setBrush(m_curIdxBgColor);
@@ -61,24 +61,24 @@ public:
 			painter->drawRoundedRect(rect, borderRadius, borderRadius);
 		}
 
-		// ÉèÖÃ×ÖÌå
+		// è®¾ç½®å­—ä½“
 		QFont font = option.font;
 		if (isCurrent) {
 			font.setBold(true);
 		}
 		painter->setFont(font);
 
-		// ×ÖÌåÑÕÉ«
+		// å­—ä½“é¢œè‰²
 		painter->setPen(m_textColor);
 
-		// ÎÄ±¾ÇøÓòÔ¤Áô³öÓÒ²àÍ¼±ê¿Õ¼ä
+		// æ–‡æœ¬åŒºåŸŸé¢„ç•™å‡ºå³ä¾§å›¾æ ‡ç©ºé—´
 		QRect textRect = option.rect.adjusted(10, 0, -10, 0);
-		// »­ÎÄ±¾
+		// ç”»æ–‡æœ¬
 		QString text = index.data(Qt::DisplayRole).toString();
 		int flags = m_enableMultiLevel ? (Qt::AlignVCenter | Qt::AlignLeft) : Qt::AlignCenter;
 		painter->drawText(textRect, flags, text);
 
-		// »­Í¼±ê£¨ÓÒ²à£©
+		// ç”»å›¾æ ‡ï¼ˆå³ä¾§ï¼‰
 		if (m_enableMultiLevel)
 		{
 			QIcon icon = qvariant_cast<QIcon>(index.data(Qt::DecorationRole));
@@ -95,11 +95,11 @@ public:
 	}
 
 private:
-	int m_itemHeight;			// ÓÃÓÚ´æ´¢Ã¿¸ö item µÄ¸ß¶È
-	QColor m_bgColor;			// Ä¬ÈÏµÄ±³¾°É«
-	QColor m_curIdxBgColor;		// µ±Ç°Ñ¡ÖĞÏîµÄ±³¾°ÑÕÉ«
-	QColor m_textColor;			// ÎÄ±¾ÑÕÉ«
-	bool m_enableMultiLevel;	// ÊÇ·ñÆôÓÃ¶à¼¶ÁĞ±í
+	int m_itemHeight;			// ç”¨äºå­˜å‚¨æ¯ä¸ª item çš„é«˜åº¦
+	QColor m_bgColor;			// é»˜è®¤çš„èƒŒæ™¯è‰²
+	QColor m_curIdxBgColor;		// å½“å‰é€‰ä¸­é¡¹çš„èƒŒæ™¯é¢œè‰²
+	QColor m_textColor;			// æ–‡æœ¬é¢œè‰²
+	bool m_enableMultiLevel;	// æ˜¯å¦å¯ç”¨å¤šçº§åˆ—è¡¨
 };
 
 class PopupWidget : public QWidget
@@ -111,10 +111,10 @@ public:
 	void setModel(QAbstractItemModel* model);
 	void showAnimated(const QPoint& pos, int width);
 	void hideAnimated();
-	/* ÊôĞÔ´æÈ¡Æ÷ */
+	/* å±æ€§å­˜å–å™¨ */
 	int  popupHeight() const { return height(); }
 	void setPopupHeight(int h) { setFixedHeight(h); }
-	// Ìí¼ÓÕâ¸öº¯ÊıÓÃÓÚÉèÖÃµ±Ç°Ïî
+	// æ·»åŠ è¿™ä¸ªå‡½æ•°ç”¨äºè®¾ç½®å½“å‰é¡¹
 	void setCurrentIndex(const QModelIndex& index);
 	bool getVisible() { return m_isVisible; }
 	void removeAppEventFilter();
@@ -129,6 +129,6 @@ private:
 	QListView* m_listView;
 	QPropertyAnimation* m_anim;
 	bool m_isVisible;
-	bool m_enableMultiLevel;	// ÊÇ·ñÆôÓÃ¶à¼¶ÁĞ±í
-	int m_popupHeight;			// µ¯³ö¿òµÄ¸ß¶È
+	bool m_enableMultiLevel;	// æ˜¯å¦å¯ç”¨å¤šçº§åˆ—è¡¨
+	int m_popupHeight;			// å¼¹å‡ºæ¡†çš„é«˜åº¦
 };

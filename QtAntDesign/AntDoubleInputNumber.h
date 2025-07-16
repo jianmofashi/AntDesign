@@ -3,31 +3,36 @@
 #include <QDoubleSpinBox>
 #include <QToolButton>
 #include <QPropertyAnimation>
+#include <QGraphicsDropShadowEffect>
+#include "DesignSystem.h"
 
 class AntDoubleInputNumber : public QDoubleSpinBox
 {
-    Q_OBJECT
-        Q_PROPERTY(int buttonX READ buttonX WRITE setButtonX)
+	Q_OBJECT
+		Q_PROPERTY(int buttonX READ buttonX WRITE setButtonX)
 
 public:
-    AntDoubleInputNumber(QWidget* parent = nullptr);
-    ~AntDoubleInputNumber();
+	AntDoubleInputNumber(QWidget* parent = nullptr);
+	~AntDoubleInputNumber();
 
 protected:
-    void enterEvent(QEnterEvent* event) override;
-    void leaveEvent(QEvent* event) override;
-    void stepBy(int steps) override;
-    void resizeEvent(QResizeEvent* event) override;
+	void enterEvent(QEnterEvent* event) override;
+	void leaveEvent(QEvent* event) override;
+	void stepBy(int steps) override;
+	void resizeEvent(QResizeEvent* event) override;
+	void focusInEvent(QFocusEvent* event);
+	void focusOutEvent(QFocusEvent* event);
+private:
+	void updateButtonsPosition();
+	int buttonX() const;
+	void setButtonX(int x);
 
 private:
-    void updateButtonsPosition();
-    int buttonX() const;
-    void setButtonX(int x);
+	QToolButton* m_plusBtn;
+	QToolButton* m_minusBtn;
+	QPropertyAnimation* m_animation;
+	QGraphicsDropShadowEffect* m_shadowEffect;
+	Theme theme = DesignSystem::instance()->currentTheme();
 
-private:
-    QToolButton* m_plusBtn;
-    QToolButton* m_minusBtn;
-    QPropertyAnimation* m_animation;
-
-    int m_buttonX;
+	int m_buttonX;
 };

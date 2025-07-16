@@ -3,15 +3,13 @@
 #include <QStyleOptionSpinBox>
 #include <QLineEdit>
 #include "StyleSheet.h"
-#include "DesignSystem.h"
 
 AntDoubleInputNumber::AntDoubleInputNumber(QWidget* parent)
 	: QDoubleSpinBox(parent), m_buttonX(0)
 {
 	setButtonSymbols(QAbstractSpinBox::NoButtons);
 
-	auto theme = DesignSystem::instance()->currentTheme();
-	setStyleSheet(StyleSheet::antDoubleInputNumberQss(theme.borderColor, theme.primaryColor));
+	setStyleSheet(StyleSheet::antDoubleInputNumberQss(theme.borderColor, theme.primaryColor, theme.primaryColor));
 
 	m_plusBtn = new QToolButton(this);
 	m_plusBtn->setIcon(QIcon(":/Imgs/upArrow.svg"));
@@ -28,6 +26,15 @@ AntDoubleInputNumber::AntDoubleInputNumber(QWidget* parent)
 	m_animation = new QPropertyAnimation(this, "buttonX", this);
 	m_animation->setDuration(300);
 	m_animation->setEasingCurve(QEasingCurve::InOutCubic);
+
+	// 阴影
+	m_shadowEffect = new QGraphicsDropShadowEffect(this);
+	m_shadowEffect->setBlurRadius(22);
+	m_shadowEffect->setOffset(0, 0);
+	QColor color = DesignSystem::instance()->primaryColor();
+	color.setAlpha(0);  // 初始透明
+	m_shadowEffect->setColor(color);
+	this->setGraphicsEffect(m_shadowEffect);
 }
 
 AntDoubleInputNumber::~AntDoubleInputNumber()
@@ -106,4 +113,34 @@ void AntDoubleInputNumber::setButtonX(int x)
 {
 	m_buttonX = x;
 	updateButtonsPosition();
+}
+
+void AntDoubleInputNumber::focusInEvent(QFocusEvent* event)
+{
+	QDoubleSpinBox::focusInEvent(event);
+	if (m_shadowEffect)
+	{
+		QColor color = m_shadowEffect->color();
+		color.setAlpha(255);
+		m_shadowEffect->setColor(color);
+	}
+
+	setProperty("focused", true);
+	style()->unpolish(this);
+	style()->polish(this);
+}
+
+void AntDoubleInputNumber::focusOutEvent(QFocusEvent* event)
+{
+	QDoubleSpinBox::focusOutEvent(event);
+	if (m_shadowEffect)
+	{
+		QColor color = m_shadowEffect->color();
+		color.setAlpha(0);
+		m_shadowEffect->setColor(color);
+	}
+
+	setProperty("focused", false);
+	style()->unpolish(this);	// 移除样式
+	style()->polish(this);		// 重新应用样式
 }

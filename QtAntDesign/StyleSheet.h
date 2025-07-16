@@ -264,26 +264,33 @@ namespace StyleSheet
 	}
 
 	inline QString antInputNumberQss(
-		const QColor& normalBorder,
-		const QColor& hoverBorder)
+		const QColor& borderColor,
+		const QColor& hoverBorderColor,
+		const QColor& focusBorderColor)
 	{
 		return QString(R"(
-        AntInputNumber {
-            border: 2px solid %1;
-            border-radius: 8px;
-        }
+		AntInputNumber {
+			border: 2px solid %1;
+			border-radius: 8px;
+		}
 
-        AntInputNumber:hover {
-            border: 2px solid %2;
-        }
-    )")
-			.arg(normalBorder.name())
-			.arg(hoverBorder.name());
+		AntInputNumber:hover {
+			border: 2px solid %2;
+		}
+
+		AntInputNumber[focused="true"] {
+			border: 2px solid %3;
+		}
+	)")
+			.arg(borderColor.name())
+			.arg(hoverBorderColor.name())
+			.arg(focusBorderColor.name());
 	}
 
 	inline QString antDoubleInputNumberQss(
 		const QColor& normalBorder,
-		const QColor& hoverBorder)
+		const QColor& hoverBorder,
+		const QColor& focusBorderColor)
 	{
 		return QString(R"(
         AntDoubleInputNumber {
@@ -294,9 +301,14 @@ namespace StyleSheet
         AntDoubleInputNumber:hover {
             border: 2px solid %2;
         }
-    )")
+
+		AntDoubleInputNumber[focused="true"] {
+			border: 2px solid %3;
+		}
+    )")	
 			.arg(normalBorder.name())
-			.arg(hoverBorder.name());
+			.arg(hoverBorder.name())
+			.arg(focusBorderColor.name());
 	}
 
 	// 垂直方向列表视图样式
@@ -333,7 +345,5 @@ namespace StyleSheet
 		})")
 			.arg(bgColor.name())
 			.arg(handleColor.name());
-		
-
 	}
 }

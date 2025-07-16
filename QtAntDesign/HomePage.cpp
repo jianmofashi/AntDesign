@@ -22,6 +22,8 @@
 HomePage::HomePage(QWidget* parent)
 	: QWidget(parent)
 {
+
+	setFocusPolicy(Qt::ClickFocus);  // 设置焦点策略 点击空白处可以获取焦点
 	// 标签页
 	MaterialTabWidget* tabWidget = new MaterialTabWidget(this);
 	QWidget* w1 = new QWidget(this);
