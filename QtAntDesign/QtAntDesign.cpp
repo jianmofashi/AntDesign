@@ -27,12 +27,16 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 
 	ui.main_widget->setStyleSheet(StyleSheet::mainQss());
 
+	// 初始化全局设计系统 必须写在最前面 因为它会设置主题和主窗口指针
+	DesignSystem::instance()->setThemeMode(DesignSystem::Light);	// 默认亮主题
+	DesignSystem::instance()->setMainWindow(ui.main_widget);		// 获取主窗口指针
+
 	// 获取主屏幕分辨率
 	int w = 0, h = 0;
 	QScreen* screen = QGuiApplication::primaryScreen();
 	if (screen)
 	{
-		QSize screenSize = screen->availableGeometry().size();  // 可用屏幕大小，不包括任务栏
+		QSize screenSize = screen->availableGeometry().size();		// 可用屏幕大小，不包括任务栏
 		w = int(screenSize.width() * 0.50);  // % 宽度
 		h = int(screenSize.height() * 0.60); // % 高度
 		resize(w, h);
@@ -92,12 +96,13 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 	contentLay->setSpacing(0);
 	SlideStackedWidget* stackedWidget = new SlideStackedWidget(ui.central);
 	contentLay->addWidget(stackedWidget);
-	HomePage* homePage = new HomePage(stackedWidget);
+	HomePage* homePage = new HomePage(ui.main_widget);
 	SettingsPage* settingsPage = new SettingsPage(stackedWidget);
 	AboutPage* aboutPage = new AboutPage(stackedWidget);
 	stackedWidget->addWidget(homePage);
 	stackedWidget->addWidget(settingsPage);
 	stackedWidget->addWidget(aboutPage);
+	stackedWidget->setCurrentIndex(0);				// 默认显示首页
 	// 导航按钮
 	const int naviWidth = ui.navi_widget->width();  // 动态获取导航栏宽度
 	const double iconSizeRatio = 0.56;				// 图标占按钮的比例
@@ -113,6 +118,7 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 	{btnAbout, ":/Imgs/about.svg", ":/Imgs/about_active.svg", aboutPage}
 	};
 	// 设置统一样式和连接信号
+	buttonInfos[stackedWidget->currentIndex()].button->setBtnChecked(true); // 设置当前页面按钮为选中状态
 	for (const ButtonInfo& info : buttonInfos)
 	{
 		CustomToolButton* btn = info.button;
@@ -155,15 +161,13 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 	naviLay->addWidget(btnAbout, 0, Qt::AlignHCenter);
 	naviLay->addStretch();
 
-	// 初始化全局设计系统
-	DesignSystem::instance()->setThemeMode(DesignSystem::Light);	//默认亮主题
-
 	// 初始化全局消息管理器
 	AntMessageManager::instance()->getMainWindow(ui.main_widget);	// 全局消息
 	AntTooltipManager::instance()->getMainWindow(ui.main_widget);	// 全局提示
 
 	// 初始化通知管理器
 	NotificationManager::instance()->getMainWindow(ui.main_widget);
+
 	// 调整消息框位置
 	connect(this, &QtAntDesign::resized, this, [=](int w, int h)
 		{
@@ -211,6 +215,10 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 		});
 
 	connect(this, &QtAntDesign::showStandardDialog, mDialog, &DialogViewController::buildStandardDialog);
+
+	// 主页的信号连接
+	connect(this, &QtAntDesign::resized, homePage, &HomePage::resized);
+	connect(this, &QtAntDesign::windowMoved, homePage, &HomePage::windowMoved);
 }
 
 QtAntDesign::~QtAntDesign()
@@ -342,4 +350,11 @@ void QtAntDesign::showEvent(QShowEvent* event)
 
 	DWORD cornerPref = 2;
 	DwmSetWindowAttribute(m_hwnd, 33, &cornerPref, sizeof(cornerPref));
+}
+
+void QtAntDesign::moveEvent(QMoveEvent* event)
+{
+	QWidget::moveEvent(event);
+	// 发送窗口左上角全局坐标
+	emit windowMoved(this->mapToGlobal(QPoint(0, 0)));
 }

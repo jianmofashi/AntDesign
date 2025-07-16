@@ -13,12 +13,12 @@ DesignSystem::DesignSystem()
 void DesignSystem::loadThemes()
 {
 	// Light Theme
-	m_lightTheme.primaryColor = QColor("#1677ff");
+	m_lightTheme.primaryColor = QColor("#1677ff");	// Ant 蓝色
 	m_lightTheme.textColor = QColor("#ffffff");
 	m_lightTheme.backgroundColor = QColor("#ffffff");
 	m_lightTheme.borderColor = QColor(200, 200, 200);
 	m_lightTheme.borderColorHover = QColor(22, 119, 255);
-	m_lightTheme.msgTextColor= QColor(30, 30, 30);
+	m_lightTheme.msgTextColor = QColor(30, 30, 30);
 	m_lightTheme.disabledColor = QColor(150, 150, 150);
 	m_lightTheme.hintBgColor = QColor(0, 0, 0);
 	m_lightTheme.slideBgColor = QColor(200, 200, 200);
@@ -42,6 +42,10 @@ void DesignSystem::loadThemes()
 	m_lightTheme.checkBoxBorderDisableColor = QColor(200, 200, 200);
 	m_lightTheme.checkBoxTextColor = QColor(0, 0, 0);
 	m_lightTheme.checkBoxTextDisableColor = QColor(180, 180, 180);
+	m_lightTheme.popupBgColor = QColor(255, 255, 255);
+	m_lightTheme.popupScrollBarColor = QColor(220, 220, 220);
+	m_lightTheme.popupItemBgColor = QColor(200, 200, 200, 80);
+	m_lightTheme.popupTextColor = QColor(30, 30, 30);
 	QFont lightFont;
 	lightFont.setPointSizeF(12);
 

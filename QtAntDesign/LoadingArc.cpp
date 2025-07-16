@@ -11,7 +11,7 @@ LoadingArc::LoadingArc(QWidget* parent)
 	m_animation = new QPropertyAnimation(this, "rotationAngle");
 	m_animation->setStartValue(0);
 	m_animation->setEndValue(360);
-	m_animation->setDuration(2000); // 2秒一圈
+	m_animation->setDuration(1500); // 1.5秒一圈
 	m_animation->setLoopCount(-1);  // 无限循环
 }
 

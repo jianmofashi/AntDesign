@@ -95,6 +95,8 @@
     <ClCompile Include="AboutPage.cpp" />
     <ClCompile Include="AnimatedNumber.cpp" />
     <ClCompile Include="AntButton.cpp" />
+    <ClCompile Include="AntComboBox.cpp" />
+    <ClCompile Include="AntDoubleInputNumber.cpp" />
     <ClCompile Include="AntInputNumber.cpp" />
     <ClCompile Include="AntMessage.cpp" />
     <ClCompile Include="AntMessageManager.cpp" />
@@ -104,6 +106,7 @@
     <ClCompile Include="AntTooltip.cpp" />
     <ClCompile Include="AntTooltipManager.cpp" />
     <ClCompile Include="BubbleViewController.cpp" />
+    <ClCompile Include="ComboBoxMask.cpp" />
     <ClCompile Include="CustomToolButton.cpp" />
     <ClCompile Include="DesignSystem.cpp" />
     <ClCompile Include="HomePage.cpp" />
@@ -121,6 +124,7 @@
     <ClCompile Include="NoDataWidget.cpp" />
     <ClCompile Include="NotificationManager.cpp" />
     <ClCompile Include="NotificationWidget.cpp" />
+    <ClCompile Include="PopupWidget.cpp" />
     <ClCompile Include="ProfilePage.cpp" />
     <ClCompile Include="RegisterPageWidget.cpp" />
     <ClCompile Include="Ripple.cpp" />
@@ -182,6 +186,10 @@
     <QtMoc Include="LoadingArc.h" />
     <QtMoc Include="DesignSystem.h" />
     <QtMoc Include="AntInputNumber.h" />
+    <QtMoc Include="AntDoubleInputNumber.h" />
+    <QtMoc Include="AntComboBox.h" />
+    <QtMoc Include="PopupWidget.h" />
+    <QtMoc Include="ComboBoxMask.h" />
     <ClInclude Include="StyleSheet.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

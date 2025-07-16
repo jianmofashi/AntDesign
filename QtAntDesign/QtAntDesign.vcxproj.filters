@@ -139,9 +139,6 @@
     <ClCompile Include="SkeletonWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="NotificationWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -155,6 +152,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AntInputNumber.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AntDoubleInputNumber.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AntComboBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PopupWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ComboBoxMask.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -279,6 +291,18 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="AntInputNumber.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="AntDoubleInputNumber.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="AntComboBox.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="PopupWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="ComboBoxMask.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

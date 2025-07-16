@@ -16,6 +16,8 @@
 #include "AntButton.h"
 #include "NotificationManager.h"
 #include "AntInputNumber.h"
+#include "AntDoubleInputNumber.h"
+#include "AntComboBox.h"
 
 HomePage::HomePage(QWidget* parent)
 	: QWidget(parent)
@@ -150,7 +152,7 @@ HomePage::HomePage(QWidget* parent)
 
 	// 任务通知
 	QHBoxLayout* row4Layout = new QHBoxLayout(w1);
-	row4Layout->setSpacing(12);
+	row4Layout->setSpacing(18);
 	row4Layout->setContentsMargins(0, 0, 0, 0);
 
 	AntButton* taskBtn = new AntButton("任务通知", 12, w1);
@@ -162,16 +164,63 @@ HomePage::HomePage(QWidget* parent)
 
 	// 数字输入框
 	AntInputNumber* spinBox = new AntInputNumber(this);
-	spinBox->setFixedSize(85, 35); // 设置最小尺寸
-	spinBox->setRange(0, 100);	// 调整数值范围
-	spinBox->setValue(10);		// 设置初始值
-	QLabel* spinBoxLabel = new QLabel("数字输入框", this);
-	row4Layout->addWidget(taskBtn);
-	row4Layout->addWidget(spinBoxLabel);
-	row4Layout->addWidget(spinBox);
-	row4Layout->addStretch();
+	spinBox->setFixedSize(85, 35);	// 设置最小尺寸
+	spinBox->setRange(0, 100);		// 调整数值范围
+	spinBox->setValue(10);			// 设置初始值
+	QLabel* spinBoxLabel1 = new QLabel("数字输入框", this);
+	// 小数数字输入框
+	AntDoubleInputNumber* doubleSpinBox = new AntDoubleInputNumber(this);
+	doubleSpinBox->setFixedSize(85, 35);
+	doubleSpinBox->setDecimals(1);              // 设置保留 1 位小数
+	doubleSpinBox->setSingleStep(1);			// 每次加/减
+	doubleSpinBox->setRange(0.0, 100.0);        // 范围设置
+	doubleSpinBox->setValue(0.0);				// 初始值设置
+	QLabel* spinBoxLabel2 = new QLabel("小数数字输入框", this);
 
-	// 添加到水平布局
+	// 单层级下拉框
+	QLabel* comboLabel1 = new QLabel("下拉框", this);
+	QStringList topItems1 = { "水果", "蔬菜", "饮料", "汤", "零食", "烘焙", "速食" };
+	AntComboBox* combo1 = new AntComboBox("请选择", topItems1, this);
+	combo1->setFixedSize(185, 48);
+	// 多层级下拉框
+	QLabel* comboLabel2 = new QLabel("多层级下拉框", this);
+	QStringList topItems2 = { "水果", "蔬菜", "饮料" };
+	QMap<QString, QStringList> subItemMap = {
+		{ "水果", {"苹果", "香蕉", "西瓜"} },
+		{ "蔬菜", {"白菜", "萝卜", "西红柿"} },
+		{ "饮料", {"可乐", "雪碧", "果汁"} }
+	};
+	AntComboBox* combo2 = new AntComboBox("请选择", topItems2, this, 200, true, subItemMap);
+	combo2->setFixedSize(185, 48);
+
+	// 让下拉框遮罩跟随页面大小变化
+	connect(this, &HomePage::resized, this, [=](int w, int h)
+		{
+			combo1->getMask()->resize(w, h);
+			combo2->getMask()->resize(w, h);
+		});
+
+	// 下拉框随着主窗口同步移动
+	connect(this, &HomePage::windowMoved, this, [=](QPoint globalPos)
+		{
+			auto movePopups = [globalPos](const QList<PopupWidget*>& popups)
+				{
+					for (PopupWidget* popup : popups)
+					{
+						if (popup->getVisible())
+						{
+							// 弹窗新位置 = 主窗口新全局位置 + 偏移量
+							QPoint newPos = globalPos + popup->m_offset;
+							popup->move(newPos);
+						}
+					}
+				};
+
+			movePopups(combo1->m_popups);
+			movePopups(combo2->m_popups);
+		});
+
+	// 第一行布局
 	row1Layout->addWidget(labelList[0]);
 	row1Layout->addSpacing(20);
 	row1Layout->addWidget(toggleBtn);
@@ -189,9 +238,22 @@ HomePage::HomePage(QWidget* parent)
 	row1Layout->addWidget(slider);
 	row1Layout->addStretch();  // 让它贴左边
 
+	// 第二行布局
 	row2Layout->addWidget(labelList[3]);
 	row2Layout->addWidget(animNum);
 	row2Layout->addStretch();
+
+	// 第四行布局
+	row4Layout->addWidget(taskBtn);
+	row4Layout->addWidget(spinBoxLabel1);
+	row4Layout->addWidget(spinBox);
+	row4Layout->addWidget(spinBoxLabel2);
+	row4Layout->addWidget(doubleSpinBox);
+	row4Layout->addWidget(comboLabel1);
+	row4Layout->addWidget(combo1);
+	row4Layout->addWidget(comboLabel2);
+	row4Layout->addWidget(combo2);
+	row4Layout->addStretch();
 
 	// 添加到页面布局
 	pageLay->addSpacing(20);

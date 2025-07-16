@@ -19,7 +19,6 @@
 
 #endif  // Q_OS_WIN
 
-
 // 检测鼠标是否在边缘
 enum ResizeRegion {
 	None, Left, Right, Top, Bottom,
@@ -36,11 +35,12 @@ protected:
 	void resizeEvent(QResizeEvent* event) override;
 	bool nativeEvent(const QByteArray& eventType, void* message, qintptr* result) override;
 	void showEvent(QShowEvent* event) override;
+	void moveEvent(QMoveEvent* event) override;
 signals:
 	void resized(int parentW, int parentH);
 	void playMaximizeAnim();
 	void showStandardDialog(int parentW, int parentH, int dialogW, int dialogH, QString title, QString text);
-private:
+	void windowMoved(QPoint globalPos); // 窗口移动时发出信号
 private:
 	Ui::QtAntDesignClass ui;
 	HWND m_hwnd;
@@ -79,5 +79,4 @@ private:
 	QRect m_minRect;
 	QRect m_maxRect;
 	QRect m_closeRect;
-
 };

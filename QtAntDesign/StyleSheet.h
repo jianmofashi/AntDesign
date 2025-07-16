@@ -280,4 +280,60 @@ namespace StyleSheet
 			.arg(normalBorder.name())
 			.arg(hoverBorder.name());
 	}
+
+	inline QString antDoubleInputNumberQss(
+		const QColor& normalBorder,
+		const QColor& hoverBorder)
+	{
+		return QString(R"(
+        AntDoubleInputNumber {
+            border: 2px solid %1;
+            border-radius: 8px;
+        }
+
+        AntDoubleInputNumber:hover {
+            border: 2px solid %2;
+        }
+    )")
+			.arg(normalBorder.name())
+			.arg(hoverBorder.name());
+	}
+
+	// 垂直方向列表视图样式
+	inline QString vListViewQss(const QColor& bgColor, const QColor& handleColor)
+	{
+		return QString(R"(
+		QListView {
+			background-color: %1;
+			border-radius: 10px;
+			padding: 6px;
+		}
+
+		QScrollBar:vertical {
+			width: 6px;
+			background: transparent;
+			border: none;
+		}
+
+		QScrollBar::handle:vertical {
+			background: %2;
+			border-radius: 3px;
+		}
+
+		QScrollBar::sub-line:vertical,
+		QScrollBar::add-line:vertical {
+			height: 0px;
+			border: none;
+			background: none;
+		}
+
+		QScrollBar::add-page:vertical,
+		QScrollBar::sub-page:vertical {
+			background: none;
+		})")
+			.arg(bgColor.name())
+			.arg(handleColor.name());
+		
+
+	}
 }

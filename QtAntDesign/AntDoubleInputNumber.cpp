@@ -1,17 +1,17 @@
-﻿#include "AntInputNumber.h"
+﻿#include "AntDoubleInputNumber.h"
 #include <QStyle>
 #include <QStyleOptionSpinBox>
 #include <QLineEdit>
 #include "StyleSheet.h"
 #include "DesignSystem.h"
 
-AntInputNumber::AntInputNumber(QWidget* parent)
-	: QSpinBox(parent), m_buttonX(0)
+AntDoubleInputNumber::AntDoubleInputNumber(QWidget* parent)
+	: QDoubleSpinBox(parent), m_buttonX(0)
 {
 	setButtonSymbols(QAbstractSpinBox::NoButtons);
 
 	auto theme = DesignSystem::instance()->currentTheme();
-	setStyleSheet(StyleSheet::antInputNumberQss(theme.borderColor, theme.primaryColor));
+	setStyleSheet(StyleSheet::antDoubleInputNumberQss(theme.borderColor, theme.primaryColor));
 
 	m_plusBtn = new QToolButton(this);
 	m_plusBtn->setIcon(QIcon(":/Imgs/upArrow.svg"));
@@ -22,7 +22,7 @@ AntInputNumber::AntInputNumber(QWidget* parent)
 	m_minusBtn = new QToolButton(this);
 	m_minusBtn->setIcon(QIcon(":/Imgs/downArrow.svg"));
 	m_minusBtn->setCursor(Qt::PointingHandCursor);
-	m_minusBtn->setStyleSheet("QToolButton { border: none; background: ; }");
+	m_minusBtn->setStyleSheet("QToolButton { border: none; background: transparent; }");
 	connect(m_minusBtn, &QToolButton::clicked, this, [this]() { stepBy(-1); });
 
 	m_animation = new QPropertyAnimation(this, "buttonX", this);
@@ -30,50 +30,53 @@ AntInputNumber::AntInputNumber(QWidget* parent)
 	m_animation->setEasingCurve(QEasingCurve::InOutCubic);
 }
 
-void AntInputNumber::enterEvent(QEnterEvent* event)
+AntDoubleInputNumber::~AntDoubleInputNumber()
+{
+	// 资源由 Qt parent-child 系统自动清理
+}
+
+void AntDoubleInputNumber::enterEvent(QEnterEvent* event)
 {
 	if (m_animation->state() == QAbstractAnimation::Running)
 		m_animation->stop();
 	m_animation->setDirection(QAbstractAnimation::Forward);
 	m_animation->start();
 
-	QSpinBox::enterEvent(event);
+	QDoubleSpinBox::enterEvent(event);
 }
 
-void AntInputNumber::leaveEvent(QEvent* event)
+void AntDoubleInputNumber::leaveEvent(QEvent* event)
 {
 	if (m_animation->state() == QAbstractAnimation::Running)
 		m_animation->stop();
 	m_animation->setDirection(QAbstractAnimation::Backward);
 	m_animation->start();
 
-	QSpinBox::leaveEvent(event);
+	QDoubleSpinBox::leaveEvent(event);
 }
 
-void AntInputNumber::stepBy(int steps)
+void AntDoubleInputNumber::stepBy(int steps)
 {
-	QSpinBox::stepBy(steps);
-	lineEdit()->deselect();  // 取消选中
-	lineEdit()->setCursorPosition(lineEdit()->text().length());  // 光标移末尾
+	QDoubleSpinBox::stepBy(steps);
+	lineEdit()->deselect();
+	lineEdit()->setCursorPosition(lineEdit()->text().length());
 }
 
-void AntInputNumber::resizeEvent(QResizeEvent* event)
+void AntDoubleInputNumber::resizeEvent(QResizeEvent* event)
 {
-	QSpinBox::resizeEvent(event);
+	QDoubleSpinBox::resizeEvent(event);
 
-	// 让按钮高度为控件高度的一半，宽度等于高度，做成正方形
 	int btnHeight = height() / 2;
 	int btnWidth = btnHeight;
 
 	m_plusBtn->setFixedSize(btnWidth, btnHeight);
-	m_plusBtn->setIconSize(QSize(btnWidth * 1.3, btnHeight * 1.3));  // 图标略大于按钮
+	m_plusBtn->setIconSize(QSize(btnWidth * 1.3, btnHeight * 1.3));
 
 	m_minusBtn->setFixedSize(btnWidth, btnHeight);
 	m_minusBtn->setIconSize(QSize(btnWidth * 1.3, btnHeight * 1.3));
 
-	// 更新动画目标位置
-	int startX = width() + btnWidth;                // 完全在外面
-	int endX = width() - btnWidth - 2;              // 靠近控件右侧
+	int startX = width() + btnWidth;
+	int endX = width() - btnWidth - 2;
 
 	if (m_animation->state() != QAbstractAnimation::Running)
 	{
@@ -84,15 +87,23 @@ void AntInputNumber::resizeEvent(QResizeEvent* event)
 	}
 }
 
-void AntInputNumber::updateButtonsPosition()
+void AntDoubleInputNumber::updateButtonsPosition()
 {
 	int btnWidth = m_plusBtn->width();
 	int btnHeight = m_plusBtn->height();
 
 	int btnYTop = 0;
-	int btnYBottom = (height()) / 2;
+	int btnYBottom = height() / 2;
 
-	// 直接用 m_buttonX 定位按钮左上角
 	m_plusBtn->move(m_buttonX, btnYTop);
 	m_minusBtn->move(m_buttonX, btnYBottom);
+}
+
+// 添加属性动画相关
+int AntDoubleInputNumber::buttonX() const { return m_buttonX; }
+
+void AntDoubleInputNumber::setButtonX(int x)
+{
+	m_buttonX = x;
+	updateButtonsPosition();
 }

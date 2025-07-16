@@ -51,6 +51,11 @@ struct Theme
 	QColor checkBoxBorderDisableColor;
 	QColor checkBoxTextColor;
 	QColor checkBoxTextDisableColor;
+	// 下拉弹出框相关颜色
+	QColor popupBgColor;
+	QColor popupScrollBarColor;
+	QColor popupItemBgColor;
+	QColor popupTextColor;
 };
 
 class DesignSystem : public QObject
@@ -72,6 +77,10 @@ public:
 
 	// 当前主题访问
 	const Theme& currentTheme() const;
+
+	// 获取主窗口指针
+	void setMainWindow(QWidget* mainWindow) { m_mainWindow = mainWindow; }
+	QWidget* getMainWindow() const { return m_mainWindow; }
 
 	// 快捷获取颜色等
 	QColor primaryColor() const;
@@ -100,6 +109,7 @@ private:
 	Theme m_darkTheme;
 	Theme m_currentTheme;
 	ThemeMode m_mode;
+	QWidget* m_mainWindow = nullptr; // 用于获取主窗口
 };
 
 #endif // DESIGN_SYSTEM_H

@@ -4,6 +4,7 @@
 #include <QPropertyAnimation>
 #include <QGraphicsDropShadowEffect>
 #include <QPainter>
+#include <QToolButton>
 #include "StyleSheet.h"
 #include "AntButton.h"
 #include "LoadingArc.h"
@@ -39,13 +40,21 @@ NotificationWidget::NotificationWidget(const QString& title, QSize size, QWidget
 	font.setPointSizeF(11.5);
 	font.setBold(true);
 	// 标题
+	QHBoxLayout* titleLay = new QHBoxLayout();
+	QToolButton* closeBtn = new QToolButton(bg);
+	closeBtn->setIcon(QIcon(":/Imgs/Shut down-2.svg"));
+	closeBtn->setStyleSheet(StyleSheet::toolBtnQss());
 	QLabel* titleLab = new QLabel(title, bg);
 	titleLab->setFont(font);
+	titleLay->addWidget(titleLab);
+	titleLay->addStretch();
+	titleLay->addWidget(closeBtn);
+
 	// 内容描述
 	m_text = QString("当前有%1个任务正在后台执行中").arg(QString::number(taskCount));
 	m_descLab = new QLabel(m_text, bg);
 	LoadingArc* loadingArc = new LoadingArc(bg);
-	loadingArc->setFixedSize(30, 30);
+	loadingArc->setFixedSize(38, 38);
 	loadingArc->start();
 	msgLay->setContentsMargins(0, 0, 0, 0);
 	msgLay->addWidget(m_descLab);
@@ -55,19 +64,24 @@ NotificationWidget::NotificationWidget(const QString& title, QSize size, QWidget
 	AntButton* btn = new AntButton("查看详情", 12, bg);
 	btn->setFixedHeight(50);
 	contentLayout->addStretch();
-	contentLayout->addWidget(titleLab);
+	contentLayout->addLayout(titleLay);
 	contentLayout->addLayout(msgLay);
 	contentLayout->addWidget(btn);
 	contentLayout->addStretch();
 	// 阴影
 	auto* shadow = new QGraphicsDropShadowEffect(bg);
 	shadow->setBlurRadius(30);
-	shadow->setOffset(0, 0);
-	shadow->setColor(QColor(0, 0, 0, 120));
+	shadow->setOffset(0, 0.5);
+	shadow->setColor(QColor(50, 50, 50, 120));
 	bg->setGraphicsEffect(shadow);
 
 	// 信号槽
 	connect(btn, &AntButton::clicked, this, [this]()
+		{
+			emit exitAnim();
+		});
+
+	connect(closeBtn, &QToolButton::clicked, this, [this]()
 		{
 			emit exitAnim();
 		});
