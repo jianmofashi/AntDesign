@@ -1,13 +1,14 @@
 ﻿#include "PopupWidget.h"
 #include "StyleSheet.h"
 #include <QVBoxLayout>
+#include <QGraphicsDropShadowEffect>
+#include <QPainterPath>
 
 PopupWidget::PopupWidget(int height, bool enableMultiLevel, QWidget* parent)
 	: QWidget(parent),
 	m_enableMultiLevel(enableMultiLevel),
 	m_popupHeight(height)
 {
-	// Qt::ToolTip 始终在最顶层 不会被遮挡
 	setWindowFlags(Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
 	setAttribute(Qt::WA_TranslucentBackground);
 	m_listView = new QListView(this);
@@ -23,7 +24,7 @@ PopupWidget::PopupWidget(int height, bool enableMultiLevel, QWidget* parent)
 
 	// 布局
 	auto* layout = new QVBoxLayout(this);
-	layout->setContentsMargins(6, 6, 6, 6);
+	layout->setContentsMargins(margin, margin, margin, margin);
 	layout->addWidget(m_listView);
 
 	QFont font = m_listView->font();

@@ -19,29 +19,24 @@ public:
 	};
 	AntTooltip(QString text, ArrowDir dir, QWidget* parent);
 	~AntTooltip();
-	void showAnimated(QPoint globalPos);
-	void hideAnimated();
 	QPoint arrowTipOffset() const;
 	void setText(QString text)
 	{
 		m_text = text;
 		update();
 	}
+	ArrowDir getArrowDirection() const { return m_arrowDirection; }
 protected:
 	void paintEvent(QPaintEvent*);
 signals:
-	void destroySelf(AntTooltip* self);
+	void resized(int width, int height);
+public:
 private:
 	QString m_text;
 	QFont m_font;
-	int margin = 8;					// 气泡框(圆角矩形)的外边距
-	int arrowHeight = 14;		// 箭头高度 箭头垂直方向
-	int arrowWidth = 7;		// 箭头宽度 箭头水平方向
+	int margin = 6;					// 气泡框(圆角矩形)的外边距
+	int arrowHeight = 14;			// 箭头高度 箭头垂直方向
+	int arrowWidth = 7;				// 箭头宽度 箭头水平方向
 
 	ArrowDir m_arrowDirection = ArrowDir::None;
-	bool isHide = false;
-	// 动画参数
-	QPropertyAnimation* geoAnim = nullptr;
-	QPropertyAnimation* opcaAnim = nullptr;
-	QParallelAnimationGroup* groupAnim = nullptr;
 };

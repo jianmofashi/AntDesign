@@ -25,9 +25,9 @@ PopupViewController::PopupViewController(int height, bool enableMultiLevel, QWid
 
 	// 阴影
 	auto* shadowEffect = new QGraphicsDropShadowEffect(this);
-	shadowEffect->setBlurRadius(30);
+	shadowEffect->setBlurRadius(20);
 	shadowEffect->setOffset(0, 0.5);
-	shadowEffect->setColor(QColor(50, 50, 50, 120));
+	shadowEffect->setColor(QColor(50, 50, 50, 80));
 	proxy->setGraphicsEffect(shadowEffect);
 
 	// 动画

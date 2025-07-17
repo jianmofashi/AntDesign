@@ -18,8 +18,6 @@ struct Theme
 	QColor disabledColor;
 	// 全局消息相关颜色
 	QColor msgTextColor;
-	// 进度条相关颜色
-	QColor hintBgColor;
 	// 滑动条相关颜色
 	QColor slideColor;
 	QColor slideBgColor;

@@ -212,13 +212,13 @@ void DownArrowTooltip::paintEvent(QPaintEvent*)
 	path.closeSubpath();
 
 	// 填充背景：黑色
-	p.setBrush(DesignSystem::instance()->currentTheme().hintBgColor);  // 深灰接近黑
+	p.setBrush(DesignSystem::instance()->currentTheme().toolTipBgColor);  // 深灰接近黑
 	p.setPen(Qt::NoPen);
 	p.drawPath(path);
 
 	// 文字：白色
 	p.setFont(m_font);
-	p.setPen(DesignSystem::instance()->currentTheme().textColor);
+	p.setPen(DesignSystem::instance()->currentTheme().toolTipTextColor);
 	p.drawText(bubbleRect, Qt::AlignCenter, m_text);
 }
 

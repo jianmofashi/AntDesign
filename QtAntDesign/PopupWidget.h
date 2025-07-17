@@ -118,4 +118,5 @@ private:
 	QListView* m_listView;
 	bool m_enableMultiLevel;	// 是否启用多级列表
 	int m_popupHeight;			// 弹出框的高度
+	int margin = 6; // 外边距
 };

@@ -2,7 +2,7 @@
 #include <QWidget>
 #include <QPointer>
 #include <QTimer>
-#include "AntTooltip.h"
+#include "AntTooltipViewController.h"
 
 class AntTooltipManager : public QWidget
 {
@@ -28,20 +28,14 @@ public:
 	void showTooltip(QWidget* targetWidget, const QString& text, Position position = Position::Right);
 	// 隐藏提示框
 	void hideTooltip();
-	void getMainWindow(QWidget* mainWindow)
-	{
-		m_mainWindow = mainWindow;
-	}
 signals:
 	void hideTip();
-private slots:
-	void destroyToolTip(AntTooltip* toolTip);
 private:
 	explicit AntTooltipManager(QWidget* parent = nullptr);
 	~AntTooltipManager();
 	Position m_position;
 
-	QPointer<AntTooltip> m_tooltip;
+	AntTooltipViewController* m_tooltipView = nullptr;
 	static AntTooltipManager* m_instance;
-	QWidget* m_mainWindow;
+
 };

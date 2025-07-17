@@ -16,10 +16,6 @@ public:
 	void onMessageClosed(AntMessage* message);
 	// 删除处理
 	void removeMessage(AntMessage* message);
-	void getMainWindow(QWidget* mainWindow)
-	{
-		m_mainWindow = mainWindow;
-	}
 signals:
 	// 播放下个消息框的退出动画
 	void closedNext(AntMessage* message);
@@ -31,5 +27,4 @@ private:
 private:
 	QList<AntMessage*> m_messages;
 	static AntMessageManager* m_instance;
-	QWidget* m_mainWindow = nullptr;
 };

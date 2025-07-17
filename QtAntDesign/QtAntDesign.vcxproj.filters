@@ -172,6 +172,9 @@
     <ClCompile Include="PopupViewController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AntTooltipViewController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StyleSheet.h">
@@ -309,6 +312,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="PopupViewController.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="AntTooltipViewController.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

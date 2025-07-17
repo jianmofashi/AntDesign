@@ -1,6 +1,7 @@
 ﻿#include "AntMessageManager.h"
 #include <QApplication>
 #include "QtAntDesign.h"
+#include "DesignSystem.h"
 
 AntMessageManager* AntMessageManager::m_instance = nullptr;
 
@@ -61,7 +62,8 @@ void AntMessageManager::showMessage(AntMessage::Type type, const QString& messag
 	s_timer.restart();
 
 	// 1. 创建消息
-	AntMessage* msg = new AntMessage(m_mainWindow, type, message, adjustMsgDuration(baseDuration));
+	QWidget* mainWindow = DesignSystem::instance()->getMainWindow();
+	AntMessage* msg = new AntMessage(mainWindow, type, message, adjustMsgDuration(baseDuration));
 	// 连接信号：关闭、销毁
 	connect(msg, &AntMessage::closed, this, &AntMessageManager::onMessageClosed);
 	connect(msg, &AntMessage::destroySelf, this, &AntMessageManager::removeMessage);
@@ -70,7 +72,7 @@ void AntMessageManager::showMessage(AntMessage::Type type, const QString& messag
 
 	// 3. 计算 endPos
 	int notifWidth = msg->width();
-	int x = (m_mainWindow->width() - notifWidth) / 2;
+	int x = (mainWindow->width() - notifWidth) / 2;
 	QPoint endPos;
 
 	// 10是Y方向位移量
@@ -131,7 +133,7 @@ void AntMessageManager::removeMessage(AntMessage* message)
 	QParallelAnimationGroup* moveGroup = new QParallelAnimationGroup(this);
 
 	// 更新剩余消息位置（向上移动）
-	int x = (m_mainWindow->width() - m_messages[0]->width()) / 2;
+	int x = (DesignSystem::instance()->getMainWindow()->width() - m_messages[0]->width()) / 2;
 	int y = 10;
 	for (AntMessage* msg : m_messages)
 	{

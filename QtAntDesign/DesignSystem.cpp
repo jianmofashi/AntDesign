@@ -20,7 +20,6 @@ void DesignSystem::loadThemes()
 	m_lightTheme.borderColorHover = QColor(22, 119, 255);
 	m_lightTheme.msgTextColor = QColor(30, 30, 30);
 	m_lightTheme.disabledColor = QColor(150, 150, 150);
-	m_lightTheme.hintBgColor = QColor(0, 0, 0);
 	m_lightTheme.slideBgColor = QColor(200, 200, 200);
 	m_lightTheme.slideColor = QColor(66, 133, 244);
 	m_lightTheme.ringColor = QColor(153, 204, 255);
@@ -28,8 +27,8 @@ void DesignSystem::loadThemes()
 	m_lightTheme.toggleButtonColor = QColor(255, 255, 255);
 	m_lightTheme.toggleButtonBgColor = QColor(200, 200, 200);
 	m_lightTheme.noCheckedColor = QColor(200, 200, 200);
-	m_lightTheme.toolTipBgColor = QColor(255, 255, 255);
-	m_lightTheme.toolTipTextColor = QColor(30, 30, 30);
+	m_lightTheme.toolTipBgColor = QColor(30, 30, 30);       
+	m_lightTheme.toolTipTextColor = QColor(245, 245, 245);
 	m_lightTheme.userBubbleBgColor = QColor(255, 255, 255);
 	m_lightTheme.toolBtnBgColor = QColor(24, 144, 255, 40);
 	m_lightTheme.dialogBgColor = QColor(255, 255, 255);

@@ -18,96 +18,24 @@ AntTooltip::AntTooltip(QString text, ArrowDir dir, QWidget* parent)
 	m_font = font;
 	QFontMetrics metrics(m_font);
 
-	// 测量文本尺寸（不换行）
-	int textWidth = metrics.horizontalAdvance(m_text);
-	int textHeight = metrics.height();
+	const int maxTextWidth = 300;  // 最大文本宽度限制
+	QRect textBounding = metrics.boundingRect(0, 0, maxTextWidth, 1000, Qt::TextWordWrap, m_text);
 
-	// 加额外 padding 整体更美观
-	int Padding = 16;
-	int paddedTextWidth = textWidth + Padding * 2;
-	int paddedTextHeight = textHeight + Padding * 2;
+	// 加额外 padding 使整体更美观
+	const int Padding = 16;
+	int paddedTextWidth = textBounding.width() + Padding * 2;
+	int paddedTextHeight = textBounding.height() + Padding * 2;
 
-	// 计算总宽高
+	// 计算总宽高，考虑箭头方向额外宽度或高度
 	int tiptoolWidth = paddedTextWidth + (m_arrowDirection == ArrowLeft || m_arrowDirection == ArrowRight ? arrowWidth : 0);
 	int tiptoolHeight = paddedTextHeight + (m_arrowDirection == ArrowTop || m_arrowDirection == ArrowBottom ? arrowHeight : 0);
 
 	// 设置控件尺寸
 	resize(tiptoolWidth, tiptoolHeight);
-
-	// 阴影
-	auto* shadowEffect = new QGraphicsDropShadowEffect(this);
-	shadowEffect->setBlurRadius(20);            // 模糊半径，越大越模糊
-	shadowEffect->setOffset(0, 0.5);              // 阴影偏移量（向下偏移）
-	shadowEffect->setColor(QColor(50, 50, 50, 120)); // 阴影颜色 + 透明度
-
-	this->setGraphicsEffect(shadowEffect);
-
-	// 几何动画
-	geoAnim = new QPropertyAnimation(this, "geometry");
-	opcaAnim = new QPropertyAnimation(this, "windowOpacity");
-	groupAnim = new QParallelAnimationGroup(this);
-	groupAnim->addAnimation(geoAnim);
-	groupAnim->addAnimation(opcaAnim);
-
-	// 信号槽
-	connect(groupAnim, &QParallelAnimationGroup::finished, this, [this]()
-		{
-			if (isHide)
-			{
-				emit destroySelf(this);
-			}
-		});
 }
 
 AntTooltip::~AntTooltip()
 {
-}
-
-void AntTooltip::showAnimated(QPoint globalPos)
-{
-	isHide = false;
-
-	const QSize finalSize = size();
-	const qreal scaleFactor = 0.93;
-
-	// 目标最终的显示矩形
-	QRect endRect(globalPos, finalSize);
-
-	// 缩放动画的中心点
-	QPoint center = endRect.center();
-
-	// 起始大小
-	QSize startSize(finalSize.width() * scaleFactor, finalSize.height() * scaleFactor);
-
-	// 计算起始左上角，使中心一致
-	QPoint startTopLeft(
-		center.x() - startSize.width() / 2,
-		center.y() - startSize.height() / 2
-	);
-	QRect startRect(startTopLeft, startSize);
-
-	setGeometry(startRect);
-	show();
-
-	groupAnim->stop();
-	geoAnim->setStartValue(startRect);
-	geoAnim->setEndValue(endRect);
-	geoAnim->setEasingCurve(QEasingCurve::OutQuart);
-	geoAnim->setDuration(200);
-	opcaAnim->setStartValue(0.0f);
-	opcaAnim->setEndValue(1.0f);
-	opcaAnim->setDuration(200);
-	opcaAnim->setEasingCurve(QEasingCurve::OutQuart);
-
-	groupAnim->setDirection(QAbstractAnimation::Forward);
-	groupAnim->start();
-}
-
-void AntTooltip::hideAnimated()
-{
-	isHide = true;
-	groupAnim->setDirection(QAbstractAnimation::Backward);
-	groupAnim->start();
 }
 
 QPoint AntTooltip::arrowTipOffset() const
@@ -283,7 +211,8 @@ void AntTooltip::paintEvent(QPaintEvent*)
 	p.setPen(DesignSystem::instance()->currentTheme().toolTipTextColor);  // 深灰色文本，更柔和
 
 	// 计算文本区域（在 rectBubble 内部减去 margin）
-	QRect textRect = rectBubble.adjusted(margin, margin, -margin, -margin);
+	int padding = 8;  // 内边距
+	QRect textRect = rectBubble.adjusted(margin + padding, margin + padding, -margin - padding, -margin - padding);
 	// 绘制文本，不支持自动换行
-	p.drawText(textRect, Qt::TextSingleLine | Qt::AlignCenter, m_text);
+	p.drawText(textRect, Qt::TextWordWrap | Qt::AlignLeft | Qt::AlignVCenter, m_text);
 }

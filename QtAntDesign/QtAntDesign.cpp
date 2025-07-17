@@ -161,9 +161,9 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 	naviLay->addWidget(btnAbout, 0, Qt::AlignHCenter);
 	naviLay->addStretch();
 
-	// 初始化全局消息管理器
-	AntMessageManager::instance()->getMainWindow(ui.main_widget);	// 全局消息
-	AntTooltipManager::instance()->getMainWindow(ui.main_widget);	// 全局提示
+	// 初始化全局管理器
+	AntMessageManager::instance();	// 全局消息
+	AntTooltipManager::instance();	// 全局提示
 
 	// 初始化通知管理器
 	NotificationManager::instance()->getMainWindow(ui.main_widget);

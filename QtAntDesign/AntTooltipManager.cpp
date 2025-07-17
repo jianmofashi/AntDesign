@@ -1,6 +1,7 @@
 ﻿#include "AntTooltipManager.h"
 #include <QGuiApplication>
 #include <QScreen>
+#include "DesignSystem.h"
 
 AntTooltipManager* AntTooltipManager::m_instance = nullptr;
 
@@ -29,17 +30,16 @@ void AntTooltipManager::showTooltip(QWidget* targetWidget, const QString& text, 
 	}
 
 	// 创建提示控件
-	AntTooltip* toolTip = new AntTooltip(text, dir, m_mainWindow);
+	m_tooltipView = new AntTooltipViewController(text, dir, DesignSystem::instance()->getMainWindow());
 
-	// 自动回收
-	connect(this, &AntTooltipManager::hideTip, toolTip, &AntTooltip::hideAnimated);
-	connect(toolTip, &AntTooltip::destroySelf, this, &AntTooltipManager::destroyToolTip);
+	// 隐藏
+	connect(this, &AntTooltipManager::hideTip, m_tooltipView, &AntTooltipViewController::hideAnimated);
 
-	const QSize tooltipSize = toolTip->size();  // 获取真实尺寸
+	const QSize tooltipSize = m_tooltipView->tooltip->size();				// 获取真实尺寸
 	QRect targetRect = targetWidget->rect();
-	QPoint globalCenter = targetWidget->mapToGlobal(targetRect.center());  // 目标控件中心全局坐标
+	QPoint globalCenter = targetWidget->mapToGlobal(targetRect.center());	// 目标控件中心全局坐标
 
-	QPoint tipOffset = toolTip->arrowTipOffset();  // 箭头尖端相对气泡左上角的偏移
+	QPoint tipOffset = m_tooltipView->tooltip->arrowTipOffset();			// 箭头尖端相对气泡左上角的偏移
 
 	QPoint topLeft;
 
@@ -81,15 +81,10 @@ void AntTooltipManager::showTooltip(QWidget* targetWidget, const QString& text, 
 		tooltipRect.moveTopLeft(screenRect.adjusted(4, 4, -4, -4).intersected(tooltipRect).topLeft());
 	}
 
-	toolTip->showAnimated(tooltipRect.topLeft());
+	m_tooltipView->showAnimated(tooltipRect.topLeft());
 }
 
 void AntTooltipManager::hideTooltip()
 {
 	emit hideTip();
-}
-
-void AntTooltipManager::destroyToolTip(AntTooltip* toolTip)
-{
-	toolTip->deleteLater();
 }

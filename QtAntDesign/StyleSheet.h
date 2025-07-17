@@ -318,6 +318,7 @@ namespace StyleSheet
 		QListView {
 			background-color: %1;
 			border-radius: 10px;
+			border:1px solid %2;
 			padding: 6px;
 		}
 

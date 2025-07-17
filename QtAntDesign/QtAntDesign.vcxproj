@@ -105,6 +105,7 @@
     <ClCompile Include="AntToggleButton.cpp" />
     <ClCompile Include="AntTooltip.cpp" />
     <ClCompile Include="AntTooltipManager.cpp" />
+    <ClCompile Include="AntTooltipViewController.cpp" />
     <ClCompile Include="BubbleViewController.cpp" />
     <ClCompile Include="ComboBoxMask.cpp" />
     <ClCompile Include="CustomToolButton.cpp" />
@@ -192,6 +193,7 @@
     <QtMoc Include="PopupWidget.h" />
     <QtMoc Include="ComboBoxMask.h" />
     <QtMoc Include="PopupViewController.h" />
+    <QtMoc Include="AntTooltipViewController.h" />
     <ClInclude Include="StyleSheet.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
