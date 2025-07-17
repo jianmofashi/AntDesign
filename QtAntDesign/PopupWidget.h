@@ -105,30 +105,17 @@ private:
 class PopupWidget : public QWidget
 {
 	Q_OBJECT
-		Q_PROPERTY(int popupHeight READ popupHeight WRITE setPopupHeight)
+
 public:
 	explicit PopupWidget(int height, bool enableMultiLevel, QWidget* parent = nullptr);
 	void setModel(QAbstractItemModel* model);
-	void showAnimated(const QPoint& pos, int width);
-	void hideAnimated();
-	/* 属性存取器 */
-	int  popupHeight() const { return height(); }
-	void setPopupHeight(int h) { setFixedHeight(h); }
-	// 添加这个函数用于设置当前项
+	// 用于设置当前项
 	void setCurrentIndex(const QModelIndex& index);
-	bool getVisible() { return m_isVisible; }
-	void removeAppEventFilter();
 signals:
 	void itemSelected(const QModelIndex& index);
 	void containsMousePos(bool isContains);
-protected:
-	void focusOutEvent(QFocusEvent* event) override;
-public:
-	QPoint m_offset;
 private:
 	QListView* m_listView;
-	QPropertyAnimation* m_anim;
-	bool m_isVisible;
 	bool m_enableMultiLevel;	// 是否启用多级列表
 	int m_popupHeight;			// 弹出框的高度
 };

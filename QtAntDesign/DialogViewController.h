@@ -49,7 +49,8 @@ private:
 
 public:
 	qreal scaleFactor() const { return m_scaleFactor; }
-	void setScaleFactor(qreal factor) {
+	void setScaleFactor(qreal factor)
+	{
 		m_scaleFactor = factor;
 		QTransform t;
 		t.scale(m_scaleFactor, m_scaleFactor);

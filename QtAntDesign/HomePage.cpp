@@ -205,9 +205,9 @@ HomePage::HomePage(QWidget* parent)
 	// 下拉框随着主窗口同步移动
 	connect(this, &HomePage::windowMoved, this, [=](QPoint globalPos)
 		{
-			auto movePopups = [globalPos](const QList<PopupWidget*>& popups)
+			auto movePopups = [globalPos](const QList<PopupViewController*>& popups)
 				{
-					for (PopupWidget* popup : popups)
+					for (PopupViewController* popup : popups)
 					{
 						if (popup->getVisible())
 						{

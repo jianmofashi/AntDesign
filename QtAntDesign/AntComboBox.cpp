@@ -17,16 +17,18 @@ AntComboBox::AntComboBox(QString showText, QStringList itemTextList, QWidget* pa
 	m_arrowRenderer = new QSvgRenderer(QStringLiteral(":/Imgs/downArrow.svg"), this);
 
 	// 二级列表足够了
-	m_popup1 = new PopupWidget(popupHeight, enableMultiLevel, nullptr);
-	m_popup2 = new PopupWidget(popupHeight, false, nullptr);
-	m_popups.append(m_popup1);
-	m_popups.append(m_popup2);
+	PopupViewController* popupView1 = new PopupViewController(popupHeight, enableMultiLevel, this);
+	PopupViewController* popupView2 = new PopupViewController(popupHeight, false, this);
+	m_popups.append(popupView1);
+	m_popups.append(popupView2);
+	m_popup1 = popupView1;
+	m_popup2 = popupView2;
 
-	for (PopupWidget* popup : m_popups)
+	for (PopupViewController* popupView : m_popups)
 	{
-		connect(popup, &PopupWidget::itemSelected, this, [this](const QModelIndex& idx)
+		connect(popupView, &PopupViewController::itemSelected, this, [this, popupView](const QModelIndex& idx)
 			{
-				PopupWidget* senderPopup = qobject_cast<PopupWidget*>(sender());
+				PopupViewController* senderPopup = qobject_cast<PopupViewController*>(sender());
 
 				if (senderPopup == m_popup1)
 				{
@@ -37,10 +39,10 @@ AntComboBox::AntComboBox(QString showText, QStringList itemTextList, QWidget* pa
 
 						if (m_subModels.contains(m_firstLevelSelectedText))
 						{
-							m_popup2->setModel(m_subModels[m_firstLevelSelectedText]);
+							m_popup2->popup->setModel(m_subModels[m_firstLevelSelectedText]);
 						}
 
-						m_popup2->showAnimated(mapToGlobal(QPoint(width() - 8, height())), width());
+						m_popup2->showAnimated(mapToGlobal(QPoint(width(), height())), width());
 					}
 					else
 					{
@@ -63,6 +65,14 @@ AntComboBox::AntComboBox(QString showText, QStringList itemTextList, QWidget* pa
 			});
 	}
 
+	connect(this, &AntComboBox::resized, this, [this](int width, int height)
+		{
+			for (PopupViewController* popup : m_popups)
+			{
+				popup->updateSize(width, height);
+			}
+		});
+
 	// 添加数据模型
 	QIcon arrowIcon(":/Imgs/rightArrow.svg");
 
@@ -78,7 +88,7 @@ AntComboBox::AntComboBox(QString showText, QStringList itemTextList, QWidget* pa
 		}
 		model1->appendRow(item);
 	}
-	m_popup1->setModel(model1);
+	m_popup1->popup->setModel(model1);
 
 	// 如果启用多级列表，则设置二级列表
 	if (m_enableMultiLevel)
@@ -223,4 +233,12 @@ void AntComboBox::mousePressEvent(QMouseEvent* event)
 		QPoint popupPos = mapToGlobal(QPoint(0, height()));
 		m_popup1->showAnimated(popupPos, width());
 	}
+}
+
+void AntComboBox::resizeEvent(QResizeEvent* event)
+{
+	QWidget::resizeEvent(event);
+
+	// 通知下拉弹窗更新尺寸
+	emit resized(width(), height());
 }

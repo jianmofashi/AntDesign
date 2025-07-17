@@ -124,6 +124,7 @@
     <ClCompile Include="NoDataWidget.cpp" />
     <ClCompile Include="NotificationManager.cpp" />
     <ClCompile Include="NotificationWidget.cpp" />
+    <ClCompile Include="PopupViewController.cpp" />
     <ClCompile Include="PopupWidget.cpp" />
     <ClCompile Include="ProfilePage.cpp" />
     <ClCompile Include="RegisterPageWidget.cpp" />
@@ -190,6 +191,7 @@
     <QtMoc Include="AntComboBox.h" />
     <QtMoc Include="PopupWidget.h" />
     <QtMoc Include="ComboBoxMask.h" />
+    <QtMoc Include="PopupViewController.h" />
     <ClInclude Include="StyleSheet.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

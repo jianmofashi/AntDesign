@@ -7,7 +7,7 @@
 #include <QMap>
 #include <QStandardItemModel>
 #include "DesignSystem.h"
-#include "PopupWidget.h"
+#include "PopupViewController.h"
 #include "ComboBoxMask.h"
 
 class AntComboBox : public QWidget
@@ -29,19 +29,22 @@ protected:
 	void enterEvent(QEnterEvent* event) override;
 	void leaveEvent(QEvent* event) override;
 	void mousePressEvent(QMouseEvent* event) override;
+	void resizeEvent(QResizeEvent* event) override;
 private:
 	// 恢复初始状态
 	void resetState();
+signals:
+	void resized(int width, int height); 
 public:
-	QList<PopupWidget*> m_popups; // 用于存储所有弹出框
+	QList<PopupViewController*> m_popups; // 用于存储所有弹出框
 private:
 	QString m_text;
 	QString m_firstLevelSelectedText;
 	QColor m_borderColor;
 	QSvgRenderer* m_arrowRenderer;
 	ComboBoxMask* mask = nullptr;
-	PopupWidget* m_popup1 = nullptr;
-	PopupWidget* m_popup2 = nullptr;
+	PopupViewController* m_popup1 = nullptr;
+	PopupViewController* m_popup2 = nullptr;
 	QMap<QString, QStandardItemModel*> m_subModels;	// 全部二级列表模型
 
 	bool m_isPressed;
