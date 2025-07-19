@@ -14,7 +14,9 @@ AntMessage::AntMessage(QWidget* parent, Type type, const QString& message, int d
 	m_type(type),
 	m_message(message),
 	m_duration(duration),
-	m_customOpacity(0.0)
+	m_customOpacity(0.0),
+	m_isExit(false),
+	m_isFirst(false)
 {
 	setAttribute(Qt::WA_TranslucentBackground);
 	initResources();
@@ -74,25 +76,31 @@ void AntMessage::initResources()
 
 void AntMessage::setupAnimations()
 {
-	m_opacityInAnim = new QPropertyAnimation(this, "customOpacity");
-	m_opacityInAnim->setDuration(400);
-	m_opacityInAnim->setEasingCurve(QEasingCurve::OutCubic);
+	// 动画
+	m_opacityAnim = new QPropertyAnimation(this, "customOpacity");
+	m_opacityAnim->setDuration(300);
+	m_opacityAnim->setEasingCurve(QEasingCurve::InOutSine);
 
-	m_posInAnim = new QPropertyAnimation(this, "pos");
-	m_posInAnim->setDuration(400);
-	m_posInAnim->setEasingCurve(QEasingCurve::OutCubic);
+	m_posAnim = new QPropertyAnimation(this, "pos");
+	m_posAnim->setDuration(300);
+	m_posAnim->setEasingCurve(QEasingCurve::InOutSine);
 
-	m_animInGroup = new QParallelAnimationGroup(this);
-	m_animInGroup->addAnimation(m_opacityInAnim);
-	m_animInGroup->addAnimation(m_posInAnim);
+	m_animGroup = new QParallelAnimationGroup(this);
+	m_animGroup->addAnimation(m_opacityAnim);
+	m_animGroup->addAnimation(m_posAnim);
 
-	m_opacityOutAnim = new QPropertyAnimation(this, "customOpacity");
-	m_opacityOutAnim->setDuration(300);
-	m_opacityOutAnim->setEasingCurve(QEasingCurve::InCubic);
-
-	connect(m_opacityOutAnim, &QPropertyAnimation::finished, this, [this]()
+	connect(m_animGroup, &QPropertyAnimation::finished, this, [this]()
 		{
-			emit destroySelf(this);
+			// 退出动画完毕
+			if (m_isExit)
+			{
+				emit destroySelf(this);
+			}
+			else
+			{
+				// 进入动画完毕
+				if (m_isFirst) m_closeTimer->start(m_duration);
+			}
 		});
 
 	m_closeTimer = new QTimer(this);
@@ -105,30 +113,20 @@ void AntMessage::setupAnimations()
 
 void AntMessage::animateIn(QPoint startPos, QPoint endPos, bool isFirst)
 {
-	m_animInGroup->stop();
-	m_opacityInAnim->stop();
-	m_posInAnim->stop();
-	setCustomOpacity(0.0f);
+	if (m_animGroup->state() == QAbstractAnimation::Running)
+		m_animGroup->stop();
 
+	m_isExit = false;
+	m_isFirst = isFirst;
 	move(startPos);
 	show();
 
 	// 设置动画初始值
-	m_opacityInAnim->setStartValue(0.0f);
-	m_opacityInAnim->setEndValue(1.0f);
-
-	m_posInAnim->setStartValue(startPos);
-	m_posInAnim->setEndValue(endPos);
-
-	if (isFirst)
-	{
-		connect(m_animInGroup, &QParallelAnimationGroup::finished, this, [this]()
-			{
-				m_closeTimer->start(m_duration);
-			});
-	}
-
-	m_animInGroup->start();
+	m_opacityAnim->setStartValue(0.0);
+	m_opacityAnim->setEndValue(1.0);
+	m_posAnim->setStartValue(startPos);
+	m_posAnim->setEndValue(endPos);
+	m_animGroup->start();
 }
 
 void AntMessage::startCloseTimer()
@@ -138,25 +136,15 @@ void AntMessage::startCloseTimer()
 
 void AntMessage::animateOut()
 {
-	// 动态调整退场动画速度：越晚显示的消息，退场越快
-	// 但仍保持合理区间，防止动画突兀或完全看不清
-	int outDuration = qBound(100, static_cast<int>(m_duration * 0.7), 300);
-	m_opacityOutAnim->setDuration(outDuration);
+	if (m_animGroup->state() == QAbstractAnimation::Running)
+		m_animGroup->stop();
 
-	m_opacityOutAnim->setStartValue(1.0f);
-	m_opacityOutAnim->setEndValue(0.0f);
-	m_opacityOutAnim->start();
-}
-
-void AntMessage::moveTo(QPoint target)
-{
-	QPropertyAnimation* moveAnim = new QPropertyAnimation(this, "pos");
-	int outDuration = qBound(100, static_cast<int>(m_duration * 0.4), 200);
-	moveAnim->setDuration(outDuration);
-	moveAnim->setStartValue(pos());
-	moveAnim->setEndValue(target);
-	moveAnim->setEasingCurve(QEasingCurve::InOutCubic);
-	moveAnim->start(QAbstractAnimation::DeleteWhenStopped);
+	m_isExit = true;
+	m_opacityAnim->setStartValue(1.0);
+	m_opacityAnim->setEndValue(0.0);
+	m_posAnim->setStartValue(pos());
+	m_posAnim->setEndValue(pos() - QPoint(0, 8));
+	m_animGroup->start();
 }
 
 void AntMessage::paintEvent(QPaintEvent* event)

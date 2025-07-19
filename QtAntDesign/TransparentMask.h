@@ -2,11 +2,11 @@
 
 #include <QWidget>
 
-class ComboBoxMask : public QWidget
+class TransparentMask : public QWidget
 {
 	Q_OBJECT
 public:
-	explicit ComboBoxMask(QWidget* parent);
+	explicit TransparentMask(QWidget* parent);
 
 signals:
 	void clickedOutside(); // 点击遮罩区域发出信号

@@ -160,19 +160,22 @@
     <ClCompile Include="AntComboBox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="PopupWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ComboBoxMask.cpp">
+    <ClCompile Include="TransparentMask.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PopupViewController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AntTooltipViewController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TagWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -308,13 +311,16 @@
     <QtMoc Include="PopupWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="ComboBoxMask.h">
+    <QtMoc Include="TransparentMask.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="PopupViewController.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="AntTooltipViewController.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="TagWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

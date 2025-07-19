@@ -32,5 +32,9 @@
         <file>Imgs/downArrow.svg</file>
         <file>Imgs/upArrow.svg</file>
         <file>Imgs/rightArrow.svg</file>
+        <file>Imgs/bilibili.svg</file>
+        <file>Imgs/taobao.svg</file>
+        <file>Imgs/WeChat.svg</file>
+        <file>Imgs/x.svg</file>
     </qresource>
 </RCC>

@@ -8,7 +8,7 @@
 #include <QStandardItemModel>
 #include "DesignSystem.h"
 #include "PopupViewController.h"
-#include "ComboBoxMask.h"
+#include "TransparentMask.h"
 
 class AntComboBox : public QWidget
 {
@@ -23,7 +23,7 @@ public:
 	void setCurrentText(const QString& text);
 	// 设置是否启用多级列表
 	void setEnableMultiLevel(bool enable);
-	ComboBoxMask* getMask() { return mask; }
+	TransparentMask* getMask() { return mask; }
 protected:
 	void paintEvent(QPaintEvent* event) override;
 	void enterEvent(QEnterEvent* event) override;
@@ -42,7 +42,7 @@ private:
 	QString m_firstLevelSelectedText;
 	QColor m_borderColor;
 	QSvgRenderer* m_arrowRenderer;
-	ComboBoxMask* mask = nullptr;
+	TransparentMask* mask = nullptr;
 	PopupViewController* m_popup1 = nullptr;
 	PopupViewController* m_popup2 = nullptr;
 	QMap<QString, QStandardItemModel*> m_subModels;	// 全部二级列表模型

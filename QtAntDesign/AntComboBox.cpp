@@ -107,8 +107,8 @@ AntComboBox::AntComboBox(QString showText, QStringList itemTextList, QWidget* pa
 
 	// 透明遮罩
 	QWidget* mainWindow = DesignSystem::instance()->getMainWindow();
-	mask = new ComboBoxMask(mainWindow);
-	connect(mask, &ComboBoxMask::clickedOutside, this, [this]()
+	mask = new TransparentMask(mainWindow);
+	connect(mask, &TransparentMask::clickedOutside, this, [this]()
 		{
 			m_popup1->raise();
 			m_popup2->raise();

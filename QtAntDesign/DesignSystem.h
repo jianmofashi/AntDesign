@@ -82,7 +82,7 @@ public:
 
 	// 快捷获取颜色等
 	QColor primaryColor() const;
-	QColor textColor(TextColorMode color) const;
+	QColor textColor() const;
 	QColor backgroundColor() const;
 	QColor borderColor() const;
 	QColor borderColorHover() const;

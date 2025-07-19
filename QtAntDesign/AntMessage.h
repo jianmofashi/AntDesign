@@ -21,17 +21,16 @@ public:
 	// 退出动画
 	void animateOut();
 	void closeMessage();
-	void moveTo(QPoint target);
 	void startCloseTimer();
 	qreal getCustomOpacity();
 	void setCustomOpacity(qreal opacity);
 
 	void setTargetPos(const QPoint& pos) { m_targetPos = pos; }
 	QPoint targetPos() const { return m_targetPos; }
-	void setStartPos(const QPoint& pos) { m_startPos = pos; }
-	void setEndPos(const QPoint& pos) { m_endPos = pos; }
 	QPoint startPos() const { return m_startPos; }
 	QPoint endPos() const { return m_endPos; }
+	void setStartPos(const QPoint& pos) { m_startPos = pos; }
+	void setEndPos(const QPoint& pos) { m_endPos = pos; }
 public:
 	int m_duration;
 signals:
@@ -39,11 +38,12 @@ signals:
 	void destroySelf(AntMessage* self);
 protected:
 	void paintEvent(QPaintEvent* event) override;
-
 private:
 	void initResources();
 	void setupAnimations();
 
+	bool m_isExit;
+	bool m_isFirst;
 	QPoint m_targetPos;
 	QPoint m_startPos;
 	QPoint m_endPos;
@@ -53,8 +53,7 @@ private:
 	qreal m_customOpacity;
 
 	QTimer* m_closeTimer;
-	QPropertyAnimation* m_posInAnim;
-	QPropertyAnimation* m_opacityInAnim;
-	QPropertyAnimation* m_opacityOutAnim;
-	QParallelAnimationGroup* m_animInGroup;
+	QPropertyAnimation* m_posAnim;
+	QPropertyAnimation* m_opacityAnim;
+	QParallelAnimationGroup* m_animGroup;
 };

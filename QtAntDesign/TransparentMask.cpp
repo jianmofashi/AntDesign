@@ -1,10 +1,10 @@
-﻿#include "ComboBoxMask.h"
+﻿#include "TransparentMask.h"
 #include <QApplication>
 #include <QScreen>
 #include <QMouseEvent>
 #include <QPainter>
 
-ComboBoxMask::ComboBoxMask(QWidget* parent)
+TransparentMask::TransparentMask(QWidget* parent)
 	: QWidget(parent)
 {
 	setWindowFlags(Qt::FramelessWindowHint);
@@ -19,14 +19,14 @@ ComboBoxMask::ComboBoxMask(QWidget* parent)
 	hide();
 }
 
-void ComboBoxMask::mousePressEvent(QMouseEvent* event)
+void TransparentMask::mousePressEvent(QMouseEvent* event)
 {
 	Q_UNUSED(event);
 	emit clickedOutside();  // 通知外部关闭弹窗等操作
 	event->accept();		// 阻止事件继续传递
 }
 
-void ComboBoxMask::paintEvent(QPaintEvent* event)
+void TransparentMask::paintEvent(QPaintEvent* event)
 {
 	Q_UNUSED(event);
 

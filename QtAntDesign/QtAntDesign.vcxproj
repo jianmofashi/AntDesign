@@ -107,7 +107,7 @@
     <ClCompile Include="AntTooltipManager.cpp" />
     <ClCompile Include="AntTooltipViewController.cpp" />
     <ClCompile Include="BubbleViewController.cpp" />
-    <ClCompile Include="ComboBoxMask.cpp" />
+    <ClCompile Include="TransparentMask.cpp" />
     <ClCompile Include="CustomToolButton.cpp" />
     <ClCompile Include="DesignSystem.cpp" />
     <ClCompile Include="HomePage.cpp" />
@@ -134,6 +134,7 @@
     <ClCompile Include="SkeletonWidget.cpp" />
     <ClCompile Include="SlideStackedWidget.cpp" />
     <ClCompile Include="StandardDialogPage.cpp" />
+    <ClCompile Include="TagWidget.cpp" />
     <ClCompile Include="UserInfoBubble.cpp" />
     <ClCompile Include="Win11CheckButton.cpp" />
     <QtRcc Include="QtAntDesign.qrc" />
@@ -149,6 +150,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="TagWidget.h" />
     <QtMoc Include="Win11CheckButton.h" />
     <QtMoc Include="UserInfoBubble.h" />
     <QtMoc Include="CircularAvatar.h" />
@@ -191,7 +193,7 @@
     <QtMoc Include="AntDoubleInputNumber.h" />
     <QtMoc Include="AntComboBox.h" />
     <QtMoc Include="PopupWidget.h" />
-    <QtMoc Include="ComboBoxMask.h" />
+    <QtMoc Include="TransparentMask.h" />
     <QtMoc Include="PopupViewController.h" />
     <QtMoc Include="AntTooltipViewController.h" />
     <ClInclude Include="StyleSheet.h" />

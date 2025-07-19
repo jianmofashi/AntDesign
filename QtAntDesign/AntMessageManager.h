@@ -15,7 +15,7 @@ public:
 	// 关闭动画
 	void onMessageClosed(AntMessage* message);
 	// 删除处理
-	void removeMessage(AntMessage* message);
+	void clearMessage(AntMessage* message);
 signals:
 	// 播放下个消息框的退出动画
 	void closedNext(AntMessage* message);
@@ -25,6 +25,6 @@ private:
 	QRect getScreenGeometry() const;
 	int adjustMsgDuration(int baseDuration);
 private:
-	QList<AntMessage*> m_messages;
+	QQueue<AntMessage*> m_messages;			// 主队列：当前屏幕上存在的所有消息
 	static AntMessageManager* m_instance;
 };

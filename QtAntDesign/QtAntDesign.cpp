@@ -29,7 +29,7 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 
 	// 初始化全局设计系统 必须写在最前面 因为它会设置主题和主窗口指针
 	DesignSystem::instance()->setThemeMode(DesignSystem::Light);	// 默认亮主题
-	DesignSystem::instance()->setMainWindow(ui.main_widget);		// 获取主窗口指针
+	DesignSystem::instance()->setMainWindow(this);					// 获取主窗口指针
 
 	// 获取主屏幕分辨率
 	int w = 0, h = 0;

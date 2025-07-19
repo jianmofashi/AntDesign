@@ -18,11 +18,11 @@
 #include "AntInputNumber.h"
 #include "AntDoubleInputNumber.h"
 #include "AntComboBox.h"
+#include "TagWidget.h"
 
 HomePage::HomePage(QWidget* parent)
 	: QWidget(parent)
 {
-
 	setFocusPolicy(Qt::ClickFocus);  // 设置焦点策略 点击空白处可以获取焦点
 	// 标签页
 	MaterialTabWidget* tabWidget = new MaterialTabWidget(this);
@@ -222,6 +222,42 @@ HomePage::HomePage(QWidget* parent)
 			movePopups(combo2->m_popups);
 		});
 
+	// 标签
+	QHBoxLayout* row5Layout = new QHBoxLayout(w1);
+	row5Layout->setSpacing(10);
+	row5Layout->setContentsMargins(8, 8, 8, 8);
+
+	QLabel* tagLabel = new QLabel("标签", this);
+
+	// 初始化配置信息列表
+	QList<TagInfo> tagList1 = {
+		{"bilibili", ":/Imgs/bilibili.svg", QColor(251, 114, 153)},
+		{"x",        ":/Imgs/x.svg",        QColor(0, 0, 0)},
+		{"wechat",   ":/Imgs/WeChat.svg",   QColor(7, 193, 96)},
+		{"taobao",   ":/Imgs/taobao.svg",   QColor(255, 140, 0)},
+	};
+
+	QList<TagInfo> tagList2 = {
+		{"bilibili", "", QColor(251, 114, 153) },
+		{"x",        "", QColor(0, 0, 0)},
+		{"wechat",   "", QColor(7, 193, 96)},
+		{"taobao",   "", QColor(255, 140, 0)}
+	};
+
+	row5Layout->addWidget(tagLabel);
+
+	for (const TagInfo& info : tagList1)
+	{
+		TagWidget* tag = new TagWidget(info.name, 11.5, info.color, this, true, info.svgPath);
+		row5Layout->addWidget(tag);
+	}
+
+	for (const TagInfo& info : tagList2)
+	{
+		TagWidget* tag = new TagWidget(info.name, 11.5, info.color, this, false);
+		row5Layout->addWidget(tag);
+	}
+
 	// 第一行布局
 	row1Layout->addWidget(labelList[0]);
 	row1Layout->addSpacing(20);
@@ -257,6 +293,9 @@ HomePage::HomePage(QWidget* parent)
 	row4Layout->addWidget(combo2);
 	row4Layout->addStretch();
 
+	// 第五行布局
+	row5Layout->addStretch();
+
 	// 添加到页面布局
 	pageLay->addSpacing(20);
 	pageLay->addLayout(row1Layout);
@@ -265,6 +304,7 @@ HomePage::HomePage(QWidget* parent)
 	pageLay->addWidget(skeletonDescBtn);
 	pageLay->addLayout(row3Layout);
 	pageLay->addLayout(row4Layout);
+	pageLay->addLayout(row5Layout);
 	pageLay->addStretch();
 }
 

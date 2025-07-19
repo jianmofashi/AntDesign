@@ -76,16 +76,9 @@ QColor DesignSystem::primaryColor() const
 	return m_currentTheme.primaryColor;
 }
 
-QColor DesignSystem::textColor(TextColorMode color) const
+QColor DesignSystem::textColor() const
 {
-	if (color == Black)
-		return QColor(0, 0, 0);
-	else if (color == White)
-		return QColor(255, 255, 255);
-	else if (color == DarkGray)
-		return QColor(30, 30, 30);
-	else
-		return QColor(0, 0, 0);
+	return m_currentTheme.textColor;
 }
 
 QColor DesignSystem::backgroundColor() const
