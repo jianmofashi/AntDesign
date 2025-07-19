@@ -10,7 +10,7 @@ class MaterialSpinner : public QWidget
 		Q_PROPERTY(qreal angle READ angle WRITE setAngle)
 
 public:
-	explicit MaterialSpinner(int lineWidth, QColor lineColor, QWidget* parent);
+	explicit MaterialSpinner(QSize size, int lineWidth, QColor lineColor, QWidget* parent);
 
 	qreal dashLength() const;
 	void setDashLength(qreal length);
@@ -32,5 +32,6 @@ private:
 	qreal m_dashOffset;
 	qreal m_angle;
 	int m_lineWidth;
+	int m_length;		// 矩形边长
 	QColor m_lineColor;
 };

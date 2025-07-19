@@ -151,9 +151,17 @@ void MaterialProgressBar::setRealProgress(int targetValue)
 	m_animation->setEndValue(targetValue);
 
 	// 动画时间取决于距离，可调节
-	int delta = targetValue - value();
-	int duration = std::clamp(delta * 10, 1000, 5000);	// 固定在这个范围内
+	constexpr int minDuration = 500;
+	constexpr int maxDuration = 5000;
+	constexpr double maxSpeed = 0.02;  // 百分比/ms
+
+	double range = maximum() - minimum();
+	double deltaRatio = double(targetValue - value()) / range;
+
+	int duration = static_cast<int>((deltaRatio * 100) / maxSpeed);
+	duration = std::clamp(duration, minDuration, maxDuration);
+
 	m_animation->setDuration(duration);
-	m_animation->setEasingCurve(QEasingCurve::OutCubic);
+	m_animation->setEasingCurve(QEasingCurve::InOutSine);
 	m_animation->start();
 }

@@ -72,8 +72,7 @@ HomePage::HomePage(QWidget* parent)
 	// 启动测试模式
 	progress->startTestPattern();
 	// 圆形进度条
-	MaterialSpinner* spinner = new MaterialSpinner(4, DesignSystem::instance()->primaryColor(), this);
-	spinner->setFixedSize(42, 42);
+	MaterialSpinner* spinner = new MaterialSpinner(QSize(50, 50), 4, DesignSystem::instance()->primaryColor(), this);
 
 	// 单选按钮
 	AntRadioButton* radioBtn1 = new AntRadioButton(this);

@@ -4,7 +4,7 @@
 #include <QParallelAnimationGroup>
 #include <QEasingCurve>
 
-MaterialSpinner::MaterialSpinner(int lineWidth, QColor lineColor, QWidget* parent)
+MaterialSpinner::MaterialSpinner(QSize size, int lineWidth, QColor lineColor, QWidget* parent)
 	: QWidget(parent),
 	m_dashLength(0.1),
 	m_dashOffset(0),
@@ -12,6 +12,9 @@ MaterialSpinner::MaterialSpinner(int lineWidth, QColor lineColor, QWidget* paren
 	m_lineWidth(lineWidth),
 	m_lineColor(lineColor)
 {
+	// 注意宽高必须相等
+	m_length = qMin(size.width(), size.height());
+	setFixedSize(m_length, m_length);
 	initAnimations();
 }
 
@@ -70,9 +73,9 @@ void MaterialSpinner::paintEvent(QPaintEvent*)
 
 	// 设置动态虚线 pattern
 	QVector<qreal> pattern;
-	pattern << m_dashLength * size / 50.0 << 35 * size / 50.0;
+	pattern << m_dashLength * size / m_length << 35 * size / m_length;	// 35这个值自己调整 合适即可
 	pen.setDashPattern(pattern);
-	pen.setDashOffset(m_dashOffset * size / 50.0);
+	pen.setDashOffset(m_dashOffset * size / m_length);
 
 	painter.setPen(pen);
 
@@ -92,7 +95,7 @@ void MaterialSpinner::initAnimations()
 	dashLengthAnim->setKeyValueAt(0.6, 20);
 	dashLengthAnim->setKeyValueAt(0.7, 20);
 	dashLengthAnim->setEndValue(25);
-	dashLengthAnim->setEasingCurve(QEasingCurve::InOutQuad);
+	dashLengthAnim->setEasingCurve(QEasingCurve::InOutSine);
 
 	// dashOffset 动画
 	QPropertyAnimation* dashOffsetAnim = new QPropertyAnimation(this, "dashOffset");
