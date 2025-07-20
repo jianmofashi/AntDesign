@@ -178,6 +178,9 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CardWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StyleSheet.h">
@@ -321,6 +324,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="TagWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="CardWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

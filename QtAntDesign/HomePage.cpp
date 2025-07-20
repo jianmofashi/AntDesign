@@ -19,6 +19,7 @@
 #include "AntDoubleInputNumber.h"
 #include "AntComboBox.h"
 #include "TagWidget.h"
+#include "CardWidget.h"
 
 HomePage::HomePage(QWidget* parent)
 	: QWidget(parent)
@@ -224,7 +225,7 @@ HomePage::HomePage(QWidget* parent)
 	// 标签
 	QHBoxLayout* row5Layout = new QHBoxLayout(w1);
 	row5Layout->setSpacing(10);
-	row5Layout->setContentsMargins(8, 8, 8, 8);
+	row5Layout->setContentsMargins(8, 22, 8, 22);
 
 	QLabel* tagLabel = new QLabel("标签", this);
 
@@ -256,6 +257,14 @@ HomePage::HomePage(QWidget* parent)
 		TagWidget* tag = new TagWidget(info.name, 11.5, info.color, this, false);
 		row5Layout->addWidget(tag);
 	}
+
+	// 卡片控件
+	CardWidget* card = new CardWidget("上次登录：xxxx-xx-xx", "总运行时间：xxx小时", this);
+	card->setImageFile(":/Imgs/gpt.jpg");
+	card->setFixedSize(320, 200);
+	QHBoxLayout* row6Layout = new QHBoxLayout(w1);
+	row6Layout->setSpacing(10);
+	row6Layout->setContentsMargins(8, 8, 8, 8);
 
 	// 第一行布局
 	row1Layout->addWidget(labelList[0]);
@@ -295,6 +304,10 @@ HomePage::HomePage(QWidget* parent)
 	// 第五行布局
 	row5Layout->addStretch();
 
+	// 第六行布局
+	row6Layout->addWidget(card);
+	row6Layout->addStretch();
+
 	// 添加到页面布局
 	pageLay->addSpacing(20);
 	pageLay->addLayout(row1Layout);
@@ -304,6 +317,7 @@ HomePage::HomePage(QWidget* parent)
 	pageLay->addLayout(row3Layout);
 	pageLay->addLayout(row4Layout);
 	pageLay->addLayout(row5Layout);
+	pageLay->addLayout(row6Layout);
 	pageLay->addStretch();
 }
 

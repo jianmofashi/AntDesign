@@ -107,6 +107,7 @@
     <ClCompile Include="AntTooltipManager.cpp" />
     <ClCompile Include="AntTooltipViewController.cpp" />
     <ClCompile Include="BubbleViewController.cpp" />
+    <ClCompile Include="CardWidget.cpp" />
     <ClCompile Include="TransparentMask.cpp" />
     <ClCompile Include="CustomToolButton.cpp" />
     <ClCompile Include="DesignSystem.cpp" />
@@ -196,6 +197,7 @@
     <QtMoc Include="TransparentMask.h" />
     <QtMoc Include="PopupViewController.h" />
     <QtMoc Include="AntTooltipViewController.h" />
+    <QtMoc Include="CardWidget.h" />
     <ClInclude Include="StyleSheet.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
