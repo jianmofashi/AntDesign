@@ -24,9 +24,9 @@ CardWidget::CardWidget(QString lastLogin, QString totalTime, QWidget* parent)
 
 	// 创建阴影效果
 	auto* shadow = new QGraphicsDropShadowEffect(this);
-	shadow->setBlurRadius(15);               
-	shadow->setOffset(0, 4);                  
-	shadow->setColor(QColor(50, 50, 50, 150));  
+	shadow->setBlurRadius(15);
+	shadow->setOffset(0, 4);
+	shadow->setColor(QColor(50, 50, 50, 150));
 	setGraphicsEffect(shadow);
 }
 

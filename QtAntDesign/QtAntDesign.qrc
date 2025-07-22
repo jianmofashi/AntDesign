@@ -37,5 +37,15 @@
         <file>Imgs/WeChat.svg</file>
         <file>Imgs/x.svg</file>
         <file>Imgs/gpt.jpg</file>
+        <file>Imgs/rightArrowBtn.svg</file>
+        <file>Imgs/amd.jpg</file>
+        <file>Imgs/apple.jpg</file>
+        <file>Imgs/google.jpg</file>
+        <file>Imgs/grok.jpg</file>
+        <file>Imgs/wechat.jpg</file>
+        <file>Imgs/openai.jpg</file>
+        <file>Imgs/nvidia.jpg</file>
+        <file>Imgs/huawei.jpg</file>
+        <file>Imgs/varda.jpg</file>
     </qresource>
 </RCC>

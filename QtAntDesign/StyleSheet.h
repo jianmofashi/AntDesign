@@ -265,8 +265,7 @@ namespace StyleSheet
 
 	inline QString antInputNumberQss(
 		const QColor& borderColor,
-		const QColor& hoverBorderColor,
-		const QColor& focusBorderColor)
+		const QColor& hoverBorderColor)
 	{
 		return QString(R"(
 		AntInputNumber {
@@ -278,19 +277,14 @@ namespace StyleSheet
 			border: 2px solid %2;
 		}
 
-		AntInputNumber[focused="true"] {
-			border: 2px solid %3;
-		}
 	)")
 			.arg(borderColor.name())
-			.arg(hoverBorderColor.name())
-			.arg(focusBorderColor.name());
+			.arg(hoverBorderColor.name());
 	}
 
 	inline QString antDoubleInputNumberQss(
 		const QColor& normalBorder,
-		const QColor& hoverBorder,
-		const QColor& focusBorderColor)
+		const QColor& hoverBorder)
 	{
 		return QString(R"(
         AntDoubleInputNumber {
@@ -301,14 +295,9 @@ namespace StyleSheet
         AntDoubleInputNumber:hover {
             border: 2px solid %2;
         }
-
-		AntDoubleInputNumber[focused="true"] {
-			border: 2px solid %3;
-		}
-    )")	
+    )")
 			.arg(normalBorder.name())
-			.arg(hoverBorder.name())
-			.arg(focusBorderColor.name());
+			.arg(hoverBorder.name());
 	}
 
 	// 垂直方向列表视图样式
@@ -346,5 +335,70 @@ namespace StyleSheet
 		})")
 			.arg(bgColor.name())
 			.arg(handleColor.name());
+	}
+
+	// 滚动区样式表
+	inline QString antScrollAreaQss(const QColor& bgColor, const QColor& handleColor, const QColor& handleHoverColor)
+	{
+		return QString(R"(
+		#AntScrollArea {
+			background-color: %1;
+			border: none;
+		}
+
+		#AntScrollArea QScrollBar:vertical, #AntScrollArea QScrollBar:horizontal {
+			background: %1;
+			border: none;
+		}
+
+		#AntScrollArea QScrollBar:vertical {
+			width: 7px;
+		}
+
+		#AntScrollArea QScrollBar:horizontal {
+			height: 7px;
+		}
+
+		#AntScrollArea QScrollBar::handle:vertical {
+			background: %2;
+			border-radius: 3px;
+		}
+
+		#AntScrollArea QScrollBar::handle:horizontal {
+			background: %2;
+			border-radius: 3px;
+		}
+
+		#AntScrollArea QScrollBar::handle:vertical:hover,
+		#AntScrollArea QScrollBar::handle:horizontal:hover {
+			background: %3;
+			border-radius: 3px;
+		}
+
+		#AntScrollArea QScrollBar::handle:vertical:pressed,
+		#AntScrollArea QScrollBar::handle:horizontal:pressed {
+			background: %3;
+		}
+
+		#AntScrollArea QScrollBar::sub-line:vertical,
+		#AntScrollArea QScrollBar::add-line:vertical,
+		#AntScrollArea QScrollBar::sub-line:horizontal,
+		#AntScrollArea QScrollBar::add-line:horizontal {
+			width: 0px;
+			height: 0px;
+			border: none;
+			background: none;
+		}
+
+		#AntScrollArea QScrollBar::add-page:vertical,
+		#AntScrollArea QScrollBar::sub-page:vertical,
+		#AntScrollArea QScrollBar::add-page:horizontal,
+		#AntScrollArea QScrollBar::sub-page:horizontal {
+			background: none;
+		}
+		)")
+			.arg(bgColor.name())			// 设置背景颜色
+			.arg(handleColor.name())		// 设置滚动条手柄颜色
+			.arg(handleHoverColor.name());  // 设置悬停时的滚动条手柄颜色
 	}
 }

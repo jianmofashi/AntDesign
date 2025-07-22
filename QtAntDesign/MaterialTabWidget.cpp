@@ -97,7 +97,7 @@ MaterialTabWidget::MaterialTabWidget(QWidget* parent)
 	m_tabBar = new MaterialTabBar(this);
 	m_stackedWidget = new SlideStackedWidget(this);
 
-	auto layout = new QVBoxLayout(this);
+	layout = new QVBoxLayout(this);
 	layout->setContentsMargins(0, 0, 0, 0);
 	layout->setSpacing(0);
 	layout->addWidget(m_tabBar);
@@ -136,7 +136,7 @@ void MaterialTabWidget::onTabClicked(int index)
 
 	m_stackedWidget->slideToPage(nextWidget,
 		forward ? SlideStackedWidget::RightToLeft : SlideStackedWidget::LeftToRight,
-		m_animationDuration, SlideStackedWidget::InOutCubic, [this, index]()
+		m_animationDuration, SlideStackedWidget::OutCubic, [this, index]()
 		{
 			m_currentIndex = index;
 			m_tabBar->setCurrentIndex(index);
@@ -154,4 +154,9 @@ void MaterialTabWidget::addTab(QWidget* wid, QString tabName)
 QWidget* MaterialTabWidget::getWidget(int index)
 {
 	return m_stackedWidget->widget(index);
+}
+
+QVBoxLayout* MaterialTabWidget::getLayout()
+{
+	return layout;
 }

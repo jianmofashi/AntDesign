@@ -4,6 +4,7 @@
 #include <QTabWidget>
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
+#include <QVBoxLayout>
 #include "SlideStackedWidget.h"
 
 class MaterialTabBar :public QTabBar
@@ -46,6 +47,7 @@ public:
 
 	void addTab(QWidget* wid, QString tabName);
 	QWidget* getWidget(int index);
+	QVBoxLayout* getLayout();
 public slots:
 	void setCurrentIndex(int index);
 
@@ -58,6 +60,7 @@ private slots:
 private:
 	MaterialTabBar* m_tabBar;
 	SlideStackedWidget* m_stackedWidget;
+	QVBoxLayout* layout;
 
 	int m_animationDuration = 300;
 	bool m_isAnimating = false;

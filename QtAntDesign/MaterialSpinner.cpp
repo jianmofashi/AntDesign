@@ -73,9 +73,9 @@ void MaterialSpinner::paintEvent(QPaintEvent*)
 
 	// 设置动态虚线 pattern
 	QVector<qreal> pattern;
-	pattern << m_dashLength * size / m_length << 35 * size / m_length;	// 35这个值自己调整 合适即可
+	pattern << m_dashLength * size / 50 << 36 * size / 50;	// 36这个值自己调整 合适即可
 	pen.setDashPattern(pattern);
-	pen.setDashOffset(m_dashOffset * size / m_length);
+	pen.setDashOffset(m_dashOffset * size / 50);
 
 	painter.setPen(pen);
 

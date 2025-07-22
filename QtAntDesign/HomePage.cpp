@@ -1,12 +1,14 @@
 ﻿#include "HomePage.h"
 #include <QVBoxLayout>
 #include <QLabel>
+#include "AntScrollArea.h"
 #include "MaterialTabWidget.h"
 #include "AntToggleButton.h"
 #include "SlideStackedWidget.h"
 #include "MaterialProgressBar.h"
 #include <QList>
 #include <QTimer>
+#include <QScrollArea>
 #include "MaterialSpinner.h"
 #include "AntRadioButton.h"
 #include "AntSlider.h"
@@ -19,6 +21,7 @@
 #include "AntDoubleInputNumber.h"
 #include "AntComboBox.h"
 #include "TagWidget.h"
+#include "CarouselWidget.h"
 #include "CardWidget.h"
 
 HomePage::HomePage(QWidget* parent)
@@ -27,13 +30,19 @@ HomePage::HomePage(QWidget* parent)
 	setFocusPolicy(Qt::ClickFocus);  // 设置焦点策略 点击空白处可以获取焦点
 	// 标签页
 	MaterialTabWidget* tabWidget = new MaterialTabWidget(this);
+	tabWidget->getLayout()->setContentsMargins(10, 0, 5, 0);
+
+	// 滚动区域
+	AntScrollArea* scrollArea = new AntScrollArea(AntScrollArea::ScrollVertical, this);
 	QWidget* w1 = new QWidget(this);
-	tabWidget->addTab(w1, "常用控件");
+	scrollArea->addWidget(w1);
+
+	// 页面内容
+	tabWidget->addTab(scrollArea, "常用控件");
 	tabWidget->addTab(new QWidget(this), "数据统计");
 	NoDataWidget* noData = new NoDataWidget(this);
 	tabWidget->addTab(noData, "暂无数据");
 	tabWidget->getWidget(1)->setStyleSheet("background-color: lightblue;");
-	tabWidget->getWidget(2)->setStyleSheet("background-color: gray;");
 
 	// 主布局
 	QVBoxLayout* layout = new QVBoxLayout(this);
@@ -43,8 +52,64 @@ HomePage::HomePage(QWidget* parent)
 
 	// 页面内容布局
 	QVBoxLayout* pageLay = new QVBoxLayout(w1);
-	pageLay->setSpacing(0);
+	pageLay->setSpacing(14);
 	pageLay->setContentsMargins(0, 0, 0, 0);
+
+	// 轮播图
+	QStringList imagePaths = {
+	":/Imgs/nvidia.jpg",
+	":/Imgs/huawei.jpg",
+	":/Imgs/openai.jpg",
+	":/Imgs/wechat.jpg",
+	":/Imgs/grok.jpg",
+	":/Imgs/varda.jpg",
+	":/Imgs/google.jpg",
+	":/Imgs/apple.jpg",
+	":/Imgs/amd.jpg"
+	};
+
+	CarouselWidget* carousel = new CarouselWidget(QSize(1150, 330), 5, imagePaths, this);
+	// 启用标签
+	carousel->getCards()[0]->addTab("新发布", QColor(255, 50, 49));					// 鲜红，新品强调
+	carousel->getCards()[1]->addTab("限时折扣", QColor(255, 136, 0));					// 橙色，促销活动
+	carousel->getCards()[2]->addTab("热销中", QColor(255, 69, 0));					// 橘红，高热度
+	carousel->getCards()[3]->addTab("推荐", QColor(0, 160, 233));					// 天蓝，系统推荐
+	carousel->getCards()[4]->addTab("精选", QColor(92, 184, 92));					// 草绿，高质量精选
+	carousel->getCards()[5]->addTab("预售", QColor(255, 102, 153));					// 粉色，预售状态
+	carousel->getCards()[6]->addTab("会员专享", QColor(255, 215, 0));					// 金色，专属权益
+	carousel->getCards()[7]->addTab("限量发售", QColor(153, 102, 255));				// 紫色，稀缺商品
+	carousel->getCards()[8]->addTab("免费试用", QColor(135, 206, 250));				// 浅蓝色
+	// 启用文本内容 启用url按钮
+	carousel->getCards()[0]->setTextContent("英伟达RTX显卡（NVIDIA Graphics Cards）");
+	carousel->getCards()[0]->enableUrlBtn(QUrl("https://www.nvidia.cn/geforce/"));
+
+	carousel->getCards()[1]->setTextContent("华为麒麟芯片（HiSilicon Kirin SoCs）");
+	carousel->getCards()[1]->enableUrlBtn(QUrl("https://www.huawei.com/cn/"));
+
+	carousel->getCards()[2]->setTextContent("OpenAI 人工智能技术（OpenAI AI Technologies）");
+	carousel->getCards()[2]->enableUrlBtn(QUrl("https://www.openai.com/"));
+
+	carousel->getCards()[3]->setTextContent("微信社交平台（WeChat Social Platform）");
+	carousel->getCards()[3]->enableUrlBtn(QUrl("https://www.wechat.com/"));
+
+	carousel->getCards()[4]->setTextContent("Grok AI 助手（Grok AI Assistant）");
+	carousel->getCards()[4]->enableUrlBtn(QUrl("https://www.grok.com/"));  // 如果没有官网请提供或改掉
+
+	carousel->getCards()[5]->setTextContent("Varda 太空制造公司（Varda Space Industries）");
+	carousel->getCards()[5]->enableUrlBtn(QUrl("https://www.varda.com/"));
+
+	carousel->getCards()[6]->setTextContent("谷歌搜索与服务（Google Search & Services）");
+	carousel->getCards()[6]->enableUrlBtn(QUrl("https://www.google.com/"));
+
+	carousel->getCards()[7]->setTextContent("苹果M系列芯片（Apple Silicon M-Series）");
+	carousel->getCards()[7]->enableUrlBtn(QUrl("https://www.apple.com/mac/"));
+
+	carousel->getCards()[8]->setTextContent("AMD锐龙CPU（AMD Ryzen Series）");
+	carousel->getCards()[8]->enableUrlBtn(QUrl("https://www.amd.com/zh/products/ryzen-processors"));
+
+	QHBoxLayout* carouselLayout = new QHBoxLayout(w1);
+	carouselLayout->setSpacing(0);
+	carouselLayout->setContentsMargins(0, 0, 0, 0);
 
 	// 添加标题 + 开关按钮
 	QHBoxLayout* row1Layout = new QHBoxLayout();
@@ -73,7 +138,7 @@ HomePage::HomePage(QWidget* parent)
 	// 启动测试模式
 	progress->startTestPattern();
 	// 圆形进度条
-	MaterialSpinner* spinner = new MaterialSpinner(QSize(50, 50), 4, DesignSystem::instance()->primaryColor(), this);
+	MaterialSpinner* spinner = new MaterialSpinner(QSize(40, 40), 4, DesignSystem::instance()->primaryColor(), this);
 
 	// 单选按钮
 	AntRadioButton* radioBtn1 = new AntRadioButton(this);
@@ -96,7 +161,7 @@ HomePage::HomePage(QWidget* parent)
 	skeletonDescBtn->setFixedSize(120, 50);
 	QHBoxLayout* row3Layout = new QHBoxLayout(w1);
 	row3Layout->setSpacing(8);
-	row3Layout->setContentsMargins(0, 0, 0, 0);
+	row3Layout->setContentsMargins(0, 0, 0, 20);
 
 	QList<QIcon> icons = {
 		QIcon(":/Imgs/undraw_book-lover_f1dq.svg"),
@@ -110,7 +175,7 @@ HomePage::HomePage(QWidget* parent)
 
 	for (const QIcon& icon : icons)
 	{
-		SkeletonWidget* skeleton = new SkeletonWidget(QSize(280, 200), 8, this);
+		SkeletonWidget* skeleton = new SkeletonWidget(QSize(250, 200), 8, this);
 		row3Layout->addWidget(skeleton);
 		skeletons.append(skeleton);  // 保存骨架指针
 
@@ -225,19 +290,19 @@ HomePage::HomePage(QWidget* parent)
 	// 标签
 	QHBoxLayout* row5Layout = new QHBoxLayout(w1);
 	row5Layout->setSpacing(10);
-	row5Layout->setContentsMargins(8, 22, 8, 22);
+	row5Layout->setContentsMargins(0, 22, 0, 22);
 
 	QLabel* tagLabel = new QLabel("标签", this);
 
 	// 初始化配置信息列表
-	QList<TagInfo> tagList1 = {
+	QList<TagWidget::TagInfo> tagList1 = {
 		{"bilibili", ":/Imgs/bilibili.svg", QColor(251, 114, 153)},
 		{"x",        ":/Imgs/x.svg",        QColor(0, 0, 0)},
 		{"wechat",   ":/Imgs/WeChat.svg",   QColor(7, 193, 96)},
 		{"taobao",   ":/Imgs/taobao.svg",   QColor(255, 140, 0)},
 	};
 
-	QList<TagInfo> tagList2 = {
+	QList<TagWidget::TagInfo> tagList2 = {
 		{"bilibili", "", QColor(251, 114, 153) },
 		{"x",        "", QColor(0, 0, 0)},
 		{"wechat",   "", QColor(7, 193, 96)},
@@ -246,13 +311,13 @@ HomePage::HomePage(QWidget* parent)
 
 	row5Layout->addWidget(tagLabel);
 
-	for (const TagInfo& info : tagList1)
+	for (const TagWidget::TagInfo& info : tagList1)
 	{
 		TagWidget* tag = new TagWidget(info.name, 11.5, info.color, this, true, info.svgPath);
 		row5Layout->addWidget(tag);
 	}
 
-	for (const TagInfo& info : tagList2)
+	for (const TagWidget::TagInfo& info : tagList2)
 	{
 		TagWidget* tag = new TagWidget(info.name, 11.5, info.color, this, false);
 		row5Layout->addWidget(tag);
@@ -262,9 +327,15 @@ HomePage::HomePage(QWidget* parent)
 	CardWidget* card = new CardWidget("上次登录：xxxx-xx-xx", "总运行时间：xxx小时", this);
 	card->setImageFile(":/Imgs/gpt.jpg");
 	card->setFixedSize(320, 200);
+	QLabel* cardLabel = new QLabel("卡片", this);
 	QHBoxLayout* row6Layout = new QHBoxLayout(w1);
 	row6Layout->setSpacing(10);
-	row6Layout->setContentsMargins(8, 8, 8, 8);
+	row6Layout->setContentsMargins(0, 8, 0, 8);
+
+	// 轮播图布局
+	carouselLayout->addStretch();
+	carouselLayout->addWidget(carousel);
+	carouselLayout->addStretch();
 
 	// 第一行布局
 	row1Layout->addWidget(labelList[0]);
@@ -305,13 +376,13 @@ HomePage::HomePage(QWidget* parent)
 	row5Layout->addStretch();
 
 	// 第六行布局
+	row6Layout->addWidget(cardLabel);
 	row6Layout->addWidget(card);
 	row6Layout->addStretch();
 
 	// 添加到页面布局
-	pageLay->addSpacing(20);
+	pageLay->addLayout(carouselLayout);
 	pageLay->addLayout(row1Layout);
-	pageLay->addSpacing(20);
 	pageLay->addLayout(row2Layout);
 	pageLay->addWidget(skeletonDescBtn);
 	pageLay->addLayout(row3Layout);

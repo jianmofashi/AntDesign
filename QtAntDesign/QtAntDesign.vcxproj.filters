@@ -175,10 +175,19 @@
     <ClCompile Include="TagWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CardWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CardWidget.cpp">
+    <ClCompile Include="CarouselCard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CarouselWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AntScrollArea.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -327,6 +336,15 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="CardWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="CarouselCard.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="CarouselWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="AntScrollArea.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

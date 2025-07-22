@@ -14,8 +14,8 @@ void DesignSystem::loadThemes()
 {
 	// Light Theme
 	m_lightTheme.primaryColor = QColor("#1677ff");	// Ant 蓝色
-	m_lightTheme.textColor = QColor("#ffffff");
-	m_lightTheme.backgroundColor = QColor("#ffffff");
+	m_lightTheme.textColor = QColor(255, 255, 255);
+	m_lightTheme.backgroundColor = QColor(255, 255, 255);
 	m_lightTheme.borderColor = QColor(200, 200, 200);
 	m_lightTheme.borderColorHover = QColor(22, 119, 255);
 	m_lightTheme.msgTextColor = QColor(30, 30, 30);
@@ -27,7 +27,7 @@ void DesignSystem::loadThemes()
 	m_lightTheme.toggleButtonColor = QColor(255, 255, 255);
 	m_lightTheme.toggleButtonBgColor = QColor(200, 200, 200);
 	m_lightTheme.noCheckedColor = QColor(200, 200, 200);
-	m_lightTheme.toolTipBgColor = QColor(30, 30, 30);       
+	m_lightTheme.toolTipBgColor = QColor(30, 30, 30);
 	m_lightTheme.toolTipTextColor = QColor(245, 245, 245);
 	m_lightTheme.userBubbleBgColor = QColor(255, 255, 255);
 	m_lightTheme.toolBtnBgColor = QColor(24, 144, 255, 40);
@@ -45,6 +45,8 @@ void DesignSystem::loadThemes()
 	m_lightTheme.popupScrollBarColor = QColor(220, 220, 220);
 	m_lightTheme.popupItemBgColor = QColor(200, 200, 200, 80);
 	m_lightTheme.popupTextColor = QColor(30, 30, 30);
+	m_lightTheme.scrollAreaHandleColor = QColor(230, 230, 230);
+	m_lightTheme.scrollAreaHoverColor = QColor(190, 190, 190);
 	QFont lightFont;
 	lightFont.setPointSizeF(12);
 

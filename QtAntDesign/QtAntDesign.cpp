@@ -145,7 +145,7 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 				}
 
 				// 页面切换 + 结束后恢复按钮
-				stackedWidget->slideFromBottomToTop(nextPage, 150, [this]()
+				stackedWidget->slideFromBottomToTop(nextPage, 250, [this]()
 					{
 						for (ButtonInfo& infos : buttonInfos)
 							infos.button->setEnabled(true);

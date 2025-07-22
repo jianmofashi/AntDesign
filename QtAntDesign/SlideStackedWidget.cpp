@@ -5,14 +5,15 @@ SlideStackedWidget::SlideStackedWidget(QWidget* parent)
 	: QStackedWidget(parent)
 {
 	setFrameShape(QFrame::NoFrame);
-	setContentsMargins(6, 0, 6, 0);
+	setContentsMargins(0, 0, 0, 0);
 }
 
 SlideStackedWidget::~SlideStackedWidget()
 {
 }
 
-void SlideStackedWidget::slideToPage(QWidget* nextWidget, SlideDirection direction, int duration, AnimationStyle style, std::function<void()> onFinished)
+void SlideStackedWidget::slideToPage(QWidget* nextWidget, SlideDirection direction, int duration,
+	AnimationStyle style, std::function<void()> onFinished)
 {
 	if (isAnimating || nextWidget == currentWidget()) return;
 	isAnimating = true;
@@ -21,65 +22,55 @@ void SlideStackedWidget::slideToPage(QWidget* nextWidget, SlideDirection directi
 	int w = width();
 	int h = height();
 
-	// 设置页面固定大小
 	currentPage->resize(w, h);
 	nextWidget->resize(w, h);
 
-	// 初始位置
-	QPoint currentStart(0, 0);
-	QPoint currentEnd = (direction == RightToLeft) ? QPoint(-w, 0) : QPoint(w, 0);
-	QPoint nextStart = (direction == RightToLeft) ? QPoint(w, 0) : QPoint(-w, 0);
+	// 小幅滑入距离
+	int offset = (direction == RightToLeft) ? 50 : -50;
+	QPoint nextStart(offset, 0);
 	QPoint nextEnd(0, 0);
 
-	// 准备新页面
+	// 初始化新页面位置
 	nextWidget->move(nextStart);
 	nextWidget->show();
 
 	// 缓动曲线
-	QEasingCurve iosEasing = getIOSEasingCurve(style);
+	QEasingCurve easing = getEasingCurve(style);
 
-	// 动画：当前页
-	QPropertyAnimation* animCurrent = new QPropertyAnimation(currentPage, "pos");
-	animCurrent->setDuration(duration);
-	animCurrent->setStartValue(currentStart);
-	animCurrent->setEndValue(currentEnd);
-	animCurrent->setEasingCurve(iosEasing);
+	// 位置动画
+	QPropertyAnimation* anim = new QPropertyAnimation(nextWidget, "pos");
+	anim->setDuration(duration);
+	anim->setStartValue(nextStart);
+	anim->setEndValue(nextEnd);
+	anim->setEasingCurve(easing);
 
-	// 动画：新页
-	QPropertyAnimation* animNext = new QPropertyAnimation(nextWidget, "pos");
-	animNext->setDuration(duration);
-	animNext->setStartValue(nextStart);
-	animNext->setEndValue(nextEnd);
-	animNext->setEasingCurve(iosEasing);
-
-	// 并行动画组
-	QParallelAnimationGroup* animGroup = new QParallelAnimationGroup(this);
-	animGroup->addAnimation(animCurrent);
-	animGroup->addAnimation(animNext);
-
-	// 动画完成处理
-	connect(animGroup, &QParallelAnimationGroup::finished, this, [=]()
+	connect(anim, &QPropertyAnimation::finished, this, [=]()
 		{
 			setCurrentWidget(nextWidget);
-			currentPage->move(0, 0); // 重置位置，避免隐藏页偏移
+			currentPage->move(0, 0);
 			isAnimating = false;
 			if (onFinished) onFinished();
 		});
 
-	animGroup->start(QAbstractAnimation::DeleteWhenStopped);
+	currentPage->hide();
+
+	anim->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
 // 额外的辅助方法：提供不同风格缓动曲线选项
-QEasingCurve SlideStackedWidget::getIOSEasingCurve(AnimationStyle style)
+QEasingCurve SlideStackedWidget::getEasingCurve(AnimationStyle style)
 {
 	switch (style) {
+	case InOutSine:
+		return QEasingCurve(QEasingCurve::InOutSine);
+
 	case Standard:
 		// iOS标准页面切换曲线
 		return QEasingCurve(QEasingCurve::OutCubic);
 
-	case InOutCubic:
+	case OutCubic:
 		// iOS弹簧阻尼效果
-		return QEasingCurve(QEasingCurve::InOutCubic);
+		return QEasingCurve(QEasingCurve::OutCubic);
 
 	case Custom:
 	{
@@ -134,7 +125,7 @@ void SlideStackedWidget::slideFromBottomToTop(QWidget* nextWidget, int duration,
 	nextWidget->show();
 
 	// 缓动曲线
-	QEasingCurve easing = getIOSEasingCurve(InOutCubic);
+	QEasingCurve easing = getEasingCurve(OutCubic);
 
 	// 动画：新页面位置动画
 	QPropertyAnimation* animNextPos = new QPropertyAnimation(nextWidget, "pos");

@@ -11,7 +11,7 @@ AntInputNumber::AntInputNumber(QWidget* parent)
 {
 	setButtonSymbols(QAbstractSpinBox::NoButtons);
 
-	setStyleSheet(StyleSheet::antInputNumberQss(theme.borderColor, theme.primaryColor, theme.primaryColor));
+	setStyleSheet(StyleSheet::antInputNumberQss(theme.borderColor, theme.primaryColor));
 
 	m_plusBtn = new QToolButton(this);
 	m_plusBtn->setIcon(QIcon(":/Imgs/upArrow.svg"));
@@ -28,15 +28,6 @@ AntInputNumber::AntInputNumber(QWidget* parent)
 	m_animation = new QPropertyAnimation(this, "buttonX", this);
 	m_animation->setDuration(300);
 	m_animation->setEasingCurve(QEasingCurve::InOutCubic);
-
-	// 阴影
-	m_shadowEffect = new QGraphicsDropShadowEffect(this);
-	m_shadowEffect->setBlurRadius(22);
-	m_shadowEffect->setOffset(0, 0);
-	QColor color = DesignSystem::instance()->primaryColor();
-	color.setAlpha(0);  // 初始透明
-	m_shadowEffect->setColor(color);
-	this->setGraphicsEffect(m_shadowEffect);
 }
 
 void AntInputNumber::enterEvent(QEnterEvent* event)
@@ -109,29 +100,9 @@ void AntInputNumber::updateButtonsPosition()
 void AntInputNumber::focusInEvent(QFocusEvent* event)
 {
 	QSpinBox::focusInEvent(event);
-	if (m_shadowEffect)
-	{
-		QColor color = m_shadowEffect->color();
-		color.setAlpha(255);
-		m_shadowEffect->setColor(color);
-	}
-
-	setProperty("focused", true);
-	style()->unpolish(this);
-	style()->polish(this);
 }
 
 void AntInputNumber::focusOutEvent(QFocusEvent* event)
 {
 	QSpinBox::focusOutEvent(event);
-	if (m_shadowEffect)
-	{
-		QColor color = m_shadowEffect->color();
-		color.setAlpha(0);
-		m_shadowEffect->setColor(color);
-	}
-
-	setProperty("focused", false);
-	style()->unpolish(this);	// 移除样式
-	style()->polish(this);		// 重新应用样式
 }

@@ -1,4 +1,4 @@
-#include "AntTooltipViewController.h"
+ï»¿#include "AntTooltipViewController.h"
 
 AntTooltipViewController::AntTooltipViewController(QString text, AntTooltip::ArrowDir dir, QWidget* parent)
 	: QGraphicsView(parent)
@@ -12,11 +12,11 @@ AntTooltipViewController::AntTooltipViewController(QString text, AntTooltip::Arr
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-	// ¹Ø¼üÐÔÄÜÓÅ»¯
+	// å…³é”®æ€§èƒ½ä¼˜åŒ–
 	setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
 	setCacheMode(QGraphicsView::CacheBackground);
 
-	// ÉèÖÃÍ¼ÐÎ´úÀí
+	// è®¾ç½®å›¾å½¢ä»£ç†
 	tooltip = new AntTooltip(text, dir, nullptr);
 	proxy = scene->addWidget(tooltip);
 	proxy->setCacheMode(QGraphicsItem::ItemCoordinateCache);
@@ -26,7 +26,7 @@ AntTooltipViewController::AntTooltipViewController(QString text, AntTooltip::Arr
 	setSceneRect(QRectF(0, 0, width, height));
 	updateTransformOrigin();
 
-	// ¶¯»­
+	// åŠ¨ç”»
 	scaleAnim = new QPropertyAnimation(proxy, "scale");
 	scaleAnim->setDuration(200);
 	scaleAnim->setStartValue(0.8);
@@ -43,7 +43,7 @@ AntTooltipViewController::AntTooltipViewController(QString text, AntTooltip::Arr
 	groupAnim->addAnimation(scaleAnim);
 	groupAnim->addAnimation(opacityAnim);
 
-	// ÐÅºÅ²Û
+	// ä¿¡å·æ§½
 	connect(groupAnim, &QParallelAnimationGroup::finished, this, [this]()
 		{
 			if (isHide)
@@ -61,7 +61,7 @@ void AntTooltipViewController::showAnimated(QPoint globalPos)
 {
 	isHide = false;
 
-	// ÉèÖÃÊÓÍ¼³¡¾°³ß´ç
+	// è®¾ç½®è§†å›¾åœºæ™¯å°ºå¯¸
 	proxy->update();
 	show();
 	move(globalPos.x(), globalPos.y());

@@ -47,12 +47,12 @@ MaterialDialog::MaterialDialog(bool loginState, QWidget* parent)
 	connect(loginPage->registerButton, &QPushButton::clicked, this, [this]()
 		{
 			// 登录页 → 注册页（向左滑动）
-			stackedWidget->slideToPage(registerPage, SlideStackedWidget::RightToLeft, 300);
+			stackedWidget->slideToPage(registerPage, SlideStackedWidget::RightToLeft);
 		});
 	connect(registerPage->loginButton, &QPushButton::clicked, this, [this]()
 		{
 			// 注册页 → 登录页（向右滑动）
-			stackedWidget->slideToPage(loginPage, SlideStackedWidget::LeftToRight, 300);
+			stackedWidget->slideToPage(loginPage, SlideStackedWidget::LeftToRight);
 		});
 
 	// 成功登录
@@ -67,7 +67,7 @@ MaterialDialog::MaterialDialog(bool loginState, QWidget* parent)
 		{
 			// 注册页 → 登录页（向右滑动）
 			AntMessageManager::instance()->showMessage(AntMessage::Success, "成功注册");
-			stackedWidget->slideToPage(loginPage, SlideStackedWidget::LeftToRight, 300);
+			stackedWidget->slideToPage(loginPage, SlideStackedWidget::LeftToRight);
 		});
 
 	// 用户个人信息页面

@@ -101,6 +101,7 @@
     <ClCompile Include="AntMessage.cpp" />
     <ClCompile Include="AntMessageManager.cpp" />
     <ClCompile Include="AntRadioButton.cpp" />
+    <ClCompile Include="AntScrollArea.cpp" />
     <ClCompile Include="AntSlider.cpp" />
     <ClCompile Include="AntToggleButton.cpp" />
     <ClCompile Include="AntTooltip.cpp" />
@@ -108,6 +109,8 @@
     <ClCompile Include="AntTooltipViewController.cpp" />
     <ClCompile Include="BubbleViewController.cpp" />
     <ClCompile Include="CardWidget.cpp" />
+    <ClCompile Include="CarouselCard.cpp" />
+    <ClCompile Include="CarouselWidget.cpp" />
     <ClCompile Include="TransparentMask.cpp" />
     <ClCompile Include="CustomToolButton.cpp" />
     <ClCompile Include="DesignSystem.cpp" />
@@ -198,6 +201,9 @@
     <QtMoc Include="PopupViewController.h" />
     <QtMoc Include="AntTooltipViewController.h" />
     <QtMoc Include="CardWidget.h" />
+    <QtMoc Include="CarouselCard.h" />
+    <QtMoc Include="CarouselWidget.h" />
+    <QtMoc Include="AntScrollArea.h" />
     <ClInclude Include="StyleSheet.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

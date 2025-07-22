@@ -54,6 +54,9 @@ struct Theme
 	QColor popupScrollBarColor;
 	QColor popupItemBgColor;
 	QColor popupTextColor;
+	// 滚动区相关颜色
+	QColor scrollAreaHandleColor;
+	QColor scrollAreaHoverColor;
 };
 
 class DesignSystem : public QObject
