@@ -1,10 +1,11 @@
-﻿// DesignSystem.h
-#ifndef DESIGN_SYSTEM_H
+﻿#ifndef DESIGN_SYSTEM_H
 #define DESIGN_SYSTEM_H
 
 #include <QObject>
 #include <QColor>
 #include <QFont>
+#include "TransparentMask.h"
+#include "MaskWidget.h"
 
 struct Theme
 {
@@ -12,8 +13,11 @@ struct Theme
 	QColor primaryColor;
 	QColor textColor;
 	QColor backgroundColor;
-	// 单选按钮相关颜色
 	QColor borderColor;
+	QColor widgetBgColor;
+	QColor widgetHoverBgColor;
+	QColor shadowColor;
+	// 单选按钮相关颜色
 	QColor borderColorHover;
 	QColor disabledColor;
 	// 全局消息相关颜色
@@ -34,8 +38,6 @@ struct Theme
 	QColor userBubbleBgColor;
 	// 自定义图标按钮颜色
 	QColor toolBtnBgColor;
-	// 自定义对话框颜色
-	QColor dialogBgColor;
 	// 进度条相关颜色
 	QColor progressBarBgColor;
 	// tab相关颜色
@@ -87,6 +89,8 @@ public:
 	QColor primaryColor() const;
 	QColor textColor() const;
 	QColor backgroundColor() const;
+	QColor widgetBgColor() const;
+	QColor widgetHoverBgColor() const;
 	QColor borderColor() const;
 	QColor borderColorHover() const;
 	QColor disabledColor() const;
@@ -95,6 +99,11 @@ public:
 	void setThemeMode(ThemeMode mode);
 	ThemeMode themeMode() const;
 
+	// 遮罩相关
+	void setTransparentMask(TransparentMask* tpMask);
+	TransparentMask* getTransparentMask();
+	void setDarkMask(MaskWidget* mask);
+	MaskWidget* getDarkMask();
 signals:
 	void themeChanged();
 
@@ -110,7 +119,9 @@ private:
 	Theme m_darkTheme;
 	Theme m_currentTheme;
 	ThemeMode m_mode;
-	QWidget* m_mainWindow = nullptr; // 用于获取主窗口
+	QWidget* m_mainWindow = nullptr;		// 用于获取主窗口
+	TransparentMask* m_tpMask = nullptr;	// 全局透明遮罩
+	MaskWidget* m_darkMask = nullptr;		// 全局深色遮罩
 };
 
 #endif // DESIGN_SYSTEM_H

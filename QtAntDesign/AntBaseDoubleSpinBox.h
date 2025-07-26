@@ -6,14 +6,14 @@
 #include <QGraphicsDropShadowEffect>
 #include "DesignSystem.h"
 
-class AntDoubleInputNumber : public QDoubleSpinBox
+class AntBaseDoubleSpinBox : public QDoubleSpinBox
 {
 	Q_OBJECT
 		Q_PROPERTY(int buttonX READ buttonX WRITE setButtonX)
 
 public:
-	AntDoubleInputNumber(QWidget* parent = nullptr);
-	~AntDoubleInputNumber();
+	AntBaseDoubleSpinBox(QWidget* parent = nullptr);
+	~AntBaseDoubleSpinBox();
 
 protected:
 	void enterEvent(QEnterEvent* event) override;

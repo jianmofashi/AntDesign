@@ -1,15 +1,23 @@
-﻿#include "AntDoubleInputNumber.h"
+﻿#include "AntBaseSpinBox.h"
 #include <QStyle>
 #include <QStyleOptionSpinBox>
 #include <QLineEdit>
+#include <QPainter>
+#include <QMouseEvent>
 #include "StyleSheet.h"
 
-AntDoubleInputNumber::AntDoubleInputNumber(QWidget* parent)
-	: QDoubleSpinBox(parent), m_buttonX(0)
+AntBaseSpinBox::AntBaseSpinBox(QWidget* parent)
+	: QSpinBox(parent), m_buttonX(0),
+	borderColor(theme.borderColor),
+	primaryColor(theme.primaryColor),
+	shadowColor(theme.primaryColor)
 {
+	setObjectName("AntBaseSpinBox");
 	setButtonSymbols(QAbstractSpinBox::NoButtons);
+	setContextMenuPolicy(Qt::NoContextMenu);
 
-	setStyleSheet(StyleSheet::antDoubleInputNumberQss(theme.borderColor, theme.primaryColor));
+	auto theme = DesignSystem::instance()->currentTheme();
+	setStyleSheet(StyleSheet::AntBaseSpinBox(borderColor, primaryColor));
 
 	m_plusBtn = new QToolButton(this);
 	m_plusBtn->setIcon(QIcon(":/Imgs/upArrow.svg"));
@@ -28,53 +36,50 @@ AntDoubleInputNumber::AntDoubleInputNumber(QWidget* parent)
 	m_animation->setEasingCurve(QEasingCurve::InOutCubic);
 }
 
-AntDoubleInputNumber::~AntDoubleInputNumber()
-{
-	// 资源由 Qt parent-child 系统自动清理
-}
-
-void AntDoubleInputNumber::enterEvent(QEnterEvent* event)
+void AntBaseSpinBox::enterEvent(QEnterEvent* event)
 {
 	if (m_animation->state() == QAbstractAnimation::Running)
 		m_animation->stop();
 	m_animation->setDirection(QAbstractAnimation::Forward);
 	m_animation->start();
 
-	QDoubleSpinBox::enterEvent(event);
+	QSpinBox::enterEvent(event);
 }
 
-void AntDoubleInputNumber::leaveEvent(QEvent* event)
+void AntBaseSpinBox::leaveEvent(QEvent* event)
 {
 	if (m_animation->state() == QAbstractAnimation::Running)
 		m_animation->stop();
 	m_animation->setDirection(QAbstractAnimation::Backward);
 	m_animation->start();
 
-	QDoubleSpinBox::leaveEvent(event);
+	QSpinBox::leaveEvent(event);
 }
 
-void AntDoubleInputNumber::stepBy(int steps)
+void AntBaseSpinBox::stepBy(int steps)
 {
-	QDoubleSpinBox::stepBy(steps);
-	lineEdit()->deselect();
-	lineEdit()->setCursorPosition(lineEdit()->text().length());
+	QSpinBox::stepBy(steps);
+	lineEdit()->deselect();  // 取消选中
+	lineEdit()->setCursorPosition(lineEdit()->text().length());  // 光标移末尾
 }
 
-void AntDoubleInputNumber::resizeEvent(QResizeEvent* event)
+void AntBaseSpinBox::resizeEvent(QResizeEvent* event)
 {
-	QDoubleSpinBox::resizeEvent(event);
+	QSpinBox::resizeEvent(event);
 
+	// 让按钮高度为控件高度的一半，宽度等于高度，做成正方形
 	int btnHeight = height() / 2;
 	int btnWidth = btnHeight;
 
 	m_plusBtn->setFixedSize(btnWidth, btnHeight);
-	m_plusBtn->setIconSize(QSize(btnWidth * 1.3, btnHeight * 1.3));
+	m_plusBtn->setIconSize(QSize(btnWidth * 1.3, btnHeight * 1.3));  // 图标略大于按钮
 
 	m_minusBtn->setFixedSize(btnWidth, btnHeight);
 	m_minusBtn->setIconSize(QSize(btnWidth * 1.3, btnHeight * 1.3));
 
-	int startX = width() + btnWidth;
-	int endX = width() - btnWidth - 2;
+	// 更新动画目标位置
+	int startX = width() + btnWidth;                // 完全在外面
+	int endX = width() - btnWidth - 2;              // 靠近控件右侧
 
 	if (m_animation->state() != QAbstractAnimation::Running)
 	{
@@ -85,33 +90,29 @@ void AntDoubleInputNumber::resizeEvent(QResizeEvent* event)
 	}
 }
 
-void AntDoubleInputNumber::updateButtonsPosition()
+void AntBaseSpinBox::updateButtonsPosition()
 {
 	int btnWidth = m_plusBtn->width();
 	int btnHeight = m_plusBtn->height();
 
 	int btnYTop = 0;
-	int btnYBottom = height() / 2;
+	int btnYBottom = btnYTop + m_plusBtn->height();
 
+	// 直接用 m_buttonX 定位按钮左上角
 	m_plusBtn->move(m_buttonX, btnYTop);
 	m_minusBtn->move(m_buttonX, btnYBottom);
 }
 
-// 添加属性动画相关
-int AntDoubleInputNumber::buttonX() const { return m_buttonX; }
-
-void AntDoubleInputNumber::setButtonX(int x)
+void AntBaseSpinBox::focusInEvent(QFocusEvent* event)
 {
-	m_buttonX = x;
-	updateButtonsPosition();
+	QSpinBox::focusInEvent(event);
+	if (parentWidget())
+		parentWidget()->update();  // 通知外层重绘阴影
 }
 
-void AntDoubleInputNumber::focusInEvent(QFocusEvent* event)
+void AntBaseSpinBox::focusOutEvent(QFocusEvent* event)
 {
-	QDoubleSpinBox::focusInEvent(event);
-}
-
-void AntDoubleInputNumber::focusOutEvent(QFocusEvent* event)
-{
-	QDoubleSpinBox::focusOutEvent(event);
+	QSpinBox::focusOutEvent(event);
+	if (parentWidget())
+		parentWidget()->update();  // 通知外层去掉阴影
 }

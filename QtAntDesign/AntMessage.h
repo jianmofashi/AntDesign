@@ -13,38 +13,45 @@ class AntMessage : public QWidget
 public:
 	enum Type { Info, Success, Error, Warning };
 
-	explicit AntMessage(QWidget* parent, Type type, const QString& message, int duration = 1000);
+	explicit AntMessage(QWidget* parent, Type type, const QString& message);
 	~AntMessage();
 
-	// 进入动画
-	void animateIn(QPoint startPos, QPoint endPos, bool isFirst);
-	// 退出动画
-	void animateOut();
-	void closeMessage();
-	void startCloseTimer();
+	// 启动显示持续时间计时器
+	void startDisplayTimer(int ms);
+
 	qreal getCustomOpacity();
 	void setCustomOpacity(qreal opacity);
 
-	void setTargetPos(const QPoint& pos) { m_targetPos = pos; }
-	QPoint targetPos() const { return m_targetPos; }
-	QPoint startPos() const { return m_startPos; }
-	QPoint endPos() const { return m_endPos; }
-	void setStartPos(const QPoint& pos) { m_startPos = pos; }
-	void setEndPos(const QPoint& pos) { m_endPos = pos; }
-public:
-	int m_duration;
+	void setIsExit(bool isExit);
+	bool isExit();
+	// 是否已经出现超时
+	bool hasTimeoutOccurred();
+
+	// 设置进入动画开始结束位置
+	void setStartEndPos(QPoint startPos, QPoint endPos)
+	{
+		m_startPos = startPos;
+		m_endPos = endPos;
+	}
+	// 进入动画开始位置
+	QPoint getStartPos() const { return m_startPos; }
+	// 进入结束开始位置
+	QPoint getEndPos() const { return m_endPos; }
 signals:
-	void closed(AntMessage* self);
-	void destroySelf(AntMessage* self);
+	// 请求退出
+	void requestExit(AntMessage* msg);
+	// 退出动画结束信号
+	void exitAnimationFinished(AntMessage* msg);
 protected:
 	void paintEvent(QPaintEvent* event) override;
+private slots:
+	void onTimeout();
 private:
 	void initResources();
-	void setupAnimations();
+	void setupTimer();
 
 	bool m_isExit;
-	bool m_isFirst;
-	QPoint m_targetPos;
+	bool m_timeoutOccurred;
 	QPoint m_startPos;
 	QPoint m_endPos;
 	Type m_type;
@@ -52,7 +59,7 @@ private:
 	QString m_svgPath;
 	qreal m_customOpacity;
 
-	QTimer* m_closeTimer;
+	QTimer* timer;
 	QPropertyAnimation* m_posAnim;
 	QPropertyAnimation* m_opacityAnim;
 	QParallelAnimationGroup* m_animGroup;

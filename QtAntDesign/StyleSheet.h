@@ -4,33 +4,33 @@
 
 namespace StyleSheet
 {
-	inline QString mainQss()
+	inline QString mainQss(QColor bgColor)
 	{
-		return "#main_widget{ "
+		return QString("#main_widget{ "
 			"border-top-left-radius: 8px; "		// 左上
 			"border-top-right-radius: 8px; "	// 右上角圆角
 			"border-bottom-left-radius: 8px;"	// 左下
 			"border-bottom-right-radius: 8px;"  // 右下
-			"background-color: white;}";
+			"background-color: white;}").arg(bgColor.name());
 	}
 
-	inline QString naviQss()
+	inline QString naviQss(const QColor& bgColor)
 	{
-		return R"(#navi_widget{background-color: rgb(245,245,245);
+		return QString(R"(#navi_widget{background-color: %1;
 					border-top-left-radius: 8px;
-					border-bottom-left-radius: 8px;})";
+					border-bottom-left-radius: 8px;})").arg(bgColor.name());
 	}
 
-	inline QString titleBarQss()
+	inline QString titleBarQss(const QColor& bgColor)
 	{
-		return R"(#titleBar{background-color: rgb(255,255,255);
-					border-top-right-radius: 8px;})";
+		return QString(R"(#titleBar{background-color: %1;
+					border-top-right-radius: 8px;})").arg(bgColor.name());
 	}
 
 	inline QString centralQss()
 	{
-		return R"(#central{background-color: rgb(255,255,255);
-					border-bottom-right-radius: 8px;})";
+		return QString(R"(#central{background-color: transparent;
+					border-bottom-right-radius: 8px;})");
 	}
 
 	inline QString gradientQss()
@@ -144,15 +144,14 @@ namespace StyleSheet
 			.arg(bgColor.blue());
 	}
 
-	inline QString lineEditQss(const QColor& borderColor)
+	inline QString lineEditQss(int padding)
 	{
 		return QString(R"(
         QLineEdit {
-            border: 2px solid rgb(%1, %2, %3);
-            border-radius: 5px;
-            padding-top: 12px;
+            border: none;
+			padding: %1;
         }
-    )").arg(borderColor.red()).arg(borderColor.green()).arg(borderColor.blue());
+    )").arg(QString::number(padding));
 	}
 
 	inline QString noBorderBtnQss(const QColor& color)
@@ -195,17 +194,18 @@ namespace StyleSheet
         }
         QTabBar::tab {
             border: none;
+			margin: 0px;	/* 禁用动画 */
             background: transparent;
-            color: rgb(%1, %2, %3);  /* 普通标签文字颜色 */
+            color: %1;  /* 普通标签文字颜色 */
         }
         QTabBar::tab:hover {
-            color: rgb(%4, %5, %6);  /* hover 时文字颜色 */
+            color: %2;  /* hover 时文字颜色 */
         }
         QTabBar::tab:selected {
-            color: rgb(%4, %5, %6);  /* 选中标签文字颜色 */
+            color: %2;  /* 选中标签文字颜色 */
         })")
-			.arg(textColor.red()).arg(textColor.green()).arg(textColor.blue())
-			.arg(themeColor.red()).arg(themeColor.green()).arg(themeColor.blue());
+			.arg(textColor.name())
+			.arg(themeColor.name());
 	}
 
 	inline QString toolBtnQss(const QColor& defaultColor = QColor("#BFBFBF"), const QColor& hoverColor = QColor("#1677FF"))
@@ -263,51 +263,50 @@ namespace StyleSheet
 			"background-color: white;}";
 	}
 
-	inline QString antInputNumberQss(
-		const QColor& borderColor,
-		const QColor& hoverBorderColor)
-	{
-		return QString(R"(
-		AntInputNumber {
-			border: 2px solid %1;
-			border-radius: 8px;
-		}
-
-		AntInputNumber:hover {
-			border: 2px solid %2;
-		}
-
-	)")
-			.arg(borderColor.name())
-			.arg(hoverBorderColor.name());
-	}
-
-	inline QString antDoubleInputNumberQss(
+	inline QString AntBaseSpinBox(
 		const QColor& normalBorder,
 		const QColor& hoverBorder)
 	{
 		return QString(R"(
-        AntDoubleInputNumber {
+		#AntBaseSpinBox {
+			border: 2px solid %1;
+			border-radius: 6px;
+		}
+
+		#AntBaseSpinBox:hover,
+		#AntBaseSpinBox:focus {
+			border: 2px solid %2;
+		}
+		)")
+			.arg(normalBorder.name())
+			.arg(hoverBorder.name());
+	}
+
+	inline QString AntBaseDoubleSpinBoxQss(
+		const QColor& normalBorder,
+		const QColor& hoverBorder)
+	{
+		return QString(R"(
+        #AntBaseDoubleSpinBox {
             border: 2px solid %1;
-            border-radius: 8px;
+            border-radius: 6px;
         }
 
-        AntDoubleInputNumber:hover {
-            border: 2px solid %2;
-        }
-    )")
+        #AntBaseDoubleSpinBox:hover,
+		#AntBaseDoubleSpinBox:focus {
+			border: 2px solid %2;
+		}
+		)")
 			.arg(normalBorder.name())
 			.arg(hoverBorder.name());
 	}
 
 	// 垂直方向列表视图样式
-	inline QString vListViewQss(const QColor& bgColor, const QColor& handleColor)
+	inline QString vListViewQss(const QColor& handleColor)
 	{
 		return QString(R"(
 		QListView {
-			background-color: %1;
-			border-radius: 10px;
-			border:1px solid %2;
+			background-color: transparent;
 			padding: 6px;
 		}
 
@@ -318,7 +317,7 @@ namespace StyleSheet
 		}
 
 		QScrollBar::handle:vertical {
-			background: %2;
+			background: %1;
 			border-radius: 3px;
 		}
 
@@ -333,7 +332,6 @@ namespace StyleSheet
 		QScrollBar::sub-page:vertical {
 			background: none;
 		})")
-			.arg(bgColor.name())
 			.arg(handleColor.name());
 	}
 
@@ -400,5 +398,35 @@ namespace StyleSheet
 			.arg(bgColor.name())			// 设置背景颜色
 			.arg(handleColor.name())		// 设置滚动条手柄颜色
 			.arg(handleHoverColor.name());  // 设置悬停时的滚动条手柄颜色
+	}
+
+	inline QString antBaseInputQss(
+		const QColor& normalBg,
+		const QColor& hoverBg,
+		const QColor& focusBorderColor,
+		const QColor& focusBg,
+		int padding)
+	{
+		return QString(R"(
+		#AntBaseInput {
+			border: 2px solid %1;
+			border-radius: 6px;
+			background-color: %1;
+			padding: %5px;
+		}
+
+		#AntBaseInput:hover {
+			background-color: %2;
+		}
+
+		#AntBaseInput:focus {
+			border: 2px solid %3;
+			background-color: %4;
+		}
+		)").arg(normalBg.name())
+			.arg(hoverBg.name())
+			.arg(focusBorderColor.name())
+			.arg(focusBg.name())
+			.arg(QString::number(padding));
 	}
 }

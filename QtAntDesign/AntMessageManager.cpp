@@ -40,126 +40,138 @@ AntMessageManager* AntMessageManager::instance()
 	return m_instance;
 }
 
-int AntMessageManager::adjustMsgDuration(int baseDuration)
+void AntMessageManager::showMessage(AntMessage::Type type, const QString& message, int msgDuration)
 {
-	const int index = m_messages.size() - 1;
-
-	if (index <= 0) {
-		// 首条消息，时间更长
-		return baseDuration * 1.5;
-	}
-
-	// 从第2条开始衰减：指数下降(开方)，最小保持时长
-	qreal ratio = qPow(0.45, index);		// x^1, x^2, x^3...
-	ratio = qMax(ratio, 0.05);				// 不低于
-	return static_cast<int>(baseDuration * ratio);
-}
-
-void AntMessageManager::showMessage(AntMessage::Type type, const QString& message, int baseDuration)
-{
-	static QElapsedTimer  s_timer;
-	if (s_timer.isValid() && s_timer.elapsed() < 100) return;
-	s_timer.restart();
-
-	// 1. 创建消息
 	QWidget* mainWindow = DesignSystem::instance()->getMainWindow();
-	AntMessage* msg = new AntMessage(mainWindow, type, message, adjustMsgDuration(baseDuration));
-	// 连接信号：关闭、销毁
-	connect(msg, &AntMessage::closed, this, &AntMessageManager::onMessageClosed);
-	connect(msg, &AntMessage::destroySelf, this, &AntMessageManager::clearMessage);
+	AntMessage* msg = new AntMessage(mainWindow, type, message);
+	msgHeight = msg->height();
+	connect(msg, &AntMessage::requestExit, this, &AntMessageManager::onMessageRequestExit);
+	connect(msg, &AntMessage::exitAnimationFinished, this, &AntMessageManager::onMessageExitFinished);
 
-	// 2. 加入队列
+	// 稳妥地计算 Y：累加所有当前消息的高度 + 间距
+	int y = spacingY;
+	for (AntMessage* m : m_messages)
+	{
+		y += msgHeight + spacingY;
+	}
+
+	// 居中计算
+	int x = (mainWindow->width() - msg->width()) / 2;
+
+	// 动画
+	QPropertyAnimation* opacityAnim = new QPropertyAnimation(msg, "customOpacity");
+	opacityAnim->setDuration(animDuration);
+	opacityAnim->setEasingCurve(QEasingCurve::OutSine);
+	opacityAnim->setStartValue(0.0);
+	opacityAnim->setEndValue(1.0);
+
+	if (m_isBatchAnimating)
+	{
+		msg->move(x, y - spacingY - msg->height());
+	}
+	else
+	{
+		msg->move(QPoint(x, y));
+	}
+
 	m_messages.append(msg);
-
-	// 3. 计算 endPos
-	int notifWidth = msg->width();
-	int x = (mainWindow->width() - notifWidth) / 2;
-	QPoint endPos;
-
-	// 10是Y方向位移量
-	if (m_messages.size() == 1)
-	{
-		endPos = QPoint(x, 10);
-	}
-	else
-	{
-		AntMessage* prev = m_messages.at(m_messages.size() - 2);
-		QPoint prevEndPos = prev->targetPos();
-		int newY = prevEndPos.y() + prev->height() + 10;
-		endPos = QPoint(x, newY);
-	}
-
-	// 4. 计算 startPos
-	QPoint startPos;
-	if (m_messages.size() == 1)
-	{
-		startPos = QPoint(x, -msg->height());
-	}
-	else
-	{
-		AntMessage* prev = m_messages.at(m_messages.size() - 2);
-		QPoint prevEndPos = prev->targetPos();
-		startPos = prevEndPos;
-	}
-
-	// 5. 设置目标位置
-	msg->setTargetPos(endPos);
-
-	// 6. 开始动画
-	msg->animateIn(startPos, endPos, m_messages.size() == 1); // 首个消息控制关闭流程
+	msg->show();
+	opacityAnim->start(QAbstractAnimation::DeleteWhenStopped);
+	msg->startDisplayTimer(msgDuration);
 }
 
-void AntMessageManager::onMessageClosed(AntMessage* msg)
+void AntMessageManager::onMessageRequestExit(AntMessage* msg)
 {
-	// 只有队列头部消息需要淡出，其余只移动
-	if (m_messages.isEmpty()) return;
-
-	if (m_messages.first() == msg)
+	if (isAnimating)
 	{
-		m_messages.removeOne(msg);
-		// 首条消息淡出
-		msg->animateOut();
+		// 当前已有动画在执行，先不处理
+		return;
 	}
+
+	if (!m_messages.isEmpty() && msg == m_messages.first())
+	{
+		// 队首消息请求退出，开始退出动画
+		startExitAnimation();
+	}
+	// 不是队首消息请求退出，忽略，等待队首退出
 }
 
-void AntMessageManager::clearMessage(AntMessage* message)
+void AntMessageManager::startExitAnimation()
 {
-	if (message) message->deleteLater();
 	if (m_messages.isEmpty()) return;
 
-	// 优化：使用 QParallelAnimationGroup 协调所有移动动画，确保同步
-	QParallelAnimationGroup* moveGroup = new QParallelAnimationGroup(this);
+	isAnimating = true;
+	AntMessage* firstMsg = m_messages.first();
+	firstMsg->setIsExit(true);
 
-	// 更新剩余消息位置（向上移动）
-	int x = (DesignSystem::instance()->getMainWindow()->width() - m_messages[0]->width()) / 2;
-	int y = 10;		// 首个消息 y=10
-	for (AntMessage* msg : m_messages)
+	// 首条消息滑出动画
+	QParallelAnimationGroup* slideOutGroup = new QParallelAnimationGroup(this);
+	QPropertyAnimation* slideOutAnim = new QPropertyAnimation(firstMsg, "pos");
+	QPropertyAnimation* opacityAnim = new QPropertyAnimation(firstMsg, "customOpacity");
+
+	slideOutAnim->setDuration(animDuration - 150);
+	slideOutAnim->setEasingCurve(QEasingCurve::InOutSine);
+	slideOutAnim->setStartValue(firstMsg->pos());
+	slideOutAnim->setEndValue(QPoint(firstMsg->x(), firstMsg->y() - 10));
+
+	opacityAnim->setDuration(animDuration - 150);
+	opacityAnim->setEasingCurve(QEasingCurve::InOutSine);
+	opacityAnim->setStartValue(1.0);
+	opacityAnim->setEndValue(0.0);
+
+	slideOutGroup->addAnimation(slideOutAnim);
+	slideOutGroup->addAnimation(opacityAnim);
+
+	// 其他消息整体上移动画组
+	QParallelAnimationGroup* moveUpAnimGroup = new QParallelAnimationGroup(this);
+
+	int baseY = -msgHeight + msgHeight + spacingY;
+	int heightWithSpacing = msgHeight + 10;
+	for (int i = 1; i < m_messages.count(); ++i)
 	{
-		QPoint newPos(x, y);
-		msg->setTargetPos(newPos);
-		msg->setCustomOpacity(1.0);	// 动画的窗口时间竞争问题,导致透明度异常无法解决,先凑活这样
-
-		// 向上移动填补动画
-		QPropertyAnimation* moveAnim = new QPropertyAnimation(msg, "pos");
-		int moveDuration = qBound(100, static_cast<int>(msg->m_duration), 250);  // 优化：统一延长
-		moveAnim->setDuration(moveDuration);
-		moveAnim->setStartValue(msg->pos());
-		moveAnim->setEndValue(newPos);
-		moveAnim->setEasingCurve(QEasingCurve::InOutSine);
-		moveGroup->addAnimation(moveAnim);
-
-		y += msg->height() + 10;
+		AntMessage* msg = m_messages[i];
+		int x = (DesignSystem::instance()->getMainWindow()->width() - msg->width()) / 2;
+		QPropertyAnimation* anim = new QPropertyAnimation(msg, "pos");
+		anim->setDuration(animDuration - 100);
+		anim->setEasingCurve(QEasingCurve::InOutSine);
+		anim->setStartValue(QPoint(x, msg->pos().y()));
+		anim->setEndValue(QPoint(x, baseY + (i - 1) * heightWithSpacing));
+		moveUpAnimGroup->addAnimation(anim);
 	}
 
-	// 启动组动画
-	moveGroup->start(QAbstractAnimation::DeleteWhenStopped);
+	// 动画结束后，消息销毁和队列更新
+	connect(slideOutAnim, &QPropertyAnimation::finished, firstMsg, &QWidget::deleteLater);
 
-	// 只有在组动画完成后，才启动下一个 closeTimer（避免连锁卡顿）
-	connect(moveGroup, &QParallelAnimationGroup::finished, this, [this]()
+	// 首个滑出和整体上移同时执行
+	QParallelAnimationGroup* totalGroup = new QParallelAnimationGroup(this);
+	totalGroup->addAnimation(slideOutGroup);
+	totalGroup->addAnimation(moveUpAnimGroup);
+
+	connect(totalGroup, &QParallelAnimationGroup::finished, this, [this]()
 		{
+			m_messages.removeFirst(); // 移除退出消息
+			isAnimating = false;
+			m_isBatchAnimating = false;
+
 			if (!m_messages.isEmpty())
 			{
-				m_messages[0]->startCloseTimer();
+				AntMessage* newFirst = m_messages.first();
+
+				// 检查新首消息是否已经计时结束
+				if (newFirst->hasTimeoutOccurred())
+				{
+					// 退出动画
+					startExitAnimation();
+				}
+				// 否则等待其自然计时结束，再发退出请求
 			}
 		});
+
+	m_isBatchAnimating = true;
+	totalGroup->start(QAbstractAnimation::DeleteWhenStopped);
+}
+
+void AntMessageManager::onMessageExitFinished(AntMessage* msg)
+{
+	// 这里可以做额外清理或通知
 }

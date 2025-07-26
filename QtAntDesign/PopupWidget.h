@@ -6,6 +6,8 @@
 #include <QAbstractItemModel>
 #include <QStyledItemDelegate>
 #include <QPainter>
+#include <QProxyStyle>
+#include <QPainterPath>
 #include "DesignSystem.h"
 
 // 自定义 Item Delegate 来控制 ListItem 的大小
@@ -48,13 +50,13 @@ public:
 		bool isCurrent = index == currentIndex;
 
 		// 画背景
-		if (isCurrent) 
+		if (isCurrent)
 		{
 			painter->setBrush(m_curIdxBgColor);
 			painter->setPen(Qt::NoPen);
 			painter->drawRoundedRect(rect, borderRadius, borderRadius);
 		}
-		else if (isHovered) 
+		else if (isHovered)
 		{
 			painter->setBrush(m_bgColor);
 			painter->setPen(Qt::NoPen);
@@ -63,7 +65,8 @@ public:
 
 		// 设置字体
 		QFont font = option.font;
-		if (isCurrent) {
+		if (isCurrent)
+		{
 			font.setBold(true);
 		}
 		painter->setFont(font);
@@ -82,7 +85,8 @@ public:
 		if (m_enableMultiLevel)
 		{
 			QIcon icon = qvariant_cast<QIcon>(index.data(Qt::DecorationRole));
-			if (!icon.isNull()) {
+			if (!icon.isNull())
+			{
 				int iconSize = 12;
 				QRect iconRect(option.rect.right() - iconSize - 5,
 					option.rect.top() + (option.rect.height() - iconSize) / 2,
@@ -102,21 +106,70 @@ private:
 	bool m_enableMultiLevel;	// 是否启用多级列表
 };
 
-class PopupWidget : public QWidget
+class ListViewStyle : public QProxyStyle
+{
+public:
+	explicit ListViewStyle(QColor bgColor, QColor borderColor, QColor shadowColor, QStyle* baseStyle = nullptr)
+		: QProxyStyle(baseStyle), m_bgColor(bgColor), m_borderColor(borderColor), m_shadowColor(shadowColor)
+	{
+	}
+
+	void drawControl(ControlElement element, const QStyleOption* option,
+		QPainter* painter, const QWidget* widget) const override
+	{
+		if (element == CE_ShapedFrame && widget && qobject_cast<const QListView*>(widget))
+		{
+			painter->save();
+			painter->setRenderHint(QPainter::Antialiasing);
+
+			// 先绘制阴影
+			int spread = 6;
+			int baseAlpha = 50;
+			int radius = 6;
+
+			QRect rect = option->rect.adjusted(spread, spread, -spread, -spread);
+
+			for (int i = 0; i < spread; ++i)
+			{
+				int alpha = baseAlpha * (1.0f - static_cast<float>(i) / spread);
+				QColor shadow = m_shadowColor;
+				shadow.setAlpha(alpha);
+				QPen pen(shadow, 1.0);
+				painter->setPen(pen);
+				painter->setBrush(Qt::NoBrush);
+				QRect shadowRect = rect.adjusted(-i, -i, i, i);
+				painter->drawRoundedRect(shadowRect, radius + i, radius + i);
+			}
+
+			// 再绘制背景和边框
+			painter->setPen(QPen(m_borderColor, 1.5));
+			painter->setBrush(m_bgColor);
+			painter->drawRoundedRect(rect, radius, radius);
+
+			painter->restore();
+			return;
+		}
+		QProxyStyle::drawControl(element, option, painter, widget);
+	}
+
+private:
+	QColor m_bgColor;
+	QColor m_borderColor;
+	QColor m_shadowColor;
+};
+
+class PopupWidget : public QListView
 {
 	Q_OBJECT
 
 public:
 	explicit PopupWidget(int height, bool enableMultiLevel, QWidget* parent = nullptr);
-	void setModel(QAbstractItemModel* model);
 	// 用于设置当前项
 	void setCurrentIndex(const QModelIndex& index);
 signals:
 	void itemSelected(const QModelIndex& index);
 	void containsMousePos(bool isContains);
 private:
-	QListView* m_listView;
 	bool m_enableMultiLevel;	// 是否启用多级列表
 	int m_popupHeight;			// 弹出框的高度
-	int margin = 6; // 外边距
 };

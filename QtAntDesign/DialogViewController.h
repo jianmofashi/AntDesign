@@ -7,7 +7,6 @@
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
 #include "MaterialDialog.h"
-#include "MaskWidget.h"
 
 class DialogViewController : public QGraphicsView
 {
@@ -41,8 +40,6 @@ private:
 	int standardDialogH;
 	QSize mainWindowSize;
 
-	//遮罩组件
-	MaskWidget* mask = nullptr;
 	bool m_isHide = false;
 private:
 	qreal m_scaleFactor = 1.0;

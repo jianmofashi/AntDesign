@@ -6,7 +6,6 @@ TagWidget::TagWidget(const QString& text, qreal fontSize, QColor bgColor, QWidge
 	bool hasIcon, const QString& svgPath, int iconSize)
 	: QWidget(parent),
 	m_text(text),
-	m_svgRenderer(svgPath),
 	m_bgColor(bgColor),
 	m_textColor(DesignSystem::instance()->textColor()),
 	m_iconSize(iconSize),
@@ -16,9 +15,18 @@ TagWidget::TagWidget(const QString& text, qreal fontSize, QColor bgColor, QWidge
 	setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 	setAttribute(Qt::WA_TranslucentBackground);
 
-	if (m_hasIcon && !m_svgRenderer.isValid())
+	// 只有在需要图标 + 路径非空时才加载 SVG
+	if (m_hasIcon && !svgPath.trimmed().isEmpty())
 	{
-		qWarning() << "SVG 加载失败:" << svgPath;
+		m_svgRenderer = new QSvgRenderer(this);
+		if (!m_svgRenderer->load(svgPath))
+		{
+			qWarning() << "SVG 加载失败:" << svgPath;
+		}
+	}
+	else if (m_hasIcon)
+	{
+		qWarning() << "启用了图标，但未提供 SVG 路径。";
 	}
 
 	// 设置字体大小
@@ -58,7 +66,7 @@ void TagWidget::paintEvent(QPaintEvent* event)
 	{
 		int iconY = (height() - m_iconSize) / 2 + 2;
 		QRect iconRect(8, iconY, m_iconSize, m_iconSize);
-		m_svgRenderer.render(&painter, iconRect);
+		m_svgRenderer->render(&painter, iconRect);
 		textX = iconRect.right() + 6;
 	}
 

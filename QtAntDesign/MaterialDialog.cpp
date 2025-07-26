@@ -23,7 +23,7 @@ MaterialDialog::MaterialDialog(bool loginState, QWidget* parent)
 	// 管理页面
 	stackedWidget = new SlideStackedWidget(this);
 	stackedWidget->setObjectName("myStacked");
-	stackedWidget->setStyleSheet(StyleSheet::myStackedQss(DesignSystem::instance()->currentTheme().dialogBgColor));
+	stackedWidget->setStyleSheet(StyleSheet::myStackedQss(DesignSystem::instance()->currentTheme().backgroundColor));
 	bgLayout->addWidget(stackedWidget);
 
 	// 登录页

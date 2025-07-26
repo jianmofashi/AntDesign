@@ -66,7 +66,7 @@ QSize MaterialTabBar::tabSizeHint(int index) const
 	QFontMetrics fm(font());
 	int textWidth = fm.horizontalAdvance(text);
 	int padding = 40; // 左右 padding
-	return QSize(textWidth + padding, 50); // 高度可调
+	return QSize(textWidth + padding, 60); // 高度可调
 }
 
 void MaterialTabBar::updateIndicatorPosition(int index)

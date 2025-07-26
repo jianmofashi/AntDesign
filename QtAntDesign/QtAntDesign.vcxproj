@@ -63,6 +63,16 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
   </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\Code\QtAntDesign\QtAntDesign\ThirdParty\QR-Code-generator-master;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\Code\QtAntDesign\QtAntDesign\ThirdParty\QR-Code-generator-master;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -94,10 +104,14 @@
   <ItemGroup>
     <ClCompile Include="AboutPage.cpp" />
     <ClCompile Include="AnimatedNumber.cpp" />
+    <ClCompile Include="AntBaseInput.cpp" />
     <ClCompile Include="AntButton.cpp" />
     <ClCompile Include="AntComboBox.cpp" />
-    <ClCompile Include="AntDoubleInputNumber.cpp" />
-    <ClCompile Include="AntInputNumber.cpp" />
+    <ClCompile Include="AntBaseDoubleSpinBox.cpp" />
+    <ClCompile Include="AntDoubleNumberInput.cpp" />
+    <ClCompile Include="AntInput.cpp" />
+    <ClCompile Include="AntBaseSpinBox.cpp" />
+    <ClCompile Include="AntNumberInput.cpp" />
     <ClCompile Include="AntMessage.cpp" />
     <ClCompile Include="AntMessageManager.cpp" />
     <ClCompile Include="AntRadioButton.cpp" />
@@ -111,6 +125,8 @@
     <ClCompile Include="CardWidget.cpp" />
     <ClCompile Include="CarouselCard.cpp" />
     <ClCompile Include="CarouselWidget.cpp" />
+    <ClCompile Include="QrCodeWidget.cpp" />
+    <ClCompile Include="ThirdParty\QR-Code-generator-master\qrcodegen.cpp" />
     <ClCompile Include="TransparentMask.cpp" />
     <ClCompile Include="CustomToolButton.cpp" />
     <ClCompile Include="DesignSystem.cpp" />
@@ -154,6 +170,12 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="QrCodeWidget.h" />
+    <QtMoc Include="AntBaseInput.h" />
+    <QtMoc Include="AntInput.h" />
+    <QtMoc Include="AntNumberInput.h" />
+    <QtMoc Include="AntDoubleNumberInput.h" />
+    <ClInclude Include="ThirdParty\QR-Code-generator-master\qrcodegen.hpp" />
     <QtMoc Include="TagWidget.h" />
     <QtMoc Include="Win11CheckButton.h" />
     <QtMoc Include="UserInfoBubble.h" />
@@ -193,8 +215,8 @@
     <QtMoc Include="NotificationManager.h" />
     <QtMoc Include="LoadingArc.h" />
     <QtMoc Include="DesignSystem.h" />
-    <QtMoc Include="AntInputNumber.h" />
-    <QtMoc Include="AntDoubleInputNumber.h" />
+    <QtMoc Include="AntBaseSpinBox.h" />
+    <QtMoc Include="AntBaseDoubleSpinBox.h" />
     <QtMoc Include="AntComboBox.h" />
     <QtMoc Include="PopupWidget.h" />
     <QtMoc Include="TransparentMask.h" />

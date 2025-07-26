@@ -20,5 +20,5 @@ public:
 	~AntScrollArea();
 	void addWidget(QWidget* w);
 	void setScrollPolicy(int direction);
-private:
+	void ensureWidgetVisibleInScrollArea(QWidget* targetWidget, int xMargin = 50, int yMargin = 50);
 };

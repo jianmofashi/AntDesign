@@ -9,7 +9,8 @@ AntComboBox::AntComboBox(QString showText, QStringList itemTextList, QWidget* pa
 	QMap<QString, QStringList> subItemMap)
 	: QWidget(parent),
 	m_text(showText),
-	m_borderColor("#C8C8C8"),
+	m_borderColor(DesignSystem::instance()->borderColor()),
+	m_shadowColor(DesignSystem::instance()->primaryColor()),
 	m_isPressed(false),
 	m_isChangeTextColor(false),
 	m_enableMultiLevel(enableMultiLevel)
@@ -49,7 +50,7 @@ AntComboBox::AntComboBox(QString showText, QStringList itemTextList, QWidget* pa
 						setCurrentText(idx.data().toString());
 						m_isChangeTextColor = false;
 						m_popup1->hideAnimated();
-						mask->hide();
+						DesignSystem::instance()->getTransparentMask()->hide();
 					}
 				}
 				else if (senderPopup == m_popup2)
@@ -60,7 +61,7 @@ AntComboBox::AntComboBox(QString showText, QStringList itemTextList, QWidget* pa
 					m_popup1->hideAnimated();
 					m_popup2->hideAnimated();
 					resetState();
-					mask->hide();
+					DesignSystem::instance()->getTransparentMask()->hide();
 				}
 			});
 	}
@@ -105,17 +106,14 @@ AntComboBox::AntComboBox(QString showText, QStringList itemTextList, QWidget* pa
 		}
 	}
 
-	// 透明遮罩
-	QWidget* mainWindow = DesignSystem::instance()->getMainWindow();
-	mask = new TransparentMask(mainWindow);
-	connect(mask, &TransparentMask::clickedOutside, this, [this]()
+	connect(DesignSystem::instance()->getTransparentMask(), &TransparentMask::clickedOutside, this, [this]()
 		{
 			m_popup1->raise();
 			m_popup2->raise();
 			m_popup1->hideAnimated();
 			if (m_enableMultiLevel) m_popup2->hideAnimated();
 			resetState();
-			mask->hide();
+			DesignSystem::instance()->getTransparentMask()->hide();
 		});
 }
 
@@ -151,7 +149,7 @@ void AntComboBox::paintEvent(QPaintEvent*)
 
 	int spread = 6;
 	int baseAlpha = 80;
-	int radius = 8;
+	int radius = 6;
 
 	QRect rect = this->rect().adjusted(spread, spread, -spread, -spread);
 
@@ -160,8 +158,9 @@ void AntComboBox::paintEvent(QPaintEvent*)
 		for (int i = 0; i < spread; ++i)
 		{
 			int alpha = baseAlpha * (1.0f - static_cast<float>(i) / spread);
-			QColor shadowColor(22, 119, 255, alpha);
-			QPen pen(shadowColor, 1.2);
+			QColor shadow = m_shadowColor;
+			shadow.setAlpha(alpha);
+			QPen pen(shadow, 1.2);
 			p.setPen(pen);
 			p.setBrush(Qt::NoBrush);
 			QRect shadowRect = rect.adjusted(-i, -i, i, i);
@@ -207,14 +206,14 @@ void AntComboBox::paintEvent(QPaintEvent*)
 void AntComboBox::enterEvent(QEnterEvent*)
 {
 	if (m_isPressed) return;
-	m_borderColor = QColor("#1677FF");
+	m_borderColor = DesignSystem::instance()->primaryColor();
 	update();
 }
 
 void AntComboBox::leaveEvent(QEvent*)
 {
 	if (m_isPressed) return;
-	m_borderColor = QColor("#C8C8C8");
+	m_borderColor = DesignSystem::instance()->borderColor();
 	update();
 }
 
@@ -224,10 +223,10 @@ void AntComboBox::mousePressEvent(QMouseEvent* event)
 	{
 		m_isPressed = true;
 		m_isChangeTextColor = true;
-		m_borderColor = QColor("#1677FF");
+		m_borderColor = DesignSystem::instance()->primaryColor();
 		update();
-		mask->show();
-		mask->raise();
+		DesignSystem::instance()->getTransparentMask()->show();
+		DesignSystem::instance()->getTransparentMask()->raise();
 		m_popup1->raise();
 		if (m_enableMultiLevel) m_popup2->raise();
 		QPoint popupPos = mapToGlobal(QPoint(0, height()));

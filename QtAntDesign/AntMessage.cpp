@@ -9,18 +9,19 @@
 #include <QFont>
 #include "DesignSystem.h"
 
-AntMessage::AntMessage(QWidget* parent, Type type, const QString& message, int duration)
+AntMessage::AntMessage(QWidget* parent, Type type, const QString& message)
 	: QWidget(parent),
 	m_type(type),
 	m_message(message),
-	m_duration(duration),
 	m_customOpacity(0.0),
 	m_isExit(false),
-	m_isFirst(false)
+	m_timeoutOccurred(false),
+	m_startPos(QPoint(0, 0)),
+	m_endPos(QPoint(0, 0))
 {
 	setAttribute(Qt::WA_TranslucentBackground);
 	initResources();
-	setupAnimations();
+	setupTimer();
 }
 
 AntMessage::~AntMessage() {}
@@ -74,77 +75,22 @@ void AntMessage::initResources()
 	}
 }
 
-void AntMessage::setupAnimations()
+void AntMessage::setupTimer()
 {
-	// 动画
-	m_opacityAnim = new QPropertyAnimation(this, "customOpacity");
-	m_opacityAnim->setDuration(300);
-	m_opacityAnim->setEasingCurve(QEasingCurve::InOutSine);
-
-	m_posAnim = new QPropertyAnimation(this, "pos");
-	m_posAnim->setDuration(300);
-	m_posAnim->setEasingCurve(QEasingCurve::InOutSine);
-
-	m_animGroup = new QParallelAnimationGroup(this);
-	m_animGroup->addAnimation(m_opacityAnim);
-	m_animGroup->addAnimation(m_posAnim);
-
-	connect(m_animGroup, &QPropertyAnimation::finished, this, [this]()
-		{
-			// 退出动画完毕
-			if (m_isExit)
-			{
-				emit destroySelf(this);
-			}
-			else
-			{
-				// 进入动画完毕
-				if (m_isFirst) m_closeTimer->start(m_duration);
-			}
-		});
-
-	m_closeTimer = new QTimer(this);
-	m_closeTimer->setSingleShot(true);
-	connect(m_closeTimer, &QTimer::timeout, this, [this]()
-		{
-			emit closed(this);
-		});
+	timer = new QTimer(this);
+	timer->setSingleShot(true);
+	connect(timer, &QTimer::timeout, this, &AntMessage::onTimeout);
 }
 
-void AntMessage::animateIn(QPoint startPos, QPoint endPos, bool isFirst)
+void AntMessage::startDisplayTimer(int ms)
 {
-	if (m_animGroup->state() == QAbstractAnimation::Running)
-		m_animGroup->stop();
-
-	m_isExit = false;
-	m_isFirst = isFirst;
-	move(startPos);
-	show();
-
-	// 设置动画初始值
-	m_opacityAnim->setStartValue(0.0);
-	m_opacityAnim->setEndValue(1.0);
-	m_posAnim->setStartValue(startPos);
-	m_posAnim->setEndValue(endPos);
-	m_animGroup->start();
+	timer->start(ms);
 }
 
-void AntMessage::startCloseTimer()
+void AntMessage::onTimeout()
 {
-	m_closeTimer->start(m_duration);
-}
-
-void AntMessage::animateOut()
-{
-	if (m_animGroup->state() == QAbstractAnimation::Running)
-		m_animGroup->stop();
-
-	m_isExit = true;
-	m_opacityAnim->setStartValue(1.0);
-	m_opacityAnim->setEndValue(0.0);
-	m_posAnim->setStartValue(pos());
-	m_posAnim->setEndValue(pos() - QPoint(0, 8));
-	m_animGroup->start();
+	m_timeoutOccurred = true;
+	emit requestExit(this);
 }
 
 void AntMessage::paintEvent(QPaintEvent* event)
@@ -181,12 +127,22 @@ void AntMessage::setCustomOpacity(qreal opacity)
 	update();
 }
 
+void AntMessage::setIsExit(bool isExit)
+{
+	m_isExit = isExit;
+}
+
+bool AntMessage::isExit()
+{
+	return m_isExit;
+}
+
+bool AntMessage::hasTimeoutOccurred()
+{
+	return m_timeoutOccurred;
+}
+
 qreal AntMessage::getCustomOpacity()
 {
 	return m_customOpacity;
-}
-
-void AntMessage::closeMessage()
-{
-	m_closeTimer->stop();
 }

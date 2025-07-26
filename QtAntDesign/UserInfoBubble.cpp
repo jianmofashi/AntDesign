@@ -96,7 +96,7 @@ UserInfoBubble::UserInfoBubble(QWidget* parent)
 				if (btnName == "signInButton")
 				{
 					// 签到逻辑
-					AntMessageManager::instance()->showMessage(AntMessage::Success, "签到成功,再接再厉", 1000);
+					AntMessageManager::instance()->showMessage(AntMessage::Success, "签到成功,再接再厉");
 				}
 				else if (btnName == "logoutButton")
 				{

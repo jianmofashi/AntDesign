@@ -1,8 +1,8 @@
 ﻿#include "HomePage.h"
 #include <QVBoxLayout>
 #include <QLabel>
-#include "AntScrollArea.h"
 #include "MaterialTabWidget.h"
+#include "AntScrollArea.h"
 #include "AntToggleButton.h"
 #include "SlideStackedWidget.h"
 #include "MaterialProgressBar.h"
@@ -17,12 +17,13 @@
 #include "SkeletonWidget.h"
 #include "AntButton.h"
 #include "NotificationManager.h"
-#include "AntInputNumber.h"
-#include "AntDoubleInputNumber.h"
+#include "AntNumberInput.h"
+#include "AntDoubleNumberInput.h"
 #include "AntComboBox.h"
 #include "TagWidget.h"
 #include "CarouselWidget.h"
 #include "CardWidget.h"
+#include "QrCodeWidget.h"
 
 HomePage::HomePage(QWidget* parent)
 	: QWidget(parent)
@@ -107,7 +108,7 @@ HomePage::HomePage(QWidget* parent)
 	carousel->getCards()[8]->setTextContent("AMD锐龙CPU（AMD Ryzen Series）");
 	carousel->getCards()[8]->enableUrlBtn(QUrl("https://www.amd.com/zh/products/ryzen-processors"));
 
-	QHBoxLayout* carouselLayout = new QHBoxLayout(w1);
+	QHBoxLayout* carouselLayout = new QHBoxLayout();
 	carouselLayout->setSpacing(0);
 	carouselLayout->setContentsMargins(0, 0, 0, 0);
 
@@ -129,7 +130,7 @@ HomePage::HomePage(QWidget* parent)
 		labelList.append(nameLabel);
 	}
 	// 开关按钮
-	AntToggleButton* toggleBtn = new AntToggleButton(QSize(52, 26), this);
+	AntToggleButton* toggleBtn = new AntToggleButton(QSize(57, 26), this);
 	toggleBtn->setShowText(true);
 
 	// 进度条
@@ -159,9 +160,9 @@ HomePage::HomePage(QWidget* parent)
 	// 骨架屏
 	AntButton* skeletonDescBtn = new AntButton("骨架屏启动", 12, w1);
 	skeletonDescBtn->setFixedSize(120, 50);
-	QHBoxLayout* row3Layout = new QHBoxLayout(w1);
+	QHBoxLayout* row3Layout = new QHBoxLayout();
 	row3Layout->setSpacing(8);
-	row3Layout->setContentsMargins(0, 0, 0, 20);
+	row3Layout->setContentsMargins(0, 0, 0, 6);
 
 	QList<QIcon> icons = {
 		QIcon(":/Imgs/undraw_book-lover_f1dq.svg"),
@@ -175,7 +176,7 @@ HomePage::HomePage(QWidget* parent)
 
 	for (const QIcon& icon : icons)
 	{
-		SkeletonWidget* skeleton = new SkeletonWidget(QSize(250, 200), 8, this);
+		SkeletonWidget* skeleton = new SkeletonWidget(QSize(240, 195), 8, this);
 		row3Layout->addWidget(skeleton);
 		skeletons.append(skeleton);  // 保存骨架指针
 
@@ -218,7 +219,7 @@ HomePage::HomePage(QWidget* parent)
 		});
 
 	// 任务通知
-	QHBoxLayout* row4Layout = new QHBoxLayout(w1);
+	QHBoxLayout* row4Layout = new QHBoxLayout();
 	row4Layout->setSpacing(18);
 	row4Layout->setContentsMargins(0, 0, 0, 0);
 
@@ -230,19 +231,19 @@ HomePage::HomePage(QWidget* parent)
 		});
 
 	// 数字输入框
-	AntInputNumber* spinBox = new AntInputNumber(this);
-	spinBox->setFixedSize(85, 35);	// 设置最小尺寸
-	spinBox->setRange(0, 100);		// 调整数值范围
-	spinBox->setValue(10);			// 设置初始值
 	QLabel* spinBoxLabel1 = new QLabel("数字输入框", this);
+	AntNumberInput* spinbox = new AntNumberInput(this);
+	spinbox->setFixedSize(90, 46);
+	spinbox->input()->setRange(0, 100);			// 调整数值范围
+	spinbox->input()->setValue(10);				// 设置初始值
 	// 小数数字输入框
-	AntDoubleInputNumber* doubleSpinBox = new AntDoubleInputNumber(this);
-	doubleSpinBox->setFixedSize(85, 35);
-	doubleSpinBox->setDecimals(1);              // 设置保留 1 位小数
-	doubleSpinBox->setSingleStep(1);			// 每次加/减
-	doubleSpinBox->setRange(0.0, 100.0);        // 范围设置
-	doubleSpinBox->setValue(0.0);				// 初始值设置
 	QLabel* spinBoxLabel2 = new QLabel("小数数字输入框", this);
+	AntDoubleNumberInput* doubleSpinBox = new AntDoubleNumberInput(this);
+	doubleSpinBox->setFixedSize(90, 46);
+	doubleSpinBox->input()->setDecimals(1);					// 设置保留 1 位小数
+	doubleSpinBox->input()->setSingleStep(1);				// 每次加/减
+	doubleSpinBox->input()->setRange(0.0, 100.0);			// 范围设置
+	doubleSpinBox->input()->setValue(0.0);					// 初始值设置
 
 	// 单层级下拉框
 	QLabel* comboLabel1 = new QLabel("下拉框", this);
@@ -268,27 +269,31 @@ HomePage::HomePage(QWidget* parent)
 		});
 
 	// 下拉框随着主窗口同步移动
-	connect(this, &HomePage::windowMoved, this, [=](QPoint globalPos)
+	connect(this, &HomePage::windowMoved, this, [combo1, combo2](QPoint globalPos)
 		{
-			auto movePopups = [globalPos](const QList<PopupViewController*>& popups)
+			auto movePopups = [globalPos, combo1, combo2](AntComboBox* combo)
 				{
-					for (PopupViewController* popup : popups)
+					for (PopupViewController* popup : combo->popupViewList())
 					{
-						if (popup->getVisible())
+						// 单层级下拉框
+						if (combo == combo1)
 						{
-							// 弹窗新位置 = 主窗口新全局位置 + 偏移量
-							QPoint newPos = globalPos + popup->m_offset;
-							popup->move(newPos);
+							combo->popupViewList()[0]->follow(combo1);
+						}
+						// 多层下级拉框
+						if (combo == combo2)
+						{
+							combo->popupViewList()[0]->follow(combo2);
+							combo2->popupViewList()[1]->follow(combo->popupViewList()[0], PopupViewController::TopRight);
 						}
 					}
 				};
-
-			movePopups(combo1->m_popups);
-			movePopups(combo2->m_popups);
+			movePopups(combo1);
+			movePopups(combo2);
 		});
 
 	// 标签
-	QHBoxLayout* row5Layout = new QHBoxLayout(w1);
+	QHBoxLayout* row5Layout = new QHBoxLayout();
 	row5Layout->setSpacing(10);
 	row5Layout->setContentsMargins(0, 22, 0, 22);
 
@@ -328,9 +333,15 @@ HomePage::HomePage(QWidget* parent)
 	card->setImageFile(":/Imgs/gpt.jpg");
 	card->setFixedSize(320, 200);
 	QLabel* cardLabel = new QLabel("卡片", this);
-	QHBoxLayout* row6Layout = new QHBoxLayout(w1);
+	QHBoxLayout* row6Layout = new QHBoxLayout();
 	row6Layout->setSpacing(10);
 	row6Layout->setContentsMargins(0, 8, 0, 8);
+
+	// 二维码
+	QrCodeWidget* qrCode = new QrCodeWidget(this);
+	qrCode->setMinimumSize(QSize(240, 240));
+	qrCode->setData(QString("https://ant-design.antgroup.com/index-cn"));
+	QLabel* qrCodeLabel = new QLabel("二维码", this);
 
 	// 轮播图布局
 	carouselLayout->addStretch();
@@ -363,7 +374,7 @@ HomePage::HomePage(QWidget* parent)
 	// 第四行布局
 	row4Layout->addWidget(taskBtn);
 	row4Layout->addWidget(spinBoxLabel1);
-	row4Layout->addWidget(spinBox);
+	row4Layout->addWidget(spinbox);
 	row4Layout->addWidget(spinBoxLabel2);
 	row4Layout->addWidget(doubleSpinBox);
 	row4Layout->addWidget(comboLabel1);
@@ -378,6 +389,9 @@ HomePage::HomePage(QWidget* parent)
 	// 第六行布局
 	row6Layout->addWidget(cardLabel);
 	row6Layout->addWidget(card);
+	row6Layout->addSpacing(10);
+	row6Layout->addWidget(qrCodeLabel);
+	row6Layout->addWidget(qrCode);
 	row6Layout->addStretch();
 
 	// 添加到页面布局

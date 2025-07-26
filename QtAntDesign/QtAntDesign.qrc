@@ -47,5 +47,6 @@
         <file>Imgs/nvidia.jpg</file>
         <file>Imgs/huawei.jpg</file>
         <file>Imgs/varda.jpg</file>
+        <file>Imgs/search.svg</file>
     </qresource>
 </RCC>

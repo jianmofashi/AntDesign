@@ -15,6 +15,9 @@
 #include <QShowEvent>
 #include "NotificationManager.h"
 #include "DesignSystem.h"
+#include "TransparentMask.h"
+#include "MaskWidget.h"
+#include "AntInput.h"
 
 QtAntDesign::QtAntDesign(QWidget* parent)
 	: QWidget(parent)
@@ -25,13 +28,9 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 	setWindowFlags(Qt::FramelessWindowHint);
 	setMinimumSize(1100, 750);
 
-	ui.main_widget->setStyleSheet(StyleSheet::mainQss());
+	ui.main_widget->setStyleSheet(StyleSheet::mainQss(DesignSystem::instance()->backgroundColor()));
 
-	// 初始化全局设计系统 必须写在最前面 因为它会设置主题和主窗口指针
-	DesignSystem::instance()->setThemeMode(DesignSystem::Light);	// 默认亮主题
-	DesignSystem::instance()->setMainWindow(this);					// 获取主窗口指针
-
-	// 获取主屏幕分辨率
+	// 获取主屏幕尺寸
 	int w = 0, h = 0;
 	QScreen* screen = QGuiApplication::primaryScreen();
 	if (screen)
@@ -43,20 +42,30 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 	}
 	setContentsMargins(0, 0, 0, 0);
 
+	// 初始化全局设计系统 必须写在最前面 因为它会设置主题和主窗口指针注册一些全局变量
+	DesignSystem::instance()->setThemeMode(DesignSystem::Light);	// 默认亮主题
+	DesignSystem::instance()->setMainWindow(this);					// 获取主窗口指针
+	// 注册全局透明遮罩
+	TransparentMask* tpMask = new TransparentMask(this);
+	DesignSystem::instance()->setTransparentMask(tpMask);
+	// 全局深色动画遮罩
+	MaskWidget* darkMask = new MaskWidget(w, h, this);
+	DesignSystem::instance()->setDarkMask(darkMask);
+
 	// 任务栏 内容区域 导航栏 布局调整
 	ui.navi_widget->setFixedWidth(m_naviWidth); // 希望的宽度
 	ui.navi_widget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);	// 水平方向缩放策略固定
-	ui.navi_widget->setStyleSheet(StyleSheet::naviQss());
-	ui.titleBar->setStyleSheet(StyleSheet::titleBarQss());
+	ui.navi_widget->setStyleSheet(StyleSheet::naviQss(DesignSystem::instance()->widgetBgColor()));
+	ui.titleBar->setStyleSheet(StyleSheet::titleBarQss(DesignSystem::instance()->backgroundColor()));
 	ui.central->setStyleSheet(StyleSheet::centralQss());
 	ui.titleBar->setFixedHeight(m_titleBarHeight);
 
 	// 标题栏
 	QHBoxLayout* titleLay = new QHBoxLayout(ui.titleBar);
-	titleLay->setContentsMargins(20, 0, 12, 0);
-	titleLay->setSpacing(6);
+	titleLay->setContentsMargins(20, 0, rightMargin, 0);
+	titleLay->setSpacing(titleBarSpacing);
 	QFont font;
-	font.setPointSizeF(14);
+	font.setPointSizeF(16);
 	font.setBold(true);
 	QLabel* title = new QLabel("TITLE", ui.titleBar);
 	title->setFont(font);
@@ -77,14 +86,49 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 	btnMax->setFixedSize(32, 32);
 	btnClose->setFixedSize(34, 34);
 	int extraWidth = 100;	// 额外的间距宽度: 是控件间距以及标题栏两端的间距 自己根据标题栏所有控件的宽度调整
-	m_widgetTotalWidth = btnMin->width() + btnMax->width() + btnClose->width() + extraWidth;
+	m_widgetTotalWidth = btnMin->width() + btnMax->width() + btnClose->width();
+
+	// 搜索栏
+	QStringList listItems = {
+	"华为", "谷歌", "微软", "亚马逊", "特斯拉", "苹果",
+	"英伟达", "Meta（脸书）", "字节跳动", "腾讯", "阿里巴巴",
+	"百度",  "小米", "三星", "英特尔",
+	"高通", "索尼", "拼多多", "OpenAI", "美团"
+	};
+	AntInput* antInput = new AntInput(300, listItems, ui.titleBar);
+	antInput->setFixedWidth(254);
+	antInput->setFixedHeight(46);
+	antInput->setPlaceholderText("搜索内容");
+
+	// 下拉框随着主窗口同步移动
+	connect(this, &QtAntDesign::windowMoved, this, [=](QPoint)
+		{
+			if (antInput && antInput->PopupView())
+			{
+				antInput->PopupView()->follow(antInput);
+			}
+		});
+
+	// 标题栏右侧所有控件的长宽转为物理像素后在native事件中限制标题栏的范围
+	qreal dpiScale = QApplication::primaryScreen()->devicePixelRatio();
+	// 计算控件总宽度（逻辑像素） 右侧4个控件3个间隔
+	int widgetTotalWidth = rightMargin + btnMin->width() + btnMax->width() + btnClose->width() +
+		antInput->width() + 3 * titleBarSpacing;
+	// 转换为物理像素
+	m_widgetTotalWidthPhysicalPixels = static_cast<int>(widgetTotalWidth * dpiScale);
+	// 同理转换标题栏左侧
+	m_titleLeftTotalWidthPhysicalPixels = static_cast<int>(m_naviWidth * dpiScale);
+	// 同理转换标题栏高度
+	m_titleBarHeightPhysicalPixels = static_cast<int>(m_titleBarHeight * dpiScale);
 
 	// 将标题和按钮添加到布局
 	titleLay->addWidget(title);
 	titleLay->addStretch();
+	titleLay->addWidget(antInput);
 	titleLay->addWidget(btnMin);
 	titleLay->addWidget(btnMax);
 	titleLay->addWidget(btnClose);
+	totalSpacingWidth = 3 * titleBarSpacing;	// 标题栏右侧4个控件中间3个间隔
 
 	// 导航栏添加控件
 	QVBoxLayout* naviLay = new QVBoxLayout(ui.navi_widget);;
@@ -175,7 +219,7 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 		});
 
 	// 对话框
-	DialogViewController* mDialog = new DialogViewController(avatar->loginState(), w, h, ui.main_widget);	// 实际登录状态要服务器给予
+	DialogViewController* mDialog = new DialogViewController(avatar->loginState(), w, h, this);	// 实际登录状态要服务器给予
 	avatar->addDialog(mDialog);
 	connect(this, &QtAntDesign::resized, mDialog, &DialogViewController::getParentSize);
 	connect(mDialog, &DialogViewController::successLogin, avatar, &CircularAvatar::allowLogin);
@@ -194,12 +238,10 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 			if (wp.showCmd == SW_MAXIMIZE)
 			{
 				ShowWindow(hwnd, SW_RESTORE);
-				btnMax->setIcon(QIcon(":/Imgs/Maximize-1.svg"));
 			}
 			else
 			{
 				ShowWindow(hwnd, SW_MAXIMIZE);
-				btnMax->setIcon(QIcon(":/Imgs/Maximize-3.svg"));
 			}
 		});
 
@@ -247,13 +289,25 @@ bool QtAntDesign::nativeEvent(const QByteArray& eventType, void* message, qintpt
 		}
 		break;
 	}
+	case WM_NCLBUTTONDBLCLK: {
+		// /如果存在遮罩则响应遮罩，禁止系统事件（双击最大化）
+		if (DesignSystem::instance()->getTransparentMask()->isVisible() ||
+			DesignSystem::instance()->getDarkMask()->isVisible())
+		{
+			*result = 0;  // 阻止系统响应双击
+			return true;
+		}
+		break;
+	}
 	case WM_NCHITTEST: {
 		// 处理拖拽和缩放区域
 		const LONG borderWidth = 8; // 拖拽缩放边框宽度
+
+		// 返回的是物理像素
 		RECT winRect;
 		GetWindowRect(HWND(winId()), &winRect);
 
-		// 获取鼠标全局坐标
+		// 获取鼠标全局坐标物理像素
 		const LONG x = GET_X_LPARAM(msg->lParam);
 		const LONG y = GET_Y_LPARAM(msg->lParam);
 
@@ -313,15 +367,13 @@ bool QtAntDesign::nativeEvent(const QByteArray& eventType, void* message, qintpt
 			*result = HTBOTTOM;
 			return true;
 		}
-
 		// 设置标题栏拖动区域 只有该区域内才允许拖动窗口
-		if (x > winRect.left + m_naviWidth && x < winRect.right - m_widgetTotalWidth
-			&& y > winRect.top && y < winRect.top + m_titleBarHeight)
+		if (x > winRect.left + m_titleLeftTotalWidthPhysicalPixels && x < winRect.right - m_widgetTotalWidthPhysicalPixels
+			&& y > winRect.top && y < winRect.top + m_titleBarHeightPhysicalPixels)
 		{
 			*result = HTCAPTION;
 			return true;
 		}
-
 		// 其余地方交给默认处理
 		break;
 	}
@@ -357,4 +409,23 @@ void QtAntDesign::moveEvent(QMoveEvent* event)
 	QWidget::moveEvent(event);
 	// 发送窗口左上角全局坐标
 	emit windowMoved(this->mapToGlobal(QPoint(0, 0)));
+}
+
+void QtAntDesign::changeEvent(QEvent* event)
+{
+	if (event->type() == QEvent::WindowStateChange)
+	{
+		QWindowStateChangeEvent* stateEvent = static_cast<QWindowStateChangeEvent*>(event);
+
+		if (isMaximized())
+		{
+			btnMax->setIcon(QIcon(":/Imgs/Maximize-3.svg"));
+		}
+		else if (stateEvent->oldState() & Qt::WindowMaximized)
+		{
+			btnMax->setIcon(QIcon(":/Imgs/Maximize-1.svg"));
+		}
+	}
+
+	QWidget::changeEvent(event);
 }

@@ -2,16 +2,15 @@
 #include <QSpinBox>
 #include <QToolButton>
 #include <QPropertyAnimation>
-#include <QGraphicsDropShadowEffect>
 #include "DesignSystem.h"
 
-class AntInputNumber : public QSpinBox
+class AntBaseSpinBox : public QSpinBox
 {
 	Q_OBJECT
 		Q_PROPERTY(int buttonX READ buttonX WRITE setButtonX)
 
 public:
-	explicit AntInputNumber(QWidget* parent = nullptr);
+	explicit AntBaseSpinBox(QWidget* parent = nullptr);
 
 	int buttonX() const { return m_buttonX; }
 	void setButtonX(int x)
@@ -19,7 +18,6 @@ public:
 		m_buttonX = x;
 		updateButtonsPosition();
 	}
-
 protected:
 	void resizeEvent(QResizeEvent* event) override;
 	void enterEvent(QEnterEvent* event) override;
@@ -33,8 +31,10 @@ private:
 	QToolButton* m_plusBtn;
 	QToolButton* m_minusBtn;
 	QPropertyAnimation* m_animation;
-	QGraphicsDropShadowEffect* m_shadowEffect;
 	Theme theme = DesignSystem::instance()->currentTheme();
+	QColor borderColor;
+	QColor primaryColor;
+	QColor shadowColor;
 	int m_buttonX;
-	bool m_isPressed = false;  // 是否按下
+	
 };

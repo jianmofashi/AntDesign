@@ -68,10 +68,12 @@ LoginPageWidget::LoginPageWidget(QWidget* parent)
 	MaterialLineEdit* accountEdit = new MaterialLineEdit(leftWidget);
 	accountEdit->setFont(font);
 	accountEdit->setLabelText("邮箱");
+	accountEdit->setTextFontSize(10.8);
 	accountEdit->setFixedHeight(40);  // 高度可自定义
 	MaterialLineEdit* passwordEdit = new MaterialLineEdit(leftWidget);
 	passwordEdit->setFont(font);
 	passwordEdit->setLabelText("密码");
+	passwordEdit->setTextFontSize(10.8);
 	passwordEdit->setFixedHeight(40);
 	passwordEdit->setPasswordToggleEnabled(leftWidget);
 	// 校验失败时调用

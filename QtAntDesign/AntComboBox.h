@@ -8,7 +8,6 @@
 #include <QStandardItemModel>
 #include "DesignSystem.h"
 #include "PopupViewController.h"
-#include "TransparentMask.h"
 
 class AntComboBox : public QWidget
 {
@@ -23,7 +22,8 @@ public:
 	void setCurrentText(const QString& text);
 	// 设置是否启用多级列表
 	void setEnableMultiLevel(bool enable);
-	TransparentMask* getMask() { return mask; }
+	TransparentMask* getMask() { return DesignSystem::instance()->getTransparentMask(); }
+	QList<PopupViewController*>& popupViewList() { return m_popups; };
 protected:
 	void paintEvent(QPaintEvent* event) override;
 	void enterEvent(QEnterEvent* event) override;
@@ -34,15 +34,14 @@ private:
 	// 恢复初始状态
 	void resetState();
 signals:
-	void resized(int width, int height); 
-public:
-	QList<PopupViewController*> m_popups; // 用于存储所有弹出框
+	void resized(int width, int height);
 private:
+	QList<PopupViewController*> m_popups; // 用于存储所有弹出框
 	QString m_text;
 	QString m_firstLevelSelectedText;
 	QColor m_borderColor;
+	QColor m_shadowColor;
 	QSvgRenderer* m_arrowRenderer;
-	TransparentMask* mask = nullptr;
 	PopupViewController* m_popup1 = nullptr;
 	PopupViewController* m_popup2 = nullptr;
 	QMap<QString, QStandardItemModel*> m_subModels;	// 全部二级列表模型

@@ -25,7 +25,7 @@ protected:
 	void paintEvent(QPaintEvent* event) override;
 private:
 	QString m_text;
-	QSvgRenderer m_svgRenderer;
+	QSvgRenderer* m_svgRenderer;
 	QColor m_bgColor;
 	QColor m_textColor;
 

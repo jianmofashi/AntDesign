@@ -15,34 +15,27 @@ PopupViewController::PopupViewController(int height, bool enableMultiLevel, QWid
 	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
 	// 关键性能优化
-	setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
-	setCacheMode(QGraphicsView::CacheBackground);
+	setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+	setCacheMode(QGraphicsView::CacheNone);
 
 	// 设置图形代理
 	popup = new PopupWidget(height, enableMultiLevel, nullptr);
 	proxy = scene->addWidget(popup);
 	proxy->setCacheMode(QGraphicsItem::NoCache);
 
-	// 阴影
-	auto* shadowEffect = new QGraphicsDropShadowEffect(this);
-	shadowEffect->setBlurRadius(20);
-	shadowEffect->setOffset(0, 0.5);
-	shadowEffect->setColor(QColor(50, 50, 50, 80));
-	proxy->setGraphicsEffect(shadowEffect);
-
 	// 动画
 	scaleTransform = new QGraphicsScale();	// 支持三维缩放，它可以分别沿 X、Y、Z 三个轴设置缩放比例
 	proxy->setTransformations({ scaleTransform });
 
 	opacityAnim = new QPropertyAnimation(proxy, "opacity");
-	opacityAnim->setDuration(300);
-	opacityAnim->setStartValue(0.3);
+	opacityAnim->setDuration(200);
+	opacityAnim->setStartValue(0.0);
 	opacityAnim->setEndValue(1.0);
 	opacityAnim->setEasingCurve(QEasingCurve::InOutCubic);
 
 	scaleAnim = new QPropertyAnimation(scaleTransform, "yScale");
-	scaleAnim->setDuration(300);
-	scaleAnim->setStartValue(0.7);
+	scaleAnim->setDuration(200);
+	scaleAnim->setStartValue(0.8);
 	scaleAnim->setEndValue(1.0);
 	scaleAnim->setEasingCurve(QEasingCurve::InOutCubic);
 
@@ -57,7 +50,6 @@ PopupViewController::PopupViewController(int height, bool enableMultiLevel, QWid
 				hide();
 			}
 		});
-
 	connect(popup, &PopupWidget::itemSelected, this, [this](const QModelIndex& idx)
 		{
 			emit itemSelected(idx);  // 转发选中信号
@@ -77,11 +69,6 @@ void PopupViewController::showAnimated(const QPoint& pos, int width)
 	proxy->update();
 	show();
 	move(pos.x(), pos.y() - 3);
-
-	// 获取全局位置
-	QPoint mainWindowGlobalPos = DesignSystem::instance()->getMainWindow()->mapToGlobal(QPoint(0, 0));
-	QPoint globalPos = QPoint(pos.x(), pos.y() - 3);
-	m_offset = globalPos - mainWindowGlobalPos;  // 计算偏移量
 
 	m_isVisible = true;
 	groupAnim->stop();
@@ -107,4 +94,30 @@ void PopupViewController::updateSize(int width, int height)
 	popup->setFixedSize(width, m_height);  // 确保popup大小正确
 	proxy->setTransformOriginPoint(QPointF(proxy->boundingRect().width() / 2, 0));	// 顶部中心
 	scaleTransform->setOrigin(QVector3D(proxy->boundingRect().width() / 2, 0, 0));
+}
+
+void PopupViewController::follow(QWidget* anchorWidget, AnchorPoint anchor)
+{
+	if (!anchorWidget) return;
+
+	QRect rect = anchorWidget->rect();
+	QPoint globalPos;
+
+	switch (anchor)
+	{
+	case AnchorPoint::TopLeft:
+		globalPos = anchorWidget->mapToGlobal(rect.topLeft());
+		break;
+	case AnchorPoint::TopRight:
+		globalPos = anchorWidget->mapToGlobal(rect.topRight());
+		break;
+	case AnchorPoint::BottomLeft:
+		globalPos = anchorWidget->mapToGlobal(rect.bottomLeft());
+		break;
+	case AnchorPoint::BottomRight:
+		globalPos = anchorWidget->mapToGlobal(rect.bottomRight());
+		break;
+	}
+
+	this->move(globalPos);
 }

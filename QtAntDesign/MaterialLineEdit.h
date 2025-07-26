@@ -11,18 +11,17 @@
 class MaterialLineEdit : public QLineEdit
 {
 	Q_OBJECT
-		Q_PROPERTY(qreal labelProgress READ labelProgress WRITE setLabelProgress)
 		Q_PROPERTY(qreal underlineProgress READ underlineProgress WRITE setUnderlineProgress)
 public:
 	explicit MaterialLineEdit(QWidget* parent = nullptr);
 	~MaterialLineEdit() override;
 
+	// 设置占位文本
 	void setLabelText(const QString& text);
 	QString labelText() const;
 
-	// 控制浮动标签动画的进度
-	qreal labelProgress() const;
-	void setLabelProgress(qreal progress);
+	// 设置字体大小
+	void setTextFontSize(qreal size);
 
 	// 控制下划线动画的进度
 	qreal underlineProgress() const;
@@ -58,7 +57,6 @@ private slots:
 	void onTextChanged(const QString& text);
 
 private:
-	void animateLabel(bool toUp);
 	void animateUnderline(bool toExpand);
 
 	QString m_labelText;
@@ -67,9 +65,10 @@ private:
 
 	QPropertyAnimation* m_labelAnimation;
 	QPropertyAnimation* m_underlineAnimation;
-	QPropertyAnimation* m_animation;
 
 	QColor m_themeColor = DesignSystem::instance()->primaryColor();	// 经典蓝
+	QColor m_borderColor;
+	int m_padding;
 
 	QToolButton* m_togglePasswordButton = nullptr;
 	QPushButton* m_textBtn = nullptr;

@@ -68,17 +68,20 @@ RegisterPageWidget::RegisterPageWidget(QWidget* parent)
 	MaterialLineEdit* accountEdit = new MaterialLineEdit(leftWidget);
 	accountEdit->setFont(font);
 	accountEdit->setLabelText("邮箱");
+	accountEdit->setTextFontSize(10.8);
 	accountEdit->setFixedHeight(40);  // 高度可自定义
 	// 验证码
 	MaterialLineEdit* codeEdit = new MaterialLineEdit(leftWidget);
 	codeEdit->setFont(font);
 	codeEdit->setLabelText("验证码");
+	codeEdit->setTextFontSize(10.8);
 	codeEdit->setFixedHeight(40);
 	codeEdit->setRightTextBtn("发送验证码");
 	// 密码
 	MaterialLineEdit* passwordEdit = new MaterialLineEdit(leftWidget);
 	passwordEdit->setFont(font);
 	passwordEdit->setLabelText("密码");
+	passwordEdit->setTextFontSize(10.8);
 	passwordEdit->setFixedHeight(40);
 	passwordEdit->setPasswordToggleEnabled(leftWidget);
 	// 校验失败时调用

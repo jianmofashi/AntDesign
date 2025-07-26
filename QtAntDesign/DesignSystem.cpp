@@ -16,8 +16,11 @@ void DesignSystem::loadThemes()
 	m_lightTheme.primaryColor = QColor("#1677ff");	// Ant 蓝色
 	m_lightTheme.textColor = QColor(255, 255, 255);
 	m_lightTheme.backgroundColor = QColor(255, 255, 255);
+	m_lightTheme.widgetBgColor = QColor(240, 240, 240);
+	m_lightTheme.widgetHoverBgColor = QColor(220, 220, 220);
 	m_lightTheme.borderColor = QColor(200, 200, 200);
 	m_lightTheme.borderColorHover = QColor(22, 119, 255);
+	m_lightTheme.shadowColor = QColor(80, 80, 80);
 	m_lightTheme.msgTextColor = QColor(30, 30, 30);
 	m_lightTheme.disabledColor = QColor(150, 150, 150);
 	m_lightTheme.slideBgColor = QColor(200, 200, 200);
@@ -31,7 +34,6 @@ void DesignSystem::loadThemes()
 	m_lightTheme.toolTipTextColor = QColor(245, 245, 245);
 	m_lightTheme.userBubbleBgColor = QColor(255, 255, 255);
 	m_lightTheme.toolBtnBgColor = QColor(24, 144, 255, 40);
-	m_lightTheme.dialogBgColor = QColor(255, 255, 255);
 	m_lightTheme.progressBarBgColor = QColor(224, 224, 224);
 	m_lightTheme.tabTextColor = QColor(0, 0, 0);
 	m_lightTheme.lineEditBorderColor = QColor(180, 180, 180);
@@ -68,6 +70,26 @@ DesignSystem::ThemeMode DesignSystem::themeMode() const
 	return m_mode;
 }
 
+void DesignSystem::setTransparentMask(TransparentMask* tpMask)
+{
+	m_tpMask = tpMask;
+}
+
+TransparentMask* DesignSystem::getTransparentMask()
+{
+	return m_tpMask;
+}
+
+void DesignSystem::setDarkMask(MaskWidget* mask)
+{
+	m_darkMask = mask;
+}
+
+MaskWidget* DesignSystem::getDarkMask()
+{
+	return m_darkMask;
+}
+
 const Theme& DesignSystem::currentTheme() const
 {
 	return m_currentTheme;
@@ -86,6 +108,16 @@ QColor DesignSystem::textColor() const
 QColor DesignSystem::backgroundColor() const
 {
 	return m_currentTheme.backgroundColor;
+}
+
+QColor DesignSystem::widgetBgColor() const
+{
+	return m_currentTheme.widgetBgColor;
+}
+
+QColor DesignSystem::widgetHoverBgColor() const
+{
+	return m_currentTheme.widgetHoverBgColor;
 }
 
 QColor DesignSystem::borderColor() const

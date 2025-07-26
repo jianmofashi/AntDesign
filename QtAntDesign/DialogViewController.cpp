@@ -1,4 +1,5 @@
 ﻿#include "DialogViewController.h"
+#include "DesignSystem.h"
 
 DialogViewController::DialogViewController(bool loginState, int parentW, int parentH, QWidget* parent)
 	: QGraphicsView(parent)
@@ -17,8 +18,8 @@ DialogViewController::DialogViewController(bool loginState, int parentW, int par
 	setCacheMode(QGraphicsView::CacheBackground);
 
 	// 创建对话框
-	//一旦你打算把一个 QWidget 放到场景中包装成 QGraphicsItem（比如通过 QGraphicsProxyWidget），那么这个 QWidget 就不能有父对象（parent），必须传 nullptr。
-	//Qt 大坑
+	// 一旦你打算把一个 QWidget 放到场景中包装成 QGraphicsItem（比如通过 QGraphicsProxyWidget），那么这个 QWidget 就不能有父对象（parent），必须传 nullptr。
+	// Qt 大坑
 	dialog = new MaterialDialog(loginState, nullptr);
 	contentDialogW = parentW * 0.40;
 	contentDialogH = parentH * 0.41;
@@ -56,22 +57,20 @@ DialogViewController::DialogViewController(bool loginState, int parentW, int par
 			}
 		});
 
-	// 深色遮罩
-	mask = new MaskWidget(parentW, parentH, parent);
 	connect(this, &DialogViewController::playMask, this, [this](bool isAddMask)
 		{
 			this->raise();
 			if (isAddMask)
 			{
-				mask->opcaityAddAnim();
+				DesignSystem::instance()->getDarkMask()->opcaityAddAnim();
 			}
 			else
 			{
-				mask->opcaityReduceAnim();
+				DesignSystem::instance()->getDarkMask()->opcaityReduceAnim();
 			}
 		});
 
-	connect(mask, &MaskWidget::clicked, this, &DialogViewController::onMaskClicked);
+	connect(DesignSystem::instance()->getDarkMask(), &MaskWidget::clicked, this, &DialogViewController::onMaskClicked);
 
 	// 控制器转发信号
 	connect(dialog, &MaterialDialog::successLogin, this, [this](bool loginState)
@@ -127,7 +126,7 @@ void DialogViewController::hideAnim()
 
 void DialogViewController::updateDialogPositionAndSize(MaterialDialog::PageIndex index)
 {
-	if (scene && proxy && mask && dialog)
+	if (scene && proxy && DesignSystem::instance()->getDarkMask() && dialog)
 	{
 		int parentW = mainWindowSize.width(), parentH = mainWindowSize.height(), dialogW = 0, dialogH = 0;
 
@@ -161,14 +160,14 @@ void DialogViewController::updateDialogPositionAndSize(MaterialDialog::PageIndex
 		proxy->setTransformOriginPoint(proxyRect.center());
 
 		//  4. 遮罩同步
-		mask->resize(parentW, parentH);
-		mask->move(0, 0);
+		DesignSystem::instance()->getDarkMask()->resize(parentW, parentH);
+		DesignSystem::instance()->getDarkMask()->move(0, 0);
 	}
 }
 
 void DialogViewController::buildStandardDialog(int parentW, int parentH, int dialogW, int dialogH, QString title, QString text)
 {
-	if (scene && proxy && mask && dialog)
+	if (scene && proxy && DesignSystem::instance()->getDarkMask() && dialog)
 	{
 		mainWindowSize = QSize(parentW, parentH);
 		standardDialogW = dialogW;
