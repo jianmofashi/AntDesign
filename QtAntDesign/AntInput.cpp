@@ -31,6 +31,7 @@ AntInput::AntInput(int popupHeight, QStringList itemTextList, QWidget* parent)
 			// 具体业务逻辑
 			setCurrentText(idx.data().toString());
 			popupView->hideAnimated();
+			DesignSystem::instance()->getTransparentMask()->hide();
 			clearFocus();
 		});
 
@@ -44,6 +45,13 @@ AntInput::AntInput(int popupHeight, QStringList itemTextList, QWidget* parent)
 		model1->appendRow(item);
 	}
 	popupView->popup->setModel(model1);
+
+	connect(DesignSystem::instance()->getTransparentMask(), &TransparentMask::clickedOutside, this, [this]()
+		{
+			popupView->hideAnimated();
+			DesignSystem::instance()->getTransparentMask()->hide();
+			clearFocus();
+		});
 }
 
 void AntInput::resizeEvent(QResizeEvent* event)
@@ -58,6 +66,7 @@ void AntInput::mousePressEvent(QMouseEvent* event)
 	{
 		AntBaseInput::mousePressEvent(event);
 		QPoint popupPos = mapToGlobal(QPoint(0, height()));
+		DesignSystem::instance()->getTransparentMask()->show();
 		popupView->raise();
 		popupView->showAnimated(popupPos, width());
 	}

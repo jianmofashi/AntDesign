@@ -48,5 +48,6 @@
         <file>Imgs/huawei.jpg</file>
         <file>Imgs/varda.jpg</file>
         <file>Imgs/search.svg</file>
+        <file>Imgs/git.svg</file>
     </qresource>
 </RCC>

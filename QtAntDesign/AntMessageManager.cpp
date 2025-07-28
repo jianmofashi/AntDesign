@@ -122,9 +122,7 @@ void AntMessageManager::startExitAnimation()
 	slideOutGroup->addAnimation(slideOutAnim);
 	slideOutGroup->addAnimation(opacityAnim);
 
-	// 其他消息整体上移动画组
-	QParallelAnimationGroup* moveUpAnimGroup = new QParallelAnimationGroup(this);
-
+	// 首个滑出和整体上移同时执行
 	int baseY = -msgHeight + msgHeight + spacingY;
 	int heightWithSpacing = msgHeight + 10;
 	for (int i = 1; i < m_messages.count(); ++i)
@@ -136,18 +134,13 @@ void AntMessageManager::startExitAnimation()
 		anim->setEasingCurve(QEasingCurve::InOutSine);
 		anim->setStartValue(QPoint(x, msg->pos().y()));
 		anim->setEndValue(QPoint(x, baseY + (i - 1) * heightWithSpacing));
-		moveUpAnimGroup->addAnimation(anim);
+		slideOutGroup->addAnimation(anim);
 	}
 
 	// 动画结束后，消息销毁和队列更新
 	connect(slideOutAnim, &QPropertyAnimation::finished, firstMsg, &QWidget::deleteLater);
 
-	// 首个滑出和整体上移同时执行
-	QParallelAnimationGroup* totalGroup = new QParallelAnimationGroup(this);
-	totalGroup->addAnimation(slideOutGroup);
-	totalGroup->addAnimation(moveUpAnimGroup);
-
-	connect(totalGroup, &QParallelAnimationGroup::finished, this, [this]()
+	connect(slideOutGroup, &QParallelAnimationGroup::finished, this, [this]()
 		{
 			m_messages.removeFirst(); // 移除退出消息
 			isAnimating = false;
@@ -168,7 +161,7 @@ void AntMessageManager::startExitAnimation()
 		});
 
 	m_isBatchAnimating = true;
-	totalGroup->start(QAbstractAnimation::DeleteWhenStopped);
+	slideOutGroup->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
 void AntMessageManager::onMessageExitFinished(AntMessage* msg)

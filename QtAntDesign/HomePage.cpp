@@ -24,6 +24,7 @@
 #include "CarouselWidget.h"
 #include "CardWidget.h"
 #include "QrCodeWidget.h"
+#include "FlowLayout.h"
 
 HomePage::HomePage(QWidget* parent)
 	: QWidget(parent)
@@ -38,12 +39,26 @@ HomePage::HomePage(QWidget* parent)
 	QWidget* w1 = new QWidget(this);
 	scrollArea->addWidget(w1);
 
-	// 页面内容
+	// 流式布局
+	QWidget* w2 = new QWidget(this);
+	FlowLayout* flowLay = new FlowLayout(w2, 10, 6);
+	QIcon svgIcon(":/Imgs/git.svg");
+	for (int i = 0; i < 50; ++i)
+	{
+		QLabel* label = new QLabel(w2);
+		label->setFixedSize(50, 50);
+		label->setPixmap(svgIcon.pixmap(50, 50));
+		flowLay->addWidget(label);
+	}
+
+	// 暂无数据
+	NoDataWidget* noData = new NoDataWidget(this);
+
+	// 添加标签项
 	tabWidget->addTab(scrollArea, "常用控件");
 	tabWidget->addTab(new QWidget(this), "数据统计");
-	NoDataWidget* noData = new NoDataWidget(this);
+	tabWidget->addTab(w2, "流式布局");
 	tabWidget->addTab(noData, "暂无数据");
-	tabWidget->getWidget(1)->setStyleSheet("background-color: lightblue;");
 
 	// 主布局
 	QVBoxLayout* layout = new QVBoxLayout(this);
