@@ -28,7 +28,7 @@ MaskWidget::~MaskWidget()
 {
 }
 
-void MaskWidget::opcaityAddAnim()
+void MaskWidget::showAnim()
 {
 	isHide = false;
 	show();
@@ -36,7 +36,7 @@ void MaskWidget::opcaityAddAnim()
 	alphaAnim->start();
 }
 
-void MaskWidget::opcaityReduceAnim()
+void MaskWidget::hideAnim()
 {
 	isHide = true;
 	alphaAnim->setDirection(QAbstractAnimation::Backward);

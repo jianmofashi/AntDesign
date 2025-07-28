@@ -214,6 +214,9 @@
     <ClCompile Include="FlowLayout.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DrawerWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StyleSheet.h">
@@ -390,6 +393,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="FlowLayout.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="DrawerWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

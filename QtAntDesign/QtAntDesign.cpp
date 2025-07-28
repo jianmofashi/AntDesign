@@ -260,6 +260,10 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 
 	// 主页的信号连接
 	connect(this, &QtAntDesign::resized, homePage, &HomePage::resized);
+	connect(this, &QtAntDesign::resized, this, [this](int w, int h)
+		{
+			DesignSystem::instance()->getDarkMask()->resize(w, h);
+		});
 	connect(this, &QtAntDesign::windowMoved, homePage, &HomePage::windowMoved);
 }
 
@@ -290,7 +294,7 @@ bool QtAntDesign::nativeEvent(const QByteArray& eventType, void* message, qintpt
 		break;
 	}
 	case WM_NCLBUTTONDBLCLK: {
-		// /如果存在遮罩则响应遮罩，禁止系统事件（双击最大化）
+		// 如果存在遮罩则响应遮罩，禁止系统事件（双击最大化）
 		if (DesignSystem::instance()->getTransparentMask()->isVisible() ||
 			DesignSystem::instance()->getDarkMask()->isVisible())
 		{
@@ -300,6 +304,13 @@ bool QtAntDesign::nativeEvent(const QByteArray& eventType, void* message, qintpt
 		break;
 	}
 	case WM_NCHITTEST: {
+		if (DesignSystem::instance()->getTransparentMask()->isVisible() ||
+			DesignSystem::instance()->getDarkMask()->isVisible())
+		{
+			*result = HTCLIENT;  // 阻止系统响应拖拽缩放
+			return true;
+		}
+
 		// 处理拖拽和缩放区域
 		const LONG borderWidth = 8; // 拖拽缩放边框宽度
 

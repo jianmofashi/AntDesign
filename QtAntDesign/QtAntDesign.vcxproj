@@ -130,6 +130,7 @@
     <ClCompile Include="CardWidget.cpp" />
     <ClCompile Include="CarouselCard.cpp" />
     <ClCompile Include="CarouselWidget.cpp" />
+    <ClCompile Include="DrawerWidget.cpp" />
     <ClCompile Include="FlowLayout.cpp" />
     <ClCompile Include="QrCodeWidget.cpp" />
     <ClCompile Include="ThirdParty\QR-Code-generator-master\qrcodegen.cpp" />
@@ -182,6 +183,7 @@
     <QtMoc Include="AntNumberInput.h" />
     <QtMoc Include="AntDoubleNumberInput.h" />
     <QtMoc Include="FlowLayout.h" />
+    <QtMoc Include="DrawerWidget.h" />
     <ClInclude Include="ThirdParty\QR-Code-generator-master\qrcodegen.hpp" />
     <QtMoc Include="TagWidget.h" />
     <QtMoc Include="Win11CheckButton.h" />

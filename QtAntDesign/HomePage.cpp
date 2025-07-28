@@ -25,6 +25,7 @@
 #include "CardWidget.h"
 #include "QrCodeWidget.h"
 #include "FlowLayout.h"
+#include "DrawerWidget.h"
 
 HomePage::HomePage(QWidget* parent)
 	: QWidget(parent)
@@ -358,6 +359,23 @@ HomePage::HomePage(QWidget* parent)
 	qrCode->setData(QString("https://ant-design.antgroup.com/index-cn"));
 	QLabel* qrCodeLabel = new QLabel("二维码", this);
 
+	// 抽屉 注意父对象要设置为主窗口
+	DrawerWidget* drawer = new DrawerWidget(280, DesignSystem::instance()->getMainWindow());
+	AntButton* drawerBtn = new AntButton("打开左侧抽屉", 12, w1);
+	drawerBtn->setFixedSize(140, 50);
+	connect(this, &HomePage::resized, this, [=](int w, int h)
+		{
+			drawer->setFixedHeight(h);
+		});
+	connect(drawerBtn, &AntButton::clicked, this, [=]()
+		{
+			if (!drawer->isVisible())
+			{
+				DesignSystem::instance()->getDarkMask()->showAnim();
+				drawer->showDrawer();
+			}
+		});
+
 	// 轮播图布局
 	carouselLayout->addStretch();
 	carouselLayout->addWidget(carousel);
@@ -407,6 +425,8 @@ HomePage::HomePage(QWidget* parent)
 	row6Layout->addSpacing(10);
 	row6Layout->addWidget(qrCodeLabel);
 	row6Layout->addWidget(qrCode);
+	row6Layout->addSpacing(10);
+	row6Layout->addWidget(drawerBtn);
 	row6Layout->addStretch();
 
 	// 添加到页面布局

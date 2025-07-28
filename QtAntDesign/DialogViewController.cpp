@@ -62,11 +62,11 @@ DialogViewController::DialogViewController(bool loginState, int parentW, int par
 			this->raise();
 			if (isAddMask)
 			{
-				DesignSystem::instance()->getDarkMask()->opcaityAddAnim();
+				DesignSystem::instance()->getDarkMask()->showAnim();
 			}
 			else
 			{
-				DesignSystem::instance()->getDarkMask()->opcaityReduceAnim();
+				DesignSystem::instance()->getDarkMask()->hideAnim();
 			}
 		});
 

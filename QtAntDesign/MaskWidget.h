@@ -23,8 +23,8 @@ public:
 		update(); // 触发重绘
 	}
 	// 播放透明度动画
-	void opcaityAddAnim();
-	void opcaityReduceAnim();
+	void showAnim();
+	void hideAnim();
 protected:
 	void mousePressEvent(QMouseEvent* e) override;
 	void paintEvent(QPaintEvent*) override;
