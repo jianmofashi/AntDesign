@@ -152,7 +152,7 @@ void MaterialProgressBar::setRealProgress(int targetValue)
 
 	// 动画时间取决于距离，可调节
 	constexpr int minDuration = 500;
-	constexpr int maxDuration = 5000;
+	constexpr int maxDuration = 3000;
 	constexpr double maxSpeed = 0.02;  // 百分比/ms
 
 	double range = maximum() - minimum();

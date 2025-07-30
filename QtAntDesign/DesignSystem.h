@@ -16,6 +16,7 @@ struct Theme
 	QColor borderColor;
 	QColor widgetBgColor;
 	QColor widgetHoverBgColor;
+	QColor widgetSelectedBgColor;
 	QColor shadowColor;
 	// 单选按钮相关颜色
 	QColor borderColorHover;
@@ -59,6 +60,9 @@ struct Theme
 	// 滚动区相关颜色
 	QColor scrollAreaHandleColor;
 	QColor scrollAreaHoverColor;
+	// 列表相关颜色
+	QColor listTextColor;
+	QColor listItemDescColor;
 };
 
 class DesignSystem : public QObject

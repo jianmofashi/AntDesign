@@ -217,6 +217,15 @@
     <ClCompile Include="DrawerWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BadgeWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AntBaseListView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AntChatListView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StyleSheet.h">
@@ -396,6 +405,15 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="DrawerWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="BadgeWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="AntBaseListView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="AntChatListView.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

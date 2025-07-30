@@ -17,7 +17,7 @@ PopupWidget::PopupWidget(int height, bool enableMultiLevel, QWidget* parent)
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 	auto theme = DesignSystem::instance()->currentTheme();
-	setStyleSheet(StyleSheet::vListViewQss(theme.popupScrollBarColor));
+	setStyleSheet(StyleSheet::popupListViewQss(theme.popupScrollBarColor));
 	setStyle(new ListViewStyle(theme.popupBgColor, theme.popupScrollBarColor, theme.shadowColor, style()));
 
 	// 自定义 Item Delegate

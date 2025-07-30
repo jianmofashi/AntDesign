@@ -26,6 +26,8 @@
 #include "QrCodeWidget.h"
 #include "FlowLayout.h"
 #include "DrawerWidget.h"
+#include "BadgeWidget.h"
+#include "AntChatListView.h"
 
 HomePage::HomePage(QWidget* parent)
 	: QWidget(parent)
@@ -36,17 +38,56 @@ HomePage::HomePage(QWidget* parent)
 	tabWidget->getLayout()->setContentsMargins(10, 0, 5, 0);
 
 	// 滚动区域
-	AntScrollArea* scrollArea = new AntScrollArea(AntScrollArea::ScrollVertical, this);
+	AntScrollArea* scrollArea1 = new AntScrollArea(AntScrollArea::ScrollVertical, this);
 	QWidget* w1 = new QWidget(this);
-	scrollArea->addWidget(w1);
+	scrollArea1->addWidget(w1);
+
+	// 视图页
+	AntScrollArea* scrollArea2 = new AntScrollArea(AntScrollArea::ScrollVertical, this);
+	QWidget* w2 = new QWidget(this);
+	scrollArea2->addWidget(w2);
+	// 创建聊天项数据
+	QVector<AntChatListView::ChatItem> chatItems = {
+	{":/Imgs/bee.png", "张三", "你好，最近怎么样？", "10:30 AM", false},
+	{":/Imgs/bee.png", "李四", "我很好，谢谢！你呢？", "10:31 AM", true},
+	{":/Imgs/bee.png", "王五", "我们今天见面吗？", "10:32 AM", false},
+	{":/Imgs/bee.png", "赵六", "今天晚上有空吗？", "10:33 AM", false},
+	{":/Imgs/bee.png", "孙七", "今晚八点见！", "10:34 AM", true},
+	{":/Imgs/bee.png", "周八", "好的，八点见！", "10:35 AM", false},
+	{":/Imgs/bee.png", "吴九", "你最近在忙什么？", "10:36 AM", false},
+	{":/Imgs/bee.png", "郑十", "最近工作挺忙的，快累死了", "10:37 AM", true},
+	{":/Imgs/bee.png", "冯十一", "加油！工作顺利啊！", "10:38 AM", false},
+	{":/Imgs/bee.png", "陈十二", "谢谢，努力！", "10:39 AM", true},
+	{":/Imgs/bee.png", "李十三", "晚安，明天见！", "10:40 AM", false},
+	{":/Imgs/bee.png", "王十四", "晚安，做个好梦！", "10:41 AM", true},
+	{":/Imgs/bee.png", "刘十五", "明天的计划是什么？", "10:42 AM", false},
+	{":/Imgs/bee.png", "张十六", "明天要去参加会议！", "10:43 AM", true},
+	{":/Imgs/bee.png", "黄十七", "祝你成功！", "10:44 AM", false},
+	// 更多数据...
+	};
+	// 创建你的自定义列表视图
+	AntChatListView* chatListView = new AntChatListView(w2);
+	// 用数据创建模型
+	QStandardItemModel* model = chatListView->createModel(chatItems);
+	// 给视图设置模型
+	chatListView->setModel(model);
+	chatListView->setFixedHeight(600);
+	// 视图页布局
+	QVBoxLayout* w2Lay = new QVBoxLayout(w2);
+	QLabel* listViewLab = new QLabel("列表视图", w2);
+	listViewLab->setFixedHeight(20);
+	w2Lay->setContentsMargins(10, 0, 10, 0);
+	w2Lay->setSpacing(0);
+	w2Lay->addWidget(listViewLab);
+	w2Lay->addWidget(chatListView);
 
 	// 流式布局
-	QWidget* w2 = new QWidget(this);
-	FlowLayout* flowLay = new FlowLayout(w2, 10, 6);
+	QWidget* w3 = new QWidget(this);
+	FlowLayout* flowLay = new FlowLayout(w3, 10, 6);
 	QIcon svgIcon(":/Imgs/git.svg");
 	for (int i = 0; i < 50; ++i)
 	{
-		QLabel* label = new QLabel(w2);
+		QLabel* label = new QLabel(w3);
 		label->setFixedSize(50, 50);
 		label->setPixmap(svgIcon.pixmap(50, 50));
 		flowLay->addWidget(label);
@@ -56,9 +97,10 @@ HomePage::HomePage(QWidget* parent)
 	NoDataWidget* noData = new NoDataWidget(this);
 
 	// 添加标签项
-	tabWidget->addTab(scrollArea, "常用控件");
+	tabWidget->addTab(scrollArea1, "常用控件");
+	tabWidget->addTab(scrollArea2, "视图控件");
 	tabWidget->addTab(new QWidget(this), "数据统计");
-	tabWidget->addTab(w2, "流式布局");
+	tabWidget->addTab(w3, "流式布局");
 	tabWidget->addTab(noData, "暂无数据");
 
 	// 主布局
@@ -327,7 +369,7 @@ HomePage::HomePage(QWidget* parent)
 		{"bilibili", "", QColor(251, 114, 153) },
 		{"x",        "", QColor(0, 0, 0)},
 		{"wechat",   "", QColor(7, 193, 96)},
-		{"taobao",   "", QColor(255, 140, 0)}
+		{"taobao",   "", QColor(255, 140, 0)},
 	};
 
 	row5Layout->addWidget(tagLabel);
@@ -375,6 +417,52 @@ HomePage::HomePage(QWidget* parent)
 				drawer->showDrawer();
 			}
 		});
+
+	// 徽章
+	// 创建徽章和标签列表
+	QList<BadgeWidget*> badgeWidgets = {
+		new BadgeWidget(10, 10, this),  // 圆形徽章
+		new BadgeWidget(42, 22, this),  // 圆角矩形徽章
+		new BadgeWidget(10, 10, this),  // 成功徽章
+		new BadgeWidget(10, 10, this),  // 错误徽章
+		new BadgeWidget(10, 10, this),  // 运行中徽章
+		new BadgeWidget(10, 10, this),  // 警告徽章
+		new BadgeWidget(10, 10, this)   // 默认徽章
+	};
+
+	// 设置徽章的状态
+	badgeWidgets[0]->setBadge(true, BadgeWidget::None);
+	badgeWidgets[1]->setBadge(false, BadgeWidget::None, 100, 99);
+	badgeWidgets[2]->setBadge(true, BadgeWidget::Success);
+	badgeWidgets[3]->setBadge(true, BadgeWidget::Error);
+	badgeWidgets[4]->setBadge(true, BadgeWidget::Running);
+	badgeWidgets[5]->setBadge(true, BadgeWidget::Warning);
+	badgeWidgets[6]->setBadge(true, BadgeWidget::Default);
+
+	// 创建标签
+	QList<QLabel*> badgeLabelList = {
+		new QLabel("圆形徽章", this),
+		new QLabel("圆角矩形徽章", this),
+		new QLabel("成功", this),
+		new QLabel("错误", this),
+		new QLabel("运行中", this),
+		new QLabel("警告", this),
+		new QLabel("默认", this)
+	};
+
+	// 创建一个横向布局来包含标签和徽章
+	QHBoxLayout* row7Layout = new QHBoxLayout();
+	row7Layout->setContentsMargins(0, 0, 0, 20);
+	row7Layout->setSpacing(10);
+
+	// 循环添加标签和徽章
+	for (int i = 0; i < badgeLabelList.size(); ++i)
+	{
+		row7Layout->addWidget(badgeLabelList[i]);
+		row7Layout->addWidget(badgeWidgets[i]);
+	}
+
+	row7Layout->addStretch();  // 添加伸缩项
 
 	// 轮播图布局
 	carouselLayout->addStretch();
@@ -438,6 +526,7 @@ HomePage::HomePage(QWidget* parent)
 	pageLay->addLayout(row4Layout);
 	pageLay->addLayout(row5Layout);
 	pageLay->addLayout(row6Layout);
+	pageLay->addLayout(row7Layout);
 	pageLay->addStretch();
 }
 

@@ -301,8 +301,8 @@ namespace StyleSheet
 			.arg(hoverBorder.name());
 	}
 
-	// 垂直方向列表视图样式
-	inline QString vListViewQss(const QColor& handleColor)
+	// 弹窗列表视图样式
+	inline QString popupListViewQss(const QColor& handleColor)
 	{
 		return QString(R"(
 		QListView {
@@ -428,5 +428,39 @@ namespace StyleSheet
 			.arg(focusBorderColor.name())
 			.arg(focusBg.name())
 			.arg(QString::number(padding));
+	}
+
+	// 垂直方向列表视图
+	inline QString vListViewQss(const QColor& handleColor)
+	{
+		return QString(R"(
+		QListView {
+			background-color: transparent;
+			border: none;
+		}
+
+		QScrollBar:vertical {
+			width: 6px;
+			background: transparent;
+			border: none;
+		}
+
+		QScrollBar::handle:vertical {
+			background: %1;
+			border-radius: 3px;
+		}
+
+		QScrollBar::sub-line:vertical,
+		QScrollBar::add-line:vertical {
+			height: 0px;
+			border: none;
+			background: none;
+		}
+
+		QScrollBar::add-page:vertical,
+		QScrollBar::sub-page:vertical {
+			background: none;
+		})")
+			.arg(handleColor.name());
 	}
 }

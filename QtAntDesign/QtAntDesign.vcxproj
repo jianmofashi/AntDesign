@@ -105,7 +105,9 @@
     <ClCompile Include="AboutPage.cpp" />
     <ClCompile Include="AnimatedNumber.cpp" />
     <ClCompile Include="AntBaseInput.cpp" />
+    <ClCompile Include="AntBaseListView.cpp" />
     <ClCompile Include="AntButton.cpp" />
+    <ClCompile Include="AntChatListView.cpp" />
     <ClCompile Include="AntComboBox.cpp" />
     <ClCompile Include="AntBaseDoubleSpinBox.cpp" />
     <ClCompile Include="AntDoubleNumberInput.cpp" />
@@ -126,6 +128,7 @@
     <ClCompile Include="AntTooltip.cpp" />
     <ClCompile Include="AntTooltipManager.cpp" />
     <ClCompile Include="AntTooltipViewController.cpp" />
+    <ClCompile Include="BadgeWidget.cpp" />
     <ClCompile Include="BubbleViewController.cpp" />
     <ClCompile Include="CardWidget.cpp" />
     <ClCompile Include="CarouselCard.cpp" />
@@ -184,6 +187,9 @@
     <QtMoc Include="AntDoubleNumberInput.h" />
     <QtMoc Include="FlowLayout.h" />
     <QtMoc Include="DrawerWidget.h" />
+    <QtMoc Include="BadgeWidget.h" />
+    <QtMoc Include="AntBaseListView.h" />
+    <QtMoc Include="AntChatListView.h" />
     <ClInclude Include="ThirdParty\QR-Code-generator-master\qrcodegen.hpp" />
     <QtMoc Include="TagWidget.h" />
     <QtMoc Include="Win11CheckButton.h" />

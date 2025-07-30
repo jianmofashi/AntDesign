@@ -168,7 +168,6 @@ public:
 	void setCurrentIndex(const QModelIndex& index);
 signals:
 	void itemSelected(const QModelIndex& index);
-	void containsMousePos(bool isContains);
 private:
 	bool m_enableMultiLevel;	// 是否启用多级列表
 	int m_popupHeight;			// 弹出框的高度

@@ -17,7 +17,8 @@ void DesignSystem::loadThemes()
 	m_lightTheme.textColor = QColor(255, 255, 255);
 	m_lightTheme.backgroundColor = QColor(255, 255, 255);
 	m_lightTheme.widgetBgColor = QColor(240, 240, 240);
-	m_lightTheme.widgetHoverBgColor = QColor(220, 220, 220);
+	m_lightTheme.widgetHoverBgColor = QColor(230, 230, 230);
+	m_lightTheme.widgetSelectedBgColor = QColor(220, 220, 220);
 	m_lightTheme.borderColor = QColor(200, 200, 200);
 	m_lightTheme.borderColorHover = QColor(22, 119, 255);
 	m_lightTheme.shadowColor = QColor(80, 80, 80);
@@ -45,10 +46,13 @@ void DesignSystem::loadThemes()
 	m_lightTheme.checkBoxTextDisableColor = QColor(180, 180, 180);
 	m_lightTheme.popupBgColor = QColor(255, 255, 255);
 	m_lightTheme.popupScrollBarColor = QColor(220, 220, 220);
-	m_lightTheme.popupItemBgColor = QColor(200, 200, 200, 80);
+	m_lightTheme.popupItemBgColor = QColor(230, 230, 230, 180);
 	m_lightTheme.popupTextColor = QColor(30, 30, 30);
 	m_lightTheme.scrollAreaHandleColor = QColor(230, 230, 230);
 	m_lightTheme.scrollAreaHoverColor = QColor(190, 190, 190);
+	m_lightTheme.listTextColor = QColor(0, 0, 0);
+	m_lightTheme.listItemDescColor = QColor(150, 150, 150);
+	
 	QFont lightFont;
 	lightFont.setPointSizeF(12);
 
