@@ -2,7 +2,6 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include "MaterialTabWidget.h"
-#include "AntScrollArea.h"
 #include "AntToggleButton.h"
 #include "SlideStackedWidget.h"
 #include "MaterialProgressBar.h"
@@ -28,6 +27,9 @@
 #include "DrawerWidget.h"
 #include "BadgeWidget.h"
 #include "AntChatListView.h"
+#include "AntProfileTable.h"
+#include "AntCellWidget.h"
+#include "StyleSheet.h"
 
 HomePage::HomePage(QWidget* parent)
 	: QWidget(parent)
@@ -38,48 +40,12 @@ HomePage::HomePage(QWidget* parent)
 	tabWidget->getLayout()->setContentsMargins(10, 0, 5, 0);
 
 	// 滚动区域
-	AntScrollArea* scrollArea1 = new AntScrollArea(AntScrollArea::ScrollVertical, this);
+	scrollArea1 = new AntScrollArea(AntScrollArea::ScrollVertical, this);
 	QWidget* w1 = new QWidget(this);
 	scrollArea1->addWidget(w1);
 
 	// 视图页
-	AntScrollArea* scrollArea2 = new AntScrollArea(AntScrollArea::ScrollVertical, this);
-	QWidget* w2 = new QWidget(this);
-	scrollArea2->addWidget(w2);
-	// 创建聊天项数据
-	QVector<AntChatListView::ChatItem> chatItems = {
-	{":/Imgs/bee.png", "张三", "你好，最近怎么样？", "10:30 AM", false},
-	{":/Imgs/bee.png", "李四", "我很好，谢谢！你呢？", "10:31 AM", true},
-	{":/Imgs/bee.png", "王五", "我们今天见面吗？", "10:32 AM", false},
-	{":/Imgs/bee.png", "赵六", "今天晚上有空吗？", "10:33 AM", false},
-	{":/Imgs/bee.png", "孙七", "今晚八点见！", "10:34 AM", true},
-	{":/Imgs/bee.png", "周八", "好的，八点见！", "10:35 AM", false},
-	{":/Imgs/bee.png", "吴九", "你最近在忙什么？", "10:36 AM", false},
-	{":/Imgs/bee.png", "郑十", "最近工作挺忙的，快累死了", "10:37 AM", true},
-	{":/Imgs/bee.png", "冯十一", "加油！工作顺利啊！", "10:38 AM", false},
-	{":/Imgs/bee.png", "陈十二", "谢谢，努力！", "10:39 AM", true},
-	{":/Imgs/bee.png", "李十三", "晚安，明天见！", "10:40 AM", false},
-	{":/Imgs/bee.png", "王十四", "晚安，做个好梦！", "10:41 AM", true},
-	{":/Imgs/bee.png", "刘十五", "明天的计划是什么？", "10:42 AM", false},
-	{":/Imgs/bee.png", "张十六", "明天要去参加会议！", "10:43 AM", true},
-	{":/Imgs/bee.png", "黄十七", "祝你成功！", "10:44 AM", false},
-	// 更多数据...
-	};
-	// 创建你的自定义列表视图
-	AntChatListView* chatListView = new AntChatListView(w2);
-	// 用数据创建模型
-	QStandardItemModel* model = chatListView->createModel(chatItems);
-	// 给视图设置模型
-	chatListView->setModel(model);
-	chatListView->setFixedHeight(600);
-	// 视图页布局
-	QVBoxLayout* w2Lay = new QVBoxLayout(w2);
-	QLabel* listViewLab = new QLabel("列表视图", w2);
-	listViewLab->setFixedHeight(20);
-	w2Lay->setContentsMargins(10, 0, 10, 0);
-	w2Lay->setSpacing(0);
-	w2Lay->addWidget(listViewLab);
-	w2Lay->addWidget(chatListView);
+	initViewPage();
 
 	// 流式布局
 	QWidget* w3 = new QWidget(this);
@@ -532,4 +498,202 @@ HomePage::HomePage(QWidget* parent)
 
 HomePage::~HomePage()
 {
+}
+
+void HomePage::initViewPage()
+{
+	scrollArea2 = new AntScrollArea(AntScrollArea::ScrollVertical, this);
+	QWidget* w2 = new QWidget(this);
+	scrollArea2->addWidget(w2);
+	// 创建聊天项数据
+	QVector<AntChatListView::ChatItem> chatItems = {
+	{":/Imgs/bee.png", "张三", "你好，最近怎么样？", "10:30 AM", false},
+	{":/Imgs/bee.png", "李四", "我很好，谢谢！你呢？", "10:31 AM", true},
+	{":/Imgs/bee.png", "王五", "我们今天见面吗？", "10:32 AM", false},
+	{":/Imgs/bee.png", "赵六", "今天晚上有空吗？", "10:33 AM", false},
+	{":/Imgs/bee.png", "孙七", "今晚八点见！", "10:34 AM", true},
+	{":/Imgs/bee.png", "周八", "好的，八点见！", "10:35 AM", false},
+	{":/Imgs/bee.png", "吴九", "你最近在忙什么？", "10:36 AM", false},
+	{":/Imgs/bee.png", "郑十", "最近工作挺忙的，快累死了", "10:37 AM", true},
+	{":/Imgs/bee.png", "冯十一", "加油！工作顺利啊！", "10:38 AM", false},
+	{":/Imgs/bee.png", "陈十二", "谢谢，努力！", "10:39 AM", true},
+	{":/Imgs/bee.png", "李十三", "晚安，明天见！", "10:40 AM", false},
+	{":/Imgs/bee.png", "王十四", "晚安，做个好梦！", "10:41 AM", true},
+	{":/Imgs/bee.png", "刘十五", "明天的计划是什么？", "10:42 AM", false},
+	{":/Imgs/bee.png", "张十六", "明天要去参加会议！", "10:43 AM", true},
+	{":/Imgs/bee.png", "黄十七", "祝你成功！", "10:44 AM", false},
+	// 更多数据...
+	};
+	// 创建你的自定义列表视图
+	AntChatListView* chatList = new AntChatListView(w2);
+	// 用数据创建模型
+	QStandardItemModel* listModel = chatList->createModel(chatItems);
+	// 给视图设置模型
+	chatList->setModel(listModel);
+	chatList->setFixedHeight(600);
+	// 视图页布局
+	QVBoxLayout* w2Lay = new QVBoxLayout(w2);
+	QLabel* listViewLab = new QLabel("列表视图", w2);
+	listViewLab->setFixedHeight(20);
+	w2Lay->setContentsMargins(10, 0, 10, 0);
+	w2Lay->setSpacing(10);
+
+	// 表格
+	QLabel* tableViewLab = new QLabel("表格视图", w2);
+	TableColumnLayout colLayout = {
+	60,         // avatarWidth
+	80,         // actionWidth
+	0.25,       // nameRatio
+	0.10,       // ageRatio
+	0.35,       // addrRatio
+	0.30        // tagRatio
+	};
+
+	int tagAlpha = 200; // 控制整体标签透明度（0~255）
+
+	QVector<AntProfileTable::TableColumnItems> rowItems = {
+	{
+		QPixmap(":/Imgs/bee.png"),
+		"张三",
+		"28",
+		"北京市朝阳区",
+		{
+			{ "程序员", QColor(255, 87, 34, tagAlpha) },       // 活跃橙（#FF5722）
+			{ "北京", QColor(33, 150, 243, tagAlpha) },        // 明亮蓝（#2196F3）
+			{ "技术狂人", QColor(76, 175, 80, tagAlpha) }       // 草绿色（#4CAF50）
+		},
+		"编辑"
+	},
+	{
+		QPixmap(":/Imgs/bee.png"),
+		"李四",
+		"34",
+		"上海市浦东新区",
+		{
+			{ "设计师", QColor(156, 39, 176, tagAlpha) },       // 鲜紫（#9C27B0）
+			{ "上海", QColor(63, 81, 181, tagAlpha) },          // 靛蓝（#3F51B5）
+			{ "创意达人", QColor(233, 30, 99, tagAlpha) }       // 亮粉（#E91E63）
+		},
+		"删除"
+	},
+	{
+		QPixmap(":/Imgs/bee.png"),
+		"王五",
+		"22",
+		"广州市天河区",
+		{
+			{ "学生", QColor(96, 125, 139, tagAlpha) },         // 蓝灰（#607D8B）
+			{ "广州", QColor(121, 85, 72, tagAlpha) }           // 深棕（#795548）
+		},
+		"查看"
+	},
+	{
+		QPixmap(":/Imgs/bee.png"),
+		"赵六",
+		"45",
+		"深圳市南山区",
+		{
+			{ "CEO", QColor(255, 193, 7, tagAlpha) },           // 琥珀黄（#FFC107）
+			{ "深圳", QColor(0, 150, 136, tagAlpha) },          // 青绿（#009688）
+			{ "企业家", QColor(139, 195, 74, tagAlpha) }        // 浅绿（#8BC34A）
+		},
+		"详情"
+	},
+	{
+		QPixmap(":/Imgs/bee.png"),
+		"钱七",
+		"30",
+		"武汉市江汉区",
+		{
+			{ "项目经理", QColor(121, 85, 72, tagAlpha) },      // 棕色
+			{ "武汉", QColor(103, 58, 183, tagAlpha) },         // 深紫（#673AB7）
+			{ "团队领袖", QColor(255, 152, 0, tagAlpha) }       // 鲜橙（#FF9800）
+		},
+		"编辑"
+	},
+	{
+		QPixmap(":/Imgs/bee.png"),
+		"孙八",
+		"25",
+		"成都市武侯区",
+		{
+			{ "产品经理", QColor(63, 81, 181, tagAlpha) },      // 靛蓝
+			{ "成都", QColor(33, 150, 243, tagAlpha) },         // 蓝
+			{ "产品思维", QColor(76, 175, 80, tagAlpha) }       // 绿
+		},
+		"删除"
+	},
+	{
+		QPixmap(":/Imgs/bee.png"),
+		"周九",
+		"40",
+		"重庆市渝中区",
+		{
+			{ "设计总监", QColor(156, 39, 176, tagAlpha) },     // 紫
+			{ "重庆", QColor(233, 30, 99, tagAlpha) }           // 粉
+		},
+		"查看"
+	},
+	{
+		QPixmap(":/Imgs/bee.png"),
+		"吴十",
+		"33",
+		"杭州市西湖区",
+		{
+			{ "营销总监", QColor(244, 67, 54, tagAlpha) },      // 红（#F44336）
+			{ "杭州", QColor(0, 150, 136, tagAlpha) },          // 青绿
+			{ "互联网营销", QColor(255, 193, 7, tagAlpha) }     // 琥珀黄
+		},
+		"详情"
+	},
+	{
+		QPixmap(":/Imgs/bee.png"),
+		"郑十一",
+		"27",
+		"南京市秦淮区",
+		{
+			{ "技术支持", QColor(33, 150, 243, tagAlpha) },     // 蓝
+			{ "南京", QColor(76, 175, 80, tagAlpha) }           // 绿
+		},
+		"编辑"
+	},
+	{
+		QPixmap(":/Imgs/bee.png"),
+		"冯十二",
+		"38",
+		"厦门市思明区",
+		{
+			{ "市场经理", QColor(255, 87, 34, tagAlpha) },      // 橙
+			{ "厦门", QColor(121, 85, 72, tagAlpha) }           // 棕
+		},
+		"删除"
+	}
+	};
+
+	AntProfileTable* table = new AntProfileTable(60, rowItems.size(), 60, colLayout, w2);
+	QStandardItemModel* tableModel = table->createModel(rowItems);
+	table->setModel(tableModel);
+	tableViewLab->setFixedHeight(20);
+
+	// 插入按钮 （根据具体业务来实现）
+	// name列和action列插入按钮
+	auto theme = DesignSystem::instance()->currentTheme();
+	for (int row = 0; row < tableModel->rowCount(); ++row)
+	{
+		// 获取按钮文本
+		QString name = tableModel->item(row, 1)->text();
+		QString action = tableModel->item(row, 5)->text();
+
+		AntCellWidget* nameCell = new AntCellWidget(name, table);
+		AntCellWidget* actionCell = new AntCellWidget(action, table);
+
+		// 插入按钮到名字列和操作列
+		table->setIndexWidget(tableModel->index(row, 1), nameCell);		// 名字列
+		table->setIndexWidget(tableModel->index(row, 5), actionCell);		// 操作列
+	}
+
+	w2Lay->addWidget(listViewLab);
+	w2Lay->addWidget(chatList);
+	w2Lay->addWidget(tableViewLab);
+	w2Lay->addWidget(table);
 }

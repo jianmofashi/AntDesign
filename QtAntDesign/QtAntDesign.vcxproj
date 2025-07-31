@@ -106,7 +106,9 @@
     <ClCompile Include="AnimatedNumber.cpp" />
     <ClCompile Include="AntBaseInput.cpp" />
     <ClCompile Include="AntBaseListView.cpp" />
+    <ClCompile Include="AntBaseTableView.cpp" />
     <ClCompile Include="AntButton.cpp" />
+    <ClCompile Include="AntCellWidget.cpp" />
     <ClCompile Include="AntChatListView.cpp" />
     <ClCompile Include="AntComboBox.cpp" />
     <ClCompile Include="AntBaseDoubleSpinBox.cpp" />
@@ -121,6 +123,8 @@
       <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Release|x64'">input</DynamicSource>
       <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Filename).moc</QtMocFileName>
     </ClCompile>
+    <ClCompile Include="AntProfileItemDelegate.cpp" />
+    <ClCompile Include="AntProfileTable.cpp" />
     <ClCompile Include="AntRadioButton.cpp" />
     <ClCompile Include="AntScrollArea.cpp" />
     <ClCompile Include="AntSlider.cpp" />
@@ -190,6 +194,10 @@
     <QtMoc Include="BadgeWidget.h" />
     <QtMoc Include="AntBaseListView.h" />
     <QtMoc Include="AntChatListView.h" />
+    <QtMoc Include="AntBaseTableView.h" />
+    <QtMoc Include="AntProfileTable.h" />
+    <QtMoc Include="AntProfileItemDelegate.h" />
+    <QtMoc Include="AntCellWidget.h" />
     <ClInclude Include="ThirdParty\QR-Code-generator-master\qrcodegen.hpp" />
     <QtMoc Include="TagWidget.h" />
     <QtMoc Include="Win11CheckButton.h" />

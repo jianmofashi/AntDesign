@@ -463,4 +463,20 @@ namespace StyleSheet
 		})")
 			.arg(handleColor.name());
 	}
+
+	// align 文本的对齐方式
+	inline QString textBtnQss(const QString& align, const QColor& color, const QColor& hoverColor)
+	{
+		return QString(R"(
+        QPushButton {
+			text-align: %1;
+            border: none;
+            background: transparent;
+            color: %2;
+        }
+        QPushButton:hover {
+            color: %3;
+        }
+    )").arg(align).arg(color.name()).arg(hoverColor.name());
+	}
 }

@@ -226,6 +226,18 @@
     <ClCompile Include="AntChatListView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AntBaseTableView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AntProfileTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AntProfileItemDelegate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AntCellWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StyleSheet.h">
@@ -414,6 +426,18 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="AntChatListView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="AntBaseTableView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="AntProfileTable.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="AntProfileItemDelegate.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="AntCellWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

@@ -13,7 +13,8 @@ DesignSystem::DesignSystem()
 void DesignSystem::loadThemes()
 {
 	// Light Theme
-	m_lightTheme.primaryColor = QColor("#1677ff");	// Ant 蓝色
+	m_lightTheme.primaryColor = QColor(22, 119, 255);	// Ant 蓝色
+	m_lightTheme.primaryHoverColor = m_lightTheme.primaryColor.lighter(130);
 	m_lightTheme.textColor = QColor(255, 255, 255);
 	m_lightTheme.backgroundColor = QColor(255, 255, 255);
 	m_lightTheme.widgetBgColor = QColor(240, 240, 240);
@@ -52,7 +53,8 @@ void DesignSystem::loadThemes()
 	m_lightTheme.scrollAreaHoverColor = QColor(190, 190, 190);
 	m_lightTheme.listTextColor = QColor(0, 0, 0);
 	m_lightTheme.listItemDescColor = QColor(150, 150, 150);
-	
+	m_lightTheme.tableTextColor = QColor(0, 0, 0);
+
 	QFont lightFont;
 	lightFont.setPointSizeF(12);
 

@@ -11,6 +11,7 @@ struct Theme
 {
 	// 样式颜色
 	QColor primaryColor;
+	QColor primaryHoverColor;
 	QColor textColor;
 	QColor backgroundColor;
 	QColor borderColor;
@@ -63,6 +64,8 @@ struct Theme
 	// 列表相关颜色
 	QColor listTextColor;
 	QColor listItemDescColor;
+	// 表格相关颜色
+	QColor tableTextColor;
 };
 
 class DesignSystem : public QObject
