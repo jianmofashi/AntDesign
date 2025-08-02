@@ -66,6 +66,10 @@ struct Theme
 	QColor listItemDescColor;
 	// 表格相关颜色
 	QColor tableTextColor;
+	// 标签选项卡相关颜色
+	QColor tabBarBgColor;
+	QColor tabHoverColor;
+	QColor onTabBtnHoverColor;
 };
 
 class DesignSystem : public QObject

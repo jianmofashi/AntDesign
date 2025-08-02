@@ -30,6 +30,8 @@
 #include "AntProfileTable.h"
 #include "AntCellWidget.h"
 #include "StyleSheet.h"
+#include "AntTabWidgetContainer.h"
+#include "TabContentWidget.h"
 
 HomePage::HomePage(QWidget* parent)
 	: QWidget(parent)
@@ -430,6 +432,21 @@ HomePage::HomePage(QWidget* parent)
 
 	row7Layout->addStretch();  // 添加伸缩项
 
+	// 标签选项卡
+	AntTabWidgetContainer* antTabContainer = new AntTabWidgetContainer(200, 42, true, w1);
+	TabContentWidget* testWidget = new TabContentWidget("标签内容Tab 0", w1);
+	antTabContainer->addTab("Tab 0", ":/Imgs/git.svg", testWidget);
+	antTabContainer->setMinimumHeight(800);
+	QVBoxLayout* row8Layout = new QVBoxLayout();
+	QLabel* antTabLabel = new QLabel("标签选项卡", this);
+	// 外部包裹的容器
+	QWidget* container = new QWidget(w1);
+	container->setObjectName("blueGrayContainer");
+	container->setStyleSheet(R"(#blueGrayContainer {background-color: #cccccc; })");
+	QVBoxLayout* cLayout = new QVBoxLayout(container);
+	cLayout->setContentsMargins(20, 20, 20, 20);
+	cLayout->addLayout(row8Layout);
+
 	// 轮播图布局
 	carouselLayout->addStretch();
 	carouselLayout->addWidget(carousel);
@@ -483,6 +500,10 @@ HomePage::HomePage(QWidget* parent)
 	row6Layout->addWidget(drawerBtn);
 	row6Layout->addStretch();
 
+	// 第八行布局
+	row8Layout->addWidget(antTabLabel);
+	row8Layout->addWidget(antTabContainer);
+
 	// 添加到页面布局
 	pageLay->addLayout(carouselLayout);
 	pageLay->addLayout(row1Layout);
@@ -493,6 +514,7 @@ HomePage::HomePage(QWidget* parent)
 	pageLay->addLayout(row5Layout);
 	pageLay->addLayout(row6Layout);
 	pageLay->addLayout(row7Layout);
+	pageLay->addWidget(container);
 	pageLay->addStretch();
 }
 

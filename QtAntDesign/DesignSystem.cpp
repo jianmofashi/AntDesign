@@ -54,6 +54,9 @@ void DesignSystem::loadThemes()
 	m_lightTheme.listTextColor = QColor(0, 0, 0);
 	m_lightTheme.listItemDescColor = QColor(150, 150, 150);
 	m_lightTheme.tableTextColor = QColor(0, 0, 0);
+	m_lightTheme.tabBarBgColor = QColor(243, 243, 243);
+	m_lightTheme.tabHoverColor = QColor(230, 230, 230);
+	m_lightTheme.onTabBtnHoverColor = QColor(200, 200, 200);
 
 	QFont lightFont;
 	lightFont.setPointSizeF(12);

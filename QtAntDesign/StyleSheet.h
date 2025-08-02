@@ -4,14 +4,12 @@
 
 namespace StyleSheet
 {
-	inline QString mainQss(QColor bgColor)
+	inline QString mainQss(const QColor& bgColor)
 	{
-		return QString("#main_widget{ "
-			"border-top-left-radius: 8px; "		// 左上
-			"border-top-right-radius: 8px; "	// 右上角圆角
-			"border-bottom-left-radius: 8px;"	// 左下
-			"border-bottom-right-radius: 8px;"  // 右下
-			"background-color: white;}").arg(bgColor.name());
+		return QString(R"(#main_widget {
+					border-radius: 8px;
+					background-color: %1;
+				})").arg(bgColor.name());
 	}
 
 	inline QString naviQss(const QColor& bgColor)
@@ -478,5 +476,12 @@ namespace StyleSheet
             color: %3;
         }
     )").arg(align).arg(color.name()).arg(hoverColor.name());
+	}
+	inline QString antTabBarWidgetQss(const QColor& color)
+	{
+		return QString(R"(
+		#AntTabBarWidget {
+			background-color: %1;
+		})").arg(color.name());
 	}
 }

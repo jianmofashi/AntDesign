@@ -50,5 +50,6 @@
         <file>Imgs/search.svg</file>
         <file>Imgs/git.svg</file>
         <file>Imgs/bee.png</file>
+        <file>Imgs/closeItem.svg</file>
     </qresource>
 </RCC>

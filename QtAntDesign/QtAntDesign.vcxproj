@@ -128,6 +128,9 @@
     <ClCompile Include="AntRadioButton.cpp" />
     <ClCompile Include="AntScrollArea.cpp" />
     <ClCompile Include="AntSlider.cpp" />
+    <ClCompile Include="AntTabBarWidget.cpp" />
+    <ClCompile Include="AntTabWidget.cpp" />
+    <ClCompile Include="AntTabWidgetContainer.cpp" />
     <ClCompile Include="AntToggleButton.cpp" />
     <ClCompile Include="AntTooltip.cpp" />
     <ClCompile Include="AntTooltipManager.cpp" />
@@ -140,6 +143,7 @@
     <ClCompile Include="DrawerWidget.cpp" />
     <ClCompile Include="FlowLayout.cpp" />
     <ClCompile Include="QrCodeWidget.cpp" />
+    <ClCompile Include="TabContentWidget.cpp" />
     <ClCompile Include="ThirdParty\QR-Code-generator-master\qrcodegen.cpp" />
     <ClCompile Include="TransparentMask.cpp" />
     <ClCompile Include="CustomToolButton.cpp" />
@@ -198,6 +202,10 @@
     <QtMoc Include="AntProfileTable.h" />
     <QtMoc Include="AntProfileItemDelegate.h" />
     <QtMoc Include="AntCellWidget.h" />
+    <QtMoc Include="AntTabWidget.h" />
+    <QtMoc Include="AntTabBarWidget.h" />
+    <QtMoc Include="AntTabWidgetContainer.h" />
+    <QtMoc Include="TabContentWidget.h" />
     <ClInclude Include="ThirdParty\QR-Code-generator-master\qrcodegen.hpp" />
     <QtMoc Include="TagWidget.h" />
     <QtMoc Include="Win11CheckButton.h" />
