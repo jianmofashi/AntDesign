@@ -91,28 +91,41 @@ void AntTabBarWidget::addTab(const QString& title, const QString& icon)
 	// 平滑移动加号按钮
 	updateAddButtonPositionAnimated();
 
-	connect(tab, &AntTabWidget::requestClose, this, [this](AntTabWidget* tab)
+	// 关闭逻辑
+	connect(tab, &AntTabWidget::requestClose, this, [this, tab](AntTabWidget* tab)
 		{
-			// 从 tab 列表中移除并删除
 			int index = m_tabs.indexOf(tab);
-			if (index != -1)
-			{
-				m_tabs.removeAt(index);
-				tab->deleteLater();
+			if (index == -1)
+				return;
 
-				// 更新当前索引
-				if (m_currentIndex >= m_tabs.size())
-					m_currentIndex = m_tabs.size() - 1;
+			QRect startGeometry = tab->geometry();
+			QRect endGeometry = QRect(startGeometry.topLeft(), QSize(0, startGeometry.height()));
 
-				emit currentIndexChanged(m_currentIndex);
-				emit removeContent(index, m_currentIndex);
+			QPropertyAnimation* closeAnim = new QPropertyAnimation(tab, "geometry");
+			closeAnim->setDuration(300);
+			closeAnim->setEasingCurve(QEasingCurve::OutCubic);
+			closeAnim->setStartValue(startGeometry);
+			closeAnim->setEndValue(endGeometry);
 
-				// 重新布局所有 tab
-				updateTabPositions();
+			connect(closeAnim, &QPropertyAnimation::finished, this, [this, tab]()
+				{
+					int idx = m_tabs.indexOf(tab);
+					if (idx != -1)
+						m_tabs.removeAt(idx);
 
-				// 重新定位加号按钮
-				updateAddButtonPositionAnimated();
-			}
+					tab->deleteLater();
+
+					// 更新当前索引
+					if (m_currentIndex >= m_tabs.size())
+						m_currentIndex = m_tabs.size() - 1;
+
+					emit currentIndexChanged(m_currentIndex);
+					emit removeContent(idx, m_currentIndex);
+					updateTabPositions();
+					updateAddButtonPositionAnimated();
+				});
+
+			closeAnim->start(QAbstractAnimation::DeleteWhenStopped);
 		});
 }
 

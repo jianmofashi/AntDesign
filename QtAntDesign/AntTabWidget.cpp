@@ -34,6 +34,7 @@ AntTabWidget::AntTabWidget(const QString& title, const QString& icon, int tabwid
 
 	connect(m_closeButton, &QPushButton::clicked, this, [this]()
 		{
+			m_closeButton->hide();
 			emit requestClose(this);  // 通知父组件
 		});
 }
