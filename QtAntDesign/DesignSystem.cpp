@@ -1,5 +1,4 @@
-﻿// DesignSystem.cpp
-#include "DesignSystem.h"
+﻿#include "DesignSystem.h"
 
 DesignSystem* DesignSystem::m_instance = nullptr;
 

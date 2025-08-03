@@ -27,11 +27,11 @@
 #include "DrawerWidget.h"
 #include "BadgeWidget.h"
 #include "AntChatListView.h"
-#include "AntProfileTable.h"
 #include "AntCellWidget.h"
 #include "StyleSheet.h"
 #include "AntTabWidgetContainer.h"
-#include "TabContentWidget.h"
+#include "PaginationWidget.h"
+#include <QRegularExpression>
 
 HomePage::HomePage(QWidget* parent)
 	: QWidget(parent)
@@ -573,7 +573,7 @@ void HomePage::initViewPage()
 
 	int tagAlpha = 200; // 控制整体标签透明度（0~255）
 
-	QVector<AntProfileTable::TableColumnItems> rowItems = {
+	rowItems = {
 	{
 		QPixmap(":/Imgs/bee.png"),
 		"张三",
@@ -692,8 +692,8 @@ void HomePage::initViewPage()
 	}
 	};
 
-	AntProfileTable* table = new AntProfileTable(60, rowItems.size(), 60, colLayout, w2);
-	QStandardItemModel* tableModel = table->createModel(rowItems);
+	table = new AntProfileTable(60, rowItems.size(), 60, colLayout, w2);
+	tableModel = table->createModel(rowItems);
 	table->setModel(tableModel);
 	tableViewLab->setFixedHeight(20);
 
@@ -714,8 +714,60 @@ void HomePage::initViewPage()
 		table->setIndexWidget(tableModel->index(row, 5), actionCell);		// 操作列
 	}
 
+	// 分页器
+	PaginationWidget* pagination = new PaginationWidget(QSize(35, 35), w2);
+	pagination->setFixedHeight(50);
+	pagination->setTotalPages(20);
+	pagination->setCurrentPage(1);
+	QHBoxLayout* pagiLay = new QHBoxLayout();
+	pagiLay->addStretch();
+	pagiLay->addWidget(pagination);
+	pagiLay->addStretch();
+
+	// 表格+分页器
+	QVBoxLayout* vLay = new QVBoxLayout();
+	vLay->setContentsMargins(0, 0, 0, 0);
+	vLay->setSpacing(0);
+	vLay->addWidget(table);
+	vLay->addLayout(pagiLay);
+
+	auto loadPage = [this](int page)
+		{
+			int rowsPerPage = rowItems.size();
+			QRegularExpression re("^第\\d+页-");  // 匹配开头“第X页-”
+
+			for (int i = 0; i < rowsPerPage; ++i)
+			{
+				AntCellWidget* cell = qobject_cast<AntCellWidget*>(table->indexWidget(tableModel->index(i, 1)));
+
+				QString currentText;
+				if (cell)
+				{
+					currentText = cell->getBtn()->text();
+				}
+
+				// 用 QRegularExpression 去除前缀
+				QRegularExpressionMatch match = re.match(currentText);
+				QString baseName = currentText;
+				if (match.hasMatch())
+				{
+					baseName = currentText.mid(match.capturedLength());
+				}
+
+				QString newName = QString("第%1页-%2").arg(page).arg(baseName);
+				cell->getBtn()->setText(newName);
+			}
+		};
+
+	loadPage(1);
+
+	connect(pagination, &PaginationWidget::currentPageChanged, this, [=](int page)
+		{
+			loadPage(page);
+		});
+
 	w2Lay->addWidget(listViewLab);
 	w2Lay->addWidget(chatList);
 	w2Lay->addWidget(tableViewLab);
-	w2Lay->addWidget(table);
+	w2Lay->addLayout(vLay);
 }

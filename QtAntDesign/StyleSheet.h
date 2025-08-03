@@ -477,11 +477,33 @@ namespace StyleSheet
         }
     )").arg(align).arg(color.name()).arg(hoverColor.name());
 	}
+
 	inline QString antTabBarWidgetQss(const QColor& color)
 	{
 		return QString(R"(
 		#AntTabBarWidget {
 			background-color: %1;
 		})").arg(color.name());
+	}
+
+	inline QString paginationWidgetQss(const QColor& color, const QColor& hoverColor)
+	{
+		return QString(R"(
+        QPushButton {
+            border: none;
+        }
+        QPushButton:hover {
+            background-color: %1;
+            border-radius: 6px;
+        }
+        QPushButton:checked {
+            color: %2;
+            border: 1px solid %2;
+            border-radius: 6px;
+            background: transparent;
+        }
+    )")
+			.arg(hoverColor.name())
+			.arg(color.name());
 	}
 }

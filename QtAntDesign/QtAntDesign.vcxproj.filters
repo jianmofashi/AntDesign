@@ -250,6 +250,9 @@
     <ClCompile Include="TabContentWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PaginationWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StyleSheet.h">
@@ -462,6 +465,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="TabContentWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="PaginationWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

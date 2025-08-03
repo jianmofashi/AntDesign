@@ -11,6 +11,8 @@ class AntCellWidget : public QWidget
 public:
 	explicit AntCellWidget(const QString& btnName, QWidget* parent = nullptr);
 	~AntCellWidget();
+
+	QPushButton* getBtn() { return button; }
 protected:
 	bool eventFilter(QObject* watched, QEvent* event);
 signals:

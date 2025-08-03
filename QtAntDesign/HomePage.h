@@ -3,6 +3,8 @@
 #include <QWidget>
 #include <QEvent>
 #include "AntScrollArea.h"
+#include "AntProfileTable.h"
+#include "TabContentWidget.h"
 
 class HomePage : public QWidget
 {
@@ -19,4 +21,7 @@ signals:
 private:
 	AntScrollArea* scrollArea1 = nullptr;
 	AntScrollArea* scrollArea2 = nullptr;
+	QVector<AntProfileTable::TableColumnItems> rowItems;
+	AntProfileTable* table = nullptr;
+	QStandardItemModel* tableModel = nullptr;
 };

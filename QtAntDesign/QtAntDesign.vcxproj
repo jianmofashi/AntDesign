@@ -142,6 +142,7 @@
     <ClCompile Include="CarouselWidget.cpp" />
     <ClCompile Include="DrawerWidget.cpp" />
     <ClCompile Include="FlowLayout.cpp" />
+    <ClCompile Include="PaginationWidget.cpp" />
     <ClCompile Include="QrCodeWidget.cpp" />
     <ClCompile Include="TabContentWidget.cpp" />
     <ClCompile Include="ThirdParty\QR-Code-generator-master\qrcodegen.cpp" />
@@ -206,6 +207,7 @@
     <QtMoc Include="AntTabBarWidget.h" />
     <QtMoc Include="AntTabWidgetContainer.h" />
     <QtMoc Include="TabContentWidget.h" />
+    <QtMoc Include="PaginationWidget.h" />
     <ClInclude Include="ThirdParty\QR-Code-generator-master\qrcodegen.hpp" />
     <QtMoc Include="TagWidget.h" />
     <QtMoc Include="Win11CheckButton.h" />

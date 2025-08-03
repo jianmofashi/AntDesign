@@ -1,5 +1,4 @@
-﻿#ifndef DESIGN_SYSTEM_H
-#define DESIGN_SYSTEM_H
+﻿#pragma once
 
 #include <QObject>
 #include <QColor>
@@ -134,5 +133,3 @@ private:
 	TransparentMask* m_tpMask = nullptr;	// 全局透明遮罩
 	MaskWidget* m_darkMask = nullptr;		// 全局深色遮罩
 };
-
-#endif // DESIGN_SYSTEM_H
