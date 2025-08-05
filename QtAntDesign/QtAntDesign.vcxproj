@@ -135,6 +135,7 @@
     <ClCompile Include="AntTooltip.cpp" />
     <ClCompile Include="AntTooltipManager.cpp" />
     <ClCompile Include="AntTooltipViewController.cpp" />
+    <ClCompile Include="AntTreeView.cpp" />
     <ClCompile Include="BadgeWidget.cpp" />
     <ClCompile Include="BubbleViewController.cpp" />
     <ClCompile Include="CardWidget.cpp" />
@@ -208,6 +209,7 @@
     <QtMoc Include="AntTabWidgetContainer.h" />
     <QtMoc Include="TabContentWidget.h" />
     <QtMoc Include="PaginationWidget.h" />
+    <QtMoc Include="AntTreeView.h" />
     <ClInclude Include="ThirdParty\QR-Code-generator-master\qrcodegen.hpp" />
     <QtMoc Include="TagWidget.h" />
     <QtMoc Include="Win11CheckButton.h" />

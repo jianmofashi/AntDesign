@@ -55,5 +55,6 @@
         <file>fonts/NotoSansSC-Regular.ttf</file>
         <file>Imgs/nextBtnDisable.svg</file>
         <file>Imgs/previousBtnDisable.svg</file>
+        <file>Imgs/smallRightArrow.svg</file>
     </qresource>
 </RCC>

@@ -22,7 +22,7 @@ public:
 
 		// 悬停的背景色
 		m_hoverColor = DesignSystem::instance()->currentTheme().widgetHoverBgColor;
-		m_hoverColor.setAlpha(100);
+		m_hoverColor.setAlpha(80);
 
 		// 默认背景色
 		m_bgColor = DesignSystem::instance()->currentTheme().backgroundColor;

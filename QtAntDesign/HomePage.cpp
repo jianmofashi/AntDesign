@@ -8,6 +8,7 @@
 #include <QList>
 #include <QTimer>
 #include <QScrollArea>
+#include <QRegularExpression>
 #include "MaterialSpinner.h"
 #include "AntRadioButton.h"
 #include "AntSlider.h"
@@ -31,7 +32,7 @@
 #include "StyleSheet.h"
 #include "AntTabWidgetContainer.h"
 #include "PaginationWidget.h"
-#include <QRegularExpression>
+#include "AntTreeView.h"
 
 HomePage::HomePage(QWidget* parent)
 	: QWidget(parent)
@@ -766,8 +767,82 @@ void HomePage::initViewPage()
 			loadPage(page);
 		});
 
+	// 树视图
+	AntTreeView* tree = new AntTreeView(60, w2);
+	QLabel* treeViewLab = new QLabel("树视图", w2);
+
+	QList<AntTreeView::ItemData> peoples = {
+	{
+		"张三", QIcon(":/Imgs/bee.png"),
+		{
+			{ "张三的儿子1", QIcon(":/Imgs/bee.png") },
+			{ "张三的儿子2", QIcon(":/Imgs/bee.png") }
+		}
+	},
+	{
+		"李四", QIcon(":/Imgs/bee.png"),
+		{
+			{ "李四的女儿1", QIcon(":/Imgs/bee.png") },
+			{ "李四的女儿2", QIcon(":/Imgs/bee.png") }
+		}
+	},
+	{
+		"王五", QIcon(":/Imgs/bee.png"),
+		{
+			{ "王五的儿子1", QIcon(":/Imgs/bee.png") },
+			{
+				"王五的儿子2", QIcon(":/Imgs/bee.png"),
+				{
+					{ "王五的孙子1", QIcon(":/Imgs/bee.png") },
+					{ "王五的孙子2", QIcon(":/Imgs/bee.png") }
+				}
+			},
+			{ "王五的儿子3", QIcon(":/Imgs/bee.png") }
+		}
+	},
+	{
+		"赵六", QIcon(":/Imgs/bee.png"),
+		{
+			{ "赵六的女儿1", QIcon(":/Imgs/bee.png") }
+		}
+	},
+	{
+		"钱七", QIcon(":/Imgs/bee.png"),
+		{
+			{ "钱七的儿子1", QIcon(":/Imgs/bee.png") },
+			{
+				"钱七的女儿2", QIcon(":/Imgs/bee.png"),
+				{
+					{ "钱七的外孙1", QIcon(":/Imgs/bee.png") }
+				}
+			},
+			{ "钱七的儿子3", QIcon(":/Imgs/bee.png") },
+			{ "钱七的女儿4", QIcon(":/Imgs/bee.png") }
+		}
+	},
+	{
+		"孙八", QIcon(":/Imgs/bee.png"),
+		{
+			{ "孙八的儿子1", QIcon(":/Imgs/bee.png") }
+		}
+	},
+	{
+		"周九", QIcon(":/Imgs/bee.png"),
+		{
+			{ "周九的儿子1", QIcon(":/Imgs/bee.png") },
+			{ "周九的儿子2", QIcon(":/Imgs/bee.png") }
+		}
+	}
+	};
+
+	QStandardItemModel* treeModel = tree->createModel(peoples);
+	tree->setModel(treeModel);
+	tree->calculateFullHeight();
+
 	w2Lay->addWidget(listViewLab);
 	w2Lay->addWidget(chatList);
 	w2Lay->addWidget(tableViewLab);
 	w2Lay->addLayout(vLay);
+	w2Lay->addWidget(treeViewLab);
+	w2Lay->addWidget(tree);
 }
