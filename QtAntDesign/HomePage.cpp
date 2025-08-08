@@ -68,7 +68,6 @@ HomePage::HomePage(QWidget* parent)
 	// 添加标签项
 	tabWidget->addTab(scrollArea1, "常用控件");
 	tabWidget->addTab(scrollArea2, "视图控件");
-	tabWidget->addTab(new QWidget(this), "数据统计");
 	tabWidget->addTab(w3, "流式布局");
 	tabWidget->addTab(noData, "暂无数据");
 
@@ -295,7 +294,7 @@ HomePage::HomePage(QWidget* parent)
 			combo2->getMask()->resize(w, h);
 		});
 
-	// 下拉框随着主窗口同步移动
+	// 下拉框子菜单定位
 	connect(this, &HomePage::windowMoved, this, [combo1, combo2](QPoint globalPos)
 		{
 			auto movePopups = [globalPos, combo1, combo2](AntComboBox* combo)
@@ -387,6 +386,11 @@ HomePage::HomePage(QWidget* parent)
 			}
 		});
 
+	// 图标按钮
+	AntButton* antIconBtn = new  AntButton("", 12, w1);
+	antIconBtn->setSvgIcon(":/Imgs/back.svg");
+	antIconBtn->setFixedSize(50, 50);
+
 	// 徽章
 	// 创建徽章和标签列表
 	QList<BadgeWidget*> badgeWidgets = {
@@ -442,8 +446,14 @@ HomePage::HomePage(QWidget* parent)
 	QLabel* antTabLabel = new QLabel("标签选项卡", this);
 	// 外部包裹的容器
 	QWidget* container = new QWidget(w1);
-	container->setObjectName("blueGrayContainer");
-	container->setStyleSheet(R"(#blueGrayContainer {background-color: #cccccc; })");
+	container->setObjectName("TabContainer");
+	container->setStyleSheet(QString("#TabContainer{background-color: %1;}")
+		.arg(DesignSystem::instance()->currentTheme().tabContainerColor.name()));
+	connect(DesignSystem::instance(), &DesignSystem::themeChanged, this, [container]()
+		{
+			container->setStyleSheet(QString("#TabContainer{background-color: %1;}")
+				.arg(DesignSystem::instance()->currentTheme().tabContainerColor.name()));
+		});
 	QVBoxLayout* cLayout = new QVBoxLayout(container);
 	cLayout->setContentsMargins(20, 20, 20, 20);
 	cLayout->addLayout(row8Layout);
@@ -499,6 +509,8 @@ HomePage::HomePage(QWidget* parent)
 	row6Layout->addWidget(qrCode);
 	row6Layout->addSpacing(10);
 	row6Layout->addWidget(drawerBtn);
+	row6Layout->addSpacing(10);
+	row6Layout->addWidget(antIconBtn);
 	row6Layout->addStretch();
 
 	// 第八行布局

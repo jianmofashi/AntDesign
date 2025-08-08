@@ -24,4 +24,6 @@ private:
 	QSize m_size;
 	QString m_text;
 	QLabel* m_descLab;
+	QWidget* bg;
+	QToolButton* closeBtn;
 };

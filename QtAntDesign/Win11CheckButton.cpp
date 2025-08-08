@@ -19,6 +19,11 @@ Win11CheckButton::Win11CheckButton(QWidget* parent)
 		}
 		m_anim->start();
 		});
+
+	connect(DesignSystem::instance(), &DesignSystem::themeChanged, this, [this]()
+		{
+			themeColor = DesignSystem::instance()->primaryColor();
+		});
 }
 
 Win11CheckButton::~Win11CheckButton()

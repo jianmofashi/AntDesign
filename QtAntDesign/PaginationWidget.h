@@ -15,10 +15,11 @@ public:
 
 signals:
 	void currentPageChanged(int page);
-
+private:
+	void updateBtnIcon(QPushButton* btn, const QString& iconPathNormal, const QString& iconPathDisabled);
 private:
 	void refreshButtons();
-	QPushButton* createNavButton(const QString& text);
+	QPushButton* createNavButton(const QString& iconPathNormal, const QString& iconPathDisabled);
 
 	QSize btnSize;
 	int m_totalPages;

@@ -97,7 +97,7 @@ public:
 		QFontMetrics fmMessage(messageFont);
 		int messageHeight = fmMessage.height();
 
-		QColor original = m_textColor;
+		QColor original = DesignSystem::instance()->currentTheme().listTextColor;
 		QColor lighter = DesignSystem::instance()->currentTheme().listItemDescColor;
 
 		// 5. 用户名顶部对齐头像顶部
@@ -114,6 +114,11 @@ public:
 		painter->drawText(messageRect, Qt::AlignLeft | Qt::AlignVCenter, elidedMessage);
 
 		painter->restore();
+	}
+
+	void updateStyle()
+	{
+		updateBaseStyle();
 	}
 };
 
@@ -136,4 +141,6 @@ public:
 	~AntChatListView();
 	// 创建模型
 	QStandardItemModel* createModel(const QVector<ChatItem>& chatItems);
+private:
+	AntChatListItemDelegate* itemDele;
 };

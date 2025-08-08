@@ -1,11 +1,19 @@
 ﻿#include "SlideStackedWidget.h"
 #include <QParallelAnimationGroup>
+#include "DesignSystem.h"
 
 SlideStackedWidget::SlideStackedWidget(QWidget* parent)
 	: QStackedWidget(parent)
 {
+	setObjectName("SlideStackedWidget");
 	setFrameShape(QFrame::NoFrame);
 	setContentsMargins(0, 0, 0, 0);
+	setStyleSheet(QString("#SlideStackedWidget { background-color: %1; }").arg(DesignSystem::instance()->backgroundColor().name()));
+
+	connect(DesignSystem::instance(), &DesignSystem::themeChanged, this, [this]()
+		{
+			setStyleSheet(QString("#SlideStackedWidget { background-color: %1; }").arg(DesignSystem::instance()->backgroundColor().name()));
+		});
 }
 
 SlideStackedWidget::~SlideStackedWidget()

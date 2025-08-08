@@ -65,7 +65,19 @@ public:
 
 		painter->restore();
 	}
+protected:
+	void updateBaseStyle()
+	{
+		m_curIdxBgColor = DesignSystem::instance()->currentTheme().widgetSelectedBgColor;
+		m_curIdxBgColor.setAlpha(180);
 
+		m_hoverColor = DesignSystem::instance()->currentTheme().widgetHoverBgColor;
+		m_hoverColor.setAlpha(80);
+
+		m_bgColor = DesignSystem::instance()->currentTheme().backgroundColor;
+
+		m_textColor = DesignSystem::instance()->currentTheme().listTextColor;
+	}
 protected:
 	QColor m_bgColor;					// 默认背景色
 	QColor m_hoverColor;				// 悬停的背景色
@@ -106,10 +118,14 @@ public:
 		QProxyStyle::drawControl(element, option, painter, widget);
 	}
 
+	void updateBaseStyle()
+	{
+		m_bgColor = DesignSystem::instance()->currentTheme().backgroundColor;
+		m_borderColor = DesignSystem::instance()->currentTheme().borderColor;
+	}
 private:
 	QColor m_bgColor;
 	QColor m_borderColor;
-	QColor m_shadowColor;
 };
 
 class AntBaseListView : public QListView
@@ -119,4 +135,7 @@ class AntBaseListView : public QListView
 public:
 	AntBaseListView(QWidget* parent);
 	~AntBaseListView();
+protected:
+	AntBaseListViewStyle* m_style;
+	AntBaseListItemDelegate* m_itemDele;
 };

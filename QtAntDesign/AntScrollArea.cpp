@@ -18,6 +18,12 @@ AntScrollArea::AntScrollArea(ScrollDirection direction, QWidget* parent)
 	auto theme = DesignSystem::instance()->currentTheme();
 	viewport()->setStyleSheet("background-color:transparent;");
 	setStyleSheet(StyleSheet::antScrollAreaQss(theme.backgroundColor, theme.scrollAreaHandleColor, theme.scrollAreaHoverColor));
+
+	connect(DesignSystem::instance(), &DesignSystem::themeChanged, this, [this]()
+		{
+			auto theme = DesignSystem::instance()->currentTheme();
+			setStyleSheet(StyleSheet::antScrollAreaQss(theme.backgroundColor, theme.scrollAreaHandleColor, theme.scrollAreaHoverColor));
+		});
 }
 
 AntScrollArea::~AntScrollArea()

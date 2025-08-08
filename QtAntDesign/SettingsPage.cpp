@@ -17,7 +17,7 @@ SettingsPage::SettingsPage(QWidget* parent)
     QVBoxLayout* layout = new QVBoxLayout(this);
 	layout->setContentsMargins(6, 0, 6, 0);
     layout->addWidget(label);
-    setStyleSheet("background-color: #A0C4A0;");
+    setStyleSheet("background-color: transparent;");
 }
 
 

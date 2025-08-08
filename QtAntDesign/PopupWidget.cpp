@@ -18,10 +18,12 @@ PopupWidget::PopupWidget(int height, bool enableMultiLevel, QWidget* parent)
 	setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 	auto theme = DesignSystem::instance()->currentTheme();
 	setStyleSheet(StyleSheet::popupListViewQss(theme.popupScrollBarColor));
-	setStyle(new ListViewStyle(theme.popupBgColor, theme.popupScrollBarColor, theme.shadowColor, style()));
+	m_style = new ListViewStyle(theme.popupBgColor, theme.popupScrollBarColor, theme.shadowColor, style());
+	setStyle(m_style);
 
 	// 自定义 Item Delegate
-	setItemDelegate(new ListItemDelegate(36, enableMultiLevel, this));
+	m_itmeDele = new ListItemDelegate(36, enableMultiLevel, this);
+	setItemDelegate(m_itmeDele);
 
 	QFont font = this->font();
 	font.setPointSize(11);   // 调大字体
@@ -30,6 +32,15 @@ PopupWidget::PopupWidget(int height, bool enableMultiLevel, QWidget* parent)
 	connect(this, &QListView::clicked, this, [this, enableMultiLevel](const QModelIndex& idx)
 		{
 			emit itemSelected(idx);
+		});
+
+	connect(DesignSystem::instance(), &DesignSystem::themeChanged, this, [this]()
+		{
+			auto theme = DesignSystem::instance()->currentTheme();
+			setStyleSheet(StyleSheet::popupListViewQss(theme.popupScrollBarColor));
+			m_style->updateStyle(theme.popupBgColor, theme.popupScrollBarColor, theme.shadowColor);
+			m_itmeDele->updateStyle(theme.primaryColor, theme.popupItemBgColor, theme.popupTextColor);
+			update();
 		});
 }
 

@@ -19,7 +19,7 @@ public:
 	{
 		// 选中的背景颜色
 		QColor color = DesignSystem::instance()->primaryColor();
-		color.setAlpha(30);
+		color.setAlpha(60);
 		m_curIdxBgColor = color;
 		// 获取默认的背景色
 		m_bgColor = DesignSystem::instance()->currentTheme().popupItemBgColor;
@@ -98,6 +98,13 @@ public:
 		painter->restore();
 	}
 
+	void updateStyle(QColor curIdxBgColor, QColor bgColor, QColor textColor)
+	{
+		curIdxBgColor.setAlpha(60);
+		m_curIdxBgColor = curIdxBgColor;
+		m_bgColor = bgColor;
+		m_textColor = textColor;
+	}
 private:
 	int m_itemHeight;			// 用于存储每个 item 的高度
 	QColor m_bgColor;			// 默认的背景色
@@ -151,7 +158,12 @@ public:
 		}
 		QProxyStyle::drawControl(element, option, painter, widget);
 	}
-
+	void updateStyle(QColor bgColor, QColor borderColor, QColor shadowColor)
+	{
+		m_bgColor = bgColor;
+		m_borderColor = borderColor;
+		m_shadowColor = shadowColor;
+	}
 private:
 	QColor m_bgColor;
 	QColor m_borderColor;
@@ -169,6 +181,8 @@ public:
 signals:
 	void itemSelected(const QModelIndex& index);
 private:
+	ListViewStyle* m_style;
+	ListItemDelegate* m_itmeDele;
 	bool m_enableMultiLevel;	// 是否启用多级列表
 	int m_popupHeight;			// 弹出框的高度
 };

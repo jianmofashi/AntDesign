@@ -58,7 +58,7 @@ void MaskWidget::paintEvent(QPaintEvent*)
 	p.setRenderHint(QPainter::Antialiasing);
 	p.setPen(Qt::NoPen);
 
-	QColor color(55, 55, 55);
+	QColor color(0, 0, 0);
 	color.setAlphaF(m_alpha);
 	p.setBrush(color);
 

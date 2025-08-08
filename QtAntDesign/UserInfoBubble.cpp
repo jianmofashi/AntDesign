@@ -36,7 +36,8 @@ UserInfoBubble::UserInfoBubble(QWidget* parent)
 	QWidget* gradientWidget = new QWidget(this);
 	gradientWidget->setObjectName("gradientWidget");
 	gradientWidget->setMinimumHeight(50);
-	gradientWidget->setStyleSheet(StyleSheet::gradientQss());
+	auto theme = DesignSystem::instance()->currentTheme();
+	gradientWidget->setStyleSheet(StyleSheet::gradientQss(theme.vipGradientStartColor, theme.vipGradientMidColor, theme.vipGradientEndColor));
 
 	QWidget* leftWid = new QWidget(gradientWidget);
 	m_antBtn = new AntButton("续费", 10, gradientWidget);

@@ -76,6 +76,14 @@ MaterialDialog::MaterialDialog(bool loginState, QWidget* parent)
 
 	// 根据用户初始登录状态决定显示什么样的界面
 	showIndexPage(loginState ? Login : Profile);
+
+	connect(DesignSystem::instance(), &DesignSystem::themeChanged, this, [this]()
+		{
+			stackedWidget->setStyleSheet(StyleSheet::myStackedQss(DesignSystem::instance()->currentTheme().backgroundColor));
+			loginPage->updateTheme();
+			registerPage->updateTheme();
+			standardPage->updateTheme();
+		});
 }
 
 MaterialDialog::~MaterialDialog()

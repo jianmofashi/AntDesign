@@ -17,15 +17,16 @@ RegisterPageWidget::RegisterPageWidget(QWidget* parent)
 	mainLayout->setSpacing(0);
 
 	// 标题
-	QWidget* titleWidget = new QWidget(this);
+	titleWidget = new QWidget(this);
 	titleWidget->setObjectName("dialogSubTitle");
-	titleWidget->setStyleSheet(StyleSheet::titleBottomLineQss());
+	titleWidget->setStyleSheet(StyleSheet::titleBottomLineQss(DesignSystem::instance()->borderColor()));
 	QHBoxLayout* titleLay = new QHBoxLayout(titleWidget);
 	QLabel* titleLab = new QLabel("TITLE", titleWidget);
 	QFont font;
 	font.setBold(true);
+	font.setPointSizeF(13.5);
 	titleLab->setFont(font);
-	titleLay->addSpacing(9);
+	titleLay->addSpacing(10);
 	titleLay->addWidget(titleLab);
 	titleLay->addStretch();
 
@@ -48,7 +49,7 @@ RegisterPageWidget::RegisterPageWidget(QWidget* parent)
 	subLab1->setFont(font);
 	loginButton->setFont(font);
 	loginButton->setCursor(Qt::PointingHandCursor);
-	loginButton->setStyleSheet(StyleSheet::noBorderBtnQss(QColor(24, 144, 255)));
+	loginButton->setStyleSheet(StyleSheet::noBorderBtnQss(DesignSystem::instance()->primaryColor()));
 	// 布局
 	centralLay->setContentsMargins(9, 9, 9, 9);
 	leftLay->setContentsMargins(9, 9, 9, 9);
@@ -68,20 +69,20 @@ RegisterPageWidget::RegisterPageWidget(QWidget* parent)
 	MaterialLineEdit* accountEdit = new MaterialLineEdit(leftWidget);
 	accountEdit->setFont(font);
 	accountEdit->setLabelText("邮箱");
-	accountEdit->setTextFontSize(10.8);
+	accountEdit->setTextFontSize(10.2);
 	accountEdit->setFixedHeight(40);  // 高度可自定义
 	// 验证码
 	MaterialLineEdit* codeEdit = new MaterialLineEdit(leftWidget);
 	codeEdit->setFont(font);
 	codeEdit->setLabelText("验证码");
-	codeEdit->setTextFontSize(10.8);
+	codeEdit->setTextFontSize(10.2);
 	codeEdit->setFixedHeight(40);
 	codeEdit->setRightTextBtn("发送验证码");
 	// 密码
 	MaterialLineEdit* passwordEdit = new MaterialLineEdit(leftWidget);
 	passwordEdit->setFont(font);
 	passwordEdit->setLabelText("密码");
-	passwordEdit->setTextFontSize(10.8);
+	passwordEdit->setTextFontSize(10.2);
 	passwordEdit->setFixedHeight(40);
 	passwordEdit->setPasswordToggleEnabled(leftWidget);
 	// 校验失败时调用
@@ -167,4 +168,10 @@ RegisterPageWidget::RegisterPageWidget(QWidget* parent)
 
 RegisterPageWidget::~RegisterPageWidget()
 {
+}
+
+void RegisterPageWidget::updateTheme()
+{
+	titleWidget->setStyleSheet(StyleSheet::titleBottomLineQss(DesignSystem::instance()->borderColor()));
+	loginButton->setStyleSheet(StyleSheet::noBorderBtnQss(DesignSystem::instance()->primaryColor()));
 }

@@ -16,6 +16,12 @@ AntDoubleNumberInput::AntDoubleNumberInput(QWidget* parent)
 	auto layout = new QVBoxLayout(this);
 	layout->setContentsMargins(6, 6, 6, 6);  // 四周各 6px
 	layout->addWidget(m_input);
+
+	connect(DesignSystem::instance(), &DesignSystem::themeChanged, this, [this]()
+		{
+			m_shadowColor = DesignSystem::instance()->primaryColor();
+			update();
+		});
 }
 
 AntDoubleNumberInput::~AntDoubleNumberInput()

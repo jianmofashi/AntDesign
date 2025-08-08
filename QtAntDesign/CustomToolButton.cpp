@@ -22,6 +22,9 @@ CustomToolButton::~CustomToolButton()
 
 void CustomToolButton::setSvgIcons(const QString& normalPath, const QString& activePath)
 {
+	if (m_normalRenderer) delete m_normalRenderer;
+	if (m_activeRenderer) delete m_activeRenderer;
+
 	m_normalRenderer = new QSvgRenderer(normalPath, this);
 	m_activeRenderer = new QSvgRenderer(activePath, this);
 	update();

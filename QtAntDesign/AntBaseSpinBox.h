@@ -34,7 +34,6 @@ private:
 	Theme theme = DesignSystem::instance()->currentTheme();
 	QColor borderColor;
 	QColor primaryColor;
-	QColor shadowColor;
 	int m_buttonX;
 	
 };

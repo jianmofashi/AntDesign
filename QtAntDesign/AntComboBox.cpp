@@ -9,7 +9,7 @@ AntComboBox::AntComboBox(QString showText, QStringList itemTextList, QWidget* pa
 	QMap<QString, QStringList> subItemMap)
 	: QWidget(parent),
 	m_text(showText),
-	m_borderColor(DesignSystem::instance()->borderColor()),
+	m_borderColor(DesignSystem::instance()->currentTheme().popupBorderColor),
 	m_shadowColor(DesignSystem::instance()->primaryColor()),
 	m_isPressed(false),
 	m_isChangeTextColor(false),
@@ -115,6 +115,13 @@ AntComboBox::AntComboBox(QString showText, QStringList itemTextList, QWidget* pa
 			resetState();
 			DesignSystem::instance()->getTransparentMask()->hide();
 		});
+
+	connect(DesignSystem::instance(), &DesignSystem::themeChanged, this, [this]()
+		{
+			m_borderColor = DesignSystem::instance()->currentTheme().popupBorderColor;
+			m_shadowColor = DesignSystem::instance()->primaryColor();
+			update();
+		});
 }
 
 AntComboBox::~AntComboBox()
@@ -125,7 +132,7 @@ void AntComboBox::resetState()
 {
 	m_isPressed = false;
 	m_isChangeTextColor = false;
-	m_borderColor = QColor("#C8C8C8");
+	m_borderColor = DesignSystem::instance()->currentTheme().popupBorderColor;
 	update();
 }
 
@@ -181,7 +188,7 @@ void AntComboBox::paintEvent(QPaintEvent*)
 	}
 	else
 	{
-		p.setPen(Qt::black);
+		p.setPen(DesignSystem::instance()->currentTheme().popupTextColor);
 	}
 
 	QFont font = p.font();

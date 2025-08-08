@@ -10,8 +10,12 @@ class RegisterPageWidget : public QWidget
 public:
 	RegisterPageWidget(QWidget* parent = nullptr);
 	~RegisterPageWidget();
+
+	void updateTheme();
 public:
 	QPushButton* loginButton;
 signals:
 	void registerSuccess();
+private:
+	QWidget* titleWidget;
 };

@@ -26,6 +26,13 @@ MaterialLineEdit::MaterialLineEdit(QWidget* parent)
 		m_labelProgress = 1.0;
 		m_underlineProgress = 1.0;
 	}
+
+	connect(DesignSystem::instance(), &DesignSystem::themeChanged, this, [this]()
+		{
+			m_borderColor = DesignSystem::instance()->currentTheme().borderColor;
+			if (m_textBtn)
+				m_textBtn->setStyleSheet(StyleSheet::noBorderBtnQss(DesignSystem::instance()->primaryColor()));
+		});
 }
 
 MaterialLineEdit::~MaterialLineEdit()

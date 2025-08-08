@@ -50,6 +50,27 @@ AntTabBarWidget::AntTabBarWidget(int tabwidth, int tabHeight, bool isEnableAddBt
 				}
 			}
 		});
+
+	connect(DesignSystem::instance(), &DesignSystem::themeChanged, this, [this]()
+		{
+			if (m_addButton)
+			{
+				m_addButton->setStyleSheet(QString(R"(
+				QPushButton {
+					border: none;
+					background-color: transparent;
+					font-weight: bold;
+					font-size: 22px;
+				}
+				QPushButton:hover {
+					background-color: %1;
+					border-radius: 4px;
+				}
+				)").arg(DesignSystem::instance()->widgetHoverBgColor().name()));
+			}
+			setStyleSheet(StyleSheet::antTabBarWidgetQss(DesignSystem::instance()->currentTheme().tabBarBgColor));
+			update();
+		});
 }
 
 void AntTabBarWidget::addTab(const QString& title, const QString& icon)

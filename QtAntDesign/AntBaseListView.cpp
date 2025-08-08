@@ -12,10 +12,12 @@ AntBaseListView::AntBaseListView(QWidget* parent)
 	setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
 	// 自定义样式
-	setStyle(new AntBaseListViewStyle(style()));
+	m_style = new AntBaseListViewStyle(style());
+	setStyle(m_style);
 
 	// 自定义 Item Delegate
-	setItemDelegate(new AntBaseListItemDelegate(this));
+	m_itemDele = new AntBaseListItemDelegate(this);
+	setItemDelegate(m_itemDele);
 }
 
 AntBaseListView::~AntBaseListView()

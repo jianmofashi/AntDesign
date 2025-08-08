@@ -1,6 +1,7 @@
 ﻿#include "skeletonwidget.h"
 #include <QPainter>
 #include <QLinearGradient>
+#include "DesignSystem.h"
 
 SkeletonWidget::SkeletonWidget(QSize size, int rectRadius, QWidget* parent)
 	: QWidget(parent), m_rectRadius(rectRadius)
@@ -13,6 +14,11 @@ SkeletonWidget::SkeletonWidget(QSize size, int rectRadius, QWidget* parent)
 	m_animation->setStartValue(-barWidth);
 	m_animation->setEndValue(width() + barWidth);
 	m_animation->setLoopCount(-1);
+
+	connect(DesignSystem::instance(), &DesignSystem::themeChanged, this, [this]()
+		{
+			update();
+		});
 }
 
 void SkeletonWidget::setGradientX(int x)
@@ -47,15 +53,33 @@ void SkeletonWidget::paintEvent(QPaintEvent*)
 
 	// 背景色
 	QRectF rect = this->rect();
-	p.setBrush(QColor("#DCDCDC"));  // RGB(220, 220, 220)
+	p.setBrush(DesignSystem::instance()->currentTheme().skeletonBgColor);
 	p.setPen(Qt::NoPen);
 	p.drawRoundedRect(rect, m_rectRadius, m_rectRadius);
 
-	// 高亮动画条
+	// 根据主题模式选择渐变色
+	QColor highlightStartColor, highlightMidColor, highlightEndColor;
+
+	if (DesignSystem::instance()->themeMode() == DesignSystem::ThemeMode::Light)
+	{
+		// 浅色模式：渐变颜色
+		highlightStartColor = QColor(240, 240, 240, 0);		// 浅灰色，接近背景色
+		highlightMidColor = QColor(255, 255, 255, 150);		// 白色，中间亮点
+		highlightEndColor = QColor(240, 240, 240, 0);		// 浅灰色，渐变结束
+	}
+	else
+	{
+		// 深色模式：渐变颜色
+		highlightStartColor = QColor(50, 50, 50, 0);		// 深灰色，接近背景色
+		highlightMidColor = QColor(180, 180, 180, 150);		// 中等亮度灰色
+		highlightEndColor = QColor(50, 50, 50, 0);			// 深灰色，渐变结束
+	}
+
+	// 创建渐变效果
 	QLinearGradient gradient(m_gradientX - 70, 0, m_gradientX + 70, 0);
-	gradient.setColorAt(0.0, QColor(255, 255, 255, 0));
-	gradient.setColorAt(0.5, QColor(255, 255, 255, 150));
-	gradient.setColorAt(1.0, QColor(255, 255, 255, 0));
+	gradient.setColorAt(0.0, highlightStartColor);   // 渐变起始颜色
+	gradient.setColorAt(0.5, highlightMidColor);     // 渐变中间颜色
+	gradient.setColorAt(1.0, highlightEndColor);     // 渐变结束颜色
 
 	p.setBrush(gradient);
 	p.drawRoundedRect(rect, m_rectRadius, m_rectRadius);

@@ -34,6 +34,7 @@ private:
 	QString m_title;
 	QString m_icon;
 	QColor hoverBgColor;
+	QColor textColor;
 	QSvgRenderer* m_svgRenderer;
 	QPushButton* m_closeButton = nullptr;
 	int m_iconSize = 24;

@@ -23,6 +23,7 @@ struct Theme
 	QColor disabledColor;
 	// 全局消息相关颜色
 	QColor msgTextColor;
+	QColor msgBgColor;
 	// 滑动条相关颜色
 	QColor slideColor;
 	QColor slideBgColor;
@@ -41,11 +42,13 @@ struct Theme
 	QColor toolBtnBgColor;
 	// 进度条相关颜色
 	QColor progressBarBgColor;
+	// 骨架屏相关颜色
+	QColor skeletonBgColor;
 	// tab相关颜色
-	QColor tabTextColor;
+	QColor tagTextColor;
 	// line edit 颜色
 	QColor lineEditBorderColor;
-	QColor lineEditHintColor;
+	QColor placeholderColor;
 	// 多选按钮相关颜色
 	QColor checkBoxBgColor;
 	QColor checkBoxBorderEnableColor;
@@ -54,6 +57,7 @@ struct Theme
 	QColor checkBoxTextDisableColor;
 	// 下拉弹出框相关颜色
 	QColor popupBgColor;
+	QColor popupBorderColor;
 	QColor popupScrollBarColor;
 	QColor popupItemBgColor;
 	QColor popupTextColor;
@@ -67,8 +71,16 @@ struct Theme
 	QColor tableTextColor;
 	// 标签选项卡相关颜色
 	QColor tabBarBgColor;
+	QColor tabTextColor;
 	QColor tabHoverColor;
 	QColor onTabBtnHoverColor;
+	QColor tabContainerColor;
+	// 通知框背景色
+	QColor notifBgColor;
+	// 渐变颜色
+	QColor vipGradientStartColor;
+	QColor vipGradientMidColor;
+	QColor vipGradientEndColor;
 };
 
 class DesignSystem : public QObject
@@ -108,12 +120,34 @@ public:
 	// 设置主题
 	void setThemeMode(ThemeMode mode);
 	ThemeMode themeMode() const;
+	void switchTheme();
+	QIcon& setThemeIcon();
 
 	// 遮罩相关
 	void setTransparentMask(TransparentMask* tpMask);
 	TransparentMask* getTransparentMask();
 	void setDarkMask(MaskWidget* mask);
 	MaskWidget* getDarkMask();
+
+	// 窗口操作按钮
+	QIcon& btnMinIcon();
+	QIcon& btnMaxIcon();
+	QIcon& btnCloseIcon();
+	QIcon& btnRestoreIcon();
+
+	// 导航栏图标
+	QString& btnHomeIconPath();
+	QString& btnSettingsIconPath();
+	QString& btnAboutIconPath();
+	QString& btnHomeActiveIconPath();
+	QString& btnSettingsActiveIconPath();
+	QString& btnAboutActiveIconPath();
+
+	// 前进后退图标
+	QString& prevBtnIcon();
+	QString& nextBtnIcon();
+	QString& prevBtnDisableIcon();
+	QString& nextBtnDisableIcon();
 signals:
 	void themeChanged();
 
@@ -132,4 +166,19 @@ private:
 	QWidget* m_mainWindow = nullptr;		// 用于获取主窗口
 	TransparentMask* m_tpMask = nullptr;	// 全局透明遮罩
 	MaskWidget* m_darkMask = nullptr;		// 全局深色遮罩
+	QIcon m_themeIcon;
+	QIcon btnMin;
+	QIcon btnMax;
+	QIcon btnClose;
+	QIcon btnRestore;
+	QString btnHome;
+	QString btnHomeActive;
+	QString btnSettings;
+	QString btnSettingsActive;
+	QString btnAbout;
+	QString btnAboutActive;
+	QString prevBtn;
+	QString nextBtn;
+	QString prevDisBtn;
+	QString nextDisBtn;
 };

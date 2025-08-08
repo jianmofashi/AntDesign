@@ -3,6 +3,7 @@
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
 #include <QEasingCurve>
+#include "DesignSystem.h"
 
 MaterialSpinner::MaterialSpinner(QSize size, int lineWidth, QColor lineColor, QWidget* parent)
 	: QWidget(parent),
@@ -16,6 +17,12 @@ MaterialSpinner::MaterialSpinner(QSize size, int lineWidth, QColor lineColor, QW
 	m_length = qMin(size.width(), size.height());
 	setFixedSize(m_length, m_length);
 	initAnimations();
+
+	connect(DesignSystem::instance(), &DesignSystem::themeChanged, this, [this]()
+		{
+			m_lineColor = DesignSystem::instance()->primaryColor();
+			update();
+		});
 }
 
 qreal MaterialSpinner::dashLength() const

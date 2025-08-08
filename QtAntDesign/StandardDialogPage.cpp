@@ -3,11 +3,11 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QPushButton>
 #include <QSpacerItem>
 #include <QScrollArea>
 #include <QFrame>
 #include <QApplication>
+#include "DesignSystem.h"
 
 StandardDialogPage::StandardDialogPage(QWidget* parent)
 	: QWidget(parent)
@@ -40,8 +40,10 @@ StandardDialogPage::StandardDialogPage(QWidget* parent)
 	buttonLayout->addStretch(); // 推到右侧
 	font.setPointSize(11.5);
 	font.setBold(false);
-	QPushButton* cancelBtn = new QPushButton("取消");
-	QPushButton* confirmBtn = new QPushButton("确定");
+	cancelBtn = new QPushButton("取消");
+	confirmBtn = new QPushButton("确定");
+	cancelBtn->setCursor(Qt::PointingHandCursor);
+	confirmBtn->setCursor(Qt::PointingHandCursor);
 	cancelBtn->setFixedSize(70, 36);
 	confirmBtn->setFixedSize(70, 36);
 
@@ -50,8 +52,8 @@ StandardDialogPage::StandardDialogPage(QWidget* parent)
 
 	cancelBtn->setObjectName("CancelButton");
 	confirmBtn->setObjectName("ConfirmButton");
-	cancelBtn->setStyleSheet(StyleSheet::standardDialogBtnQss());
-	confirmBtn->setStyleSheet(StyleSheet::standardDialogBtnQss());
+	cancelBtn->setStyleSheet(StyleSheet::standardDialogBtnQss(DesignSystem::instance()->primaryColor(), DesignSystem::instance()->backgroundColor()));
+	confirmBtn->setStyleSheet(StyleSheet::standardDialogBtnQss(DesignSystem::instance()->primaryColor(), DesignSystem::instance()->backgroundColor()));
 
 	buttonLayout->addWidget(cancelBtn);
 	buttonLayout->addSpacing(10);
@@ -75,4 +77,10 @@ void StandardDialogPage::setText(QString title, QString text)
 		titleLabel->setText(title);
 		contentLabel->setText(text);
 	}
+}
+
+void StandardDialogPage::updateTheme()
+{
+	cancelBtn->setStyleSheet(StyleSheet::standardDialogBtnQss(DesignSystem::instance()->primaryColor(), DesignSystem::instance()->backgroundColor()));
+	confirmBtn->setStyleSheet(StyleSheet::standardDialogBtnQss(DesignSystem::instance()->primaryColor(), DesignSystem::instance()->backgroundColor()));
 }

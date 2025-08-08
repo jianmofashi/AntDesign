@@ -14,7 +14,16 @@ AntChatListView::AntChatListView(QWidget* parent)
 	setStyleSheet(StyleSheet::vListViewQss(DesignSystem::instance()->currentTheme().popupScrollBarColor));
 
 	// 自定义 Item Delegate
-	setItemDelegate(new AntChatListItemDelegate(this));
+	itemDele = new AntChatListItemDelegate(this);
+	setItemDelegate(itemDele);
+
+	connect(DesignSystem::instance(), &DesignSystem::themeChanged, this, [this]()
+		{
+			setStyleSheet(StyleSheet::vListViewQss(DesignSystem::instance()->currentTheme().popupScrollBarColor));
+			itemDele->updateStyle();
+			m_style->updateBaseStyle();
+			update();
+		});
 }
 
 AntChatListView::~AntChatListView()

@@ -11,10 +11,13 @@ AntTabWidget::AntTabWidget(const QString& title, const QString& icon, int tabwid
 	m_svgRenderer = new QSvgRenderer(m_icon, this);  // 使用 QSvgRenderer 加载图标
 
 	hoverBgColor = DesignSystem::instance()->currentTheme().tabHoverColor;
+	textColor = DesignSystem::instance()->currentTheme().tabTextColor;
 
 	// 关闭按钮
+	QIcon closeBtnIcon = DesignSystem::instance()->themeMode() == DesignSystem::ThemeMode::Light ?
+		QIcon(":/Imgs/closeItem.svg") : QIcon(":/Imgs/closeItemDark.svg");
 	m_closeButton = new QPushButton(this);
-	m_closeButton->setIcon(QIcon(":/Imgs/closeItem.svg"));
+	m_closeButton->setIcon(closeBtnIcon);
 	m_closeButton->setIconSize(QSize(14, 14)); // 图标大小可按需调整
 	m_closeButton->setFixedSize(20, 20);       // 按钮整体大小
 	m_closeButton->raise();
@@ -36,6 +39,28 @@ AntTabWidget::AntTabWidget(const QString& title, const QString& icon, int tabwid
 		{
 			m_closeButton->hide();
 			emit requestClose(this);  // 通知父组件
+		});
+	
+	connect(DesignSystem::instance(), &DesignSystem::themeChanged, this, [this]()
+		{
+			QIcon closeBtnIcon = DesignSystem::instance()->themeMode() == DesignSystem::ThemeMode::Light ?
+				QIcon(":/Imgs/closeItem.svg") : QIcon(":/Imgs/closeItemDark.svg");
+			m_closeButton->setIcon(closeBtnIcon);
+			m_closeButton->setStyleSheet(QString(R"(
+			QPushButton {
+				border: none;
+				background-color: transparent;
+				padding: 2px;
+			}
+			QPushButton:hover {
+				background-color: %1;
+				border-radius: 4px;
+			}
+			)").arg(DesignSystem::instance()->currentTheme().onTabBtnHoverColor.name()));
+
+			hoverBgColor = DesignSystem::instance()->currentTheme().tabHoverColor;
+			textColor = DesignSystem::instance()->currentTheme().tabTextColor;
+			update();
 		});
 }
 
@@ -143,7 +168,7 @@ void AntTabWidget::paintEvent(QPaintEvent* /*event*/)
 	// 文本
 	QRect textRect = rect().adjusted(0, topOffset, 0, 2);
 	textRect.setLeft(iconRect.right() + 15);  // 确保文本不会与图标重叠
-	p.setPen(Qt::black);
+	p.setPen(textColor);
 	p.drawText(textRect, Qt::AlignVCenter | Qt::AlignLeft, m_title);
 }
 

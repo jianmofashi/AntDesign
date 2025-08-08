@@ -18,6 +18,7 @@ private:
     QSvgRenderer m_svgRenderer;
     QString m_svgPath = QStringLiteral(":/Imgs/noData.svg");
     QString m_text = QStringLiteral("暂无数据");
+    QColor m_bgColor;
     // svg图有问题 因此要缩放
     float m_scale = 0.65f;    // 高度缩放比例
     float m_factor = 0.18f;   // 整体缩放比例

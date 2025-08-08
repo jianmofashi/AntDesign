@@ -1,11 +1,13 @@
 ﻿#include "QrCodeWidget.h"
 #include <QPainter>
+#include "DesignSystem.h"
 
 using namespace qrcodegen;
 
 QrCodeWidget::QrCodeWidget(QWidget* parent)
 	: QWidget(parent)
 {
+	setObjectName("QrCodeWidget");
 }
 
 void QrCodeWidget::setData(const QString& data)

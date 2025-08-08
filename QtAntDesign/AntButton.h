@@ -7,6 +7,7 @@
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
 #include <QElapsedTimer>
+#include <QSvgRenderer>
 #include "Ripple.h"
 
 class AntButton : public QPushButton
@@ -15,6 +16,7 @@ class AntButton : public QPushButton
 public:
 	AntButton(QString btnText, qreal textSize, QWidget* parent);
 	~AntButton();
+	void setSvgIcon(const QString& iconPath);
 protected:
 	// 重写绘制逻辑：先绘制按钮本身，再绘制向外扩散的圆角矩形波纹
 	void paintEvent(QPaintEvent* event) override;
@@ -36,6 +38,10 @@ private:
 	// 按钮当前状态
 	bool m_hovered;
 	bool m_pressed;
+
+	// 图标
+	QSvgRenderer* m_svgRenderer = nullptr;
+	qreal m_scaleFactor = 0.65;	// 缩放系数
 
 	// 按钮主色（可以在构造函数中或外部提供 setter 修改）
 	QColor baseColor;

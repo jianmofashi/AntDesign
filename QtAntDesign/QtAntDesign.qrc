@@ -1,5 +1,26 @@
 <RCC>
     <qresource prefix="/">
+        <file>Imgs/previousBtnDisableDark.svg</file>
+        <file>Imgs/nextBtnDisableDark.svg</file>
+        <file>Imgs/nextBtnDark.svg</file>
+        <file>Imgs/PreviousBtnDark.svg</file>
+        <file>Imgs/smallRightArrow.svg</file>
+        <file>Imgs/light.svg</file>
+        <file>Imgs/dark.svg</file>
+        <file>Imgs/homeDark.svg</file>
+        <file>Imgs/settingsDark.svg</file>
+        <file>Imgs/aboutDark.svg</file>
+        <file>Imgs/home_activeDark.svg</file>
+        <file>Imgs/settings_activeDark.svg</file>
+        <file>Imgs/about_activeDark.svg</file>
+        <file>Imgs/ShutDownDark.svg</file>
+        <file>Imgs/RestoreDark.svg</file>
+        <file>Imgs/MaximizeDark.svg</file>
+        <file>Imgs/MinimizeDark.svg</file>
+        <file>Imgs/closeItemDark.svg</file>
+        <file>Imgs/back.svg</file>
+        <file>Imgs/previousBtnDisable.svg</file>
+        <file>Imgs/nextBtnDisable.svg</file>
         <file>Imgs/nextBtn.svg</file>
         <file>Imgs/PreviousBtn.svg</file>
         <file>Imgs/closeItem.svg</file>
@@ -29,10 +50,10 @@
         <file>Imgs/undraw_book-lover_f1dq.svg</file>
         <file>Imgs/undraw_stock-prices_8nuz.svg</file>
         <file>Imgs/noData.svg</file>
-        <file>Imgs/Minimize-2.svg</file>
-        <file>Imgs/Maximize-3.svg</file>
-        <file>Imgs/Shut down-2.svg</file>
-        <file>Imgs/Maximize-1.svg</file>
+        <file>Imgs/Minimize.svg</file>
+        <file>Imgs/Restore.svg</file>
+        <file>Imgs/ShutDown.svg</file>
+        <file>Imgs/Maximize.svg</file>
         <file>Imgs/home_active.svg</file>
         <file>Imgs/settings_active.svg</file>
         <file>Imgs/about_active.svg</file>
@@ -53,8 +74,5 @@
         <file>fonts/NotoSansSC-Bold.ttf</file>
         <file>fonts/NotoSansSC-Medium.ttf</file>
         <file>fonts/NotoSansSC-Regular.ttf</file>
-        <file>Imgs/nextBtnDisable.svg</file>
-        <file>Imgs/previousBtnDisable.svg</file>
-        <file>Imgs/smallRightArrow.svg</file>
     </qresource>
 </RCC>

@@ -31,18 +31,20 @@ namespace StyleSheet
 					border-bottom-right-radius: 8px;})");
 	}
 
-	inline QString gradientQss()
+	inline QString gradientQss(const QColor& color1, const QColor& color2, const QColor& color3)
 	{
-		return R"(
-		#gradientWidget {
-		background: qlineargradient(
-        x1: 0, y1: 0,
-        x2: 1, y2: 1,
-        stop: 0 #dce8ff,
-        stop: 0.4 #e8e6ff,
-        stop: 1 #f3e7fe
-    );
-		border-radius: 12px;})";
+		return QString(R"(
+        #gradientWidget {
+            background: qlineargradient(
+                x1: 0, y1: 0,
+                x2: 1, y2: 1,
+                stop: 0 %1,
+                stop: 0.4 %2,
+                stop: 1 %3
+            );
+            border-radius: 12px;
+        })")
+			.arg(color1.name(), color2.name(), color3.name());
 	}
 
 	inline QString antMsgQss()
@@ -146,6 +148,7 @@ namespace StyleSheet
 	{
 		return QString(R"(
         QLineEdit {
+			background-color: transparent;
             border: none;
 			padding: %1;
         }
@@ -158,16 +161,16 @@ namespace StyleSheet
         QPushButton {
             border: none;
 			background-color: transparent;
-            color: rgb(%1, %2, %3);
-        })").arg(color.red()).arg(color.green()).arg(color.blue());
+            color: %1;
+        })").arg(color.name());
 	}
 
-	inline QString titleBottomLineQss()
+	inline QString titleBottomLineQss(const QColor& color)
 	{
 		return QString(R"(
         #dialogSubTitle {
             border: none;
-            border-bottom: 2px solid rgb(200,200,200); })");
+            border-bottom: 2px solid %1; })").arg(color.name());
 	}
 
 	inline QString widgetLeftLineQss()
@@ -226,39 +229,40 @@ namespace StyleSheet
 			"background-color: white;}";
 	}
 
-	inline QString standardDialogBtnQss()
+	inline QString standardDialogBtnQss(const QColor& primaryColor, const QColor& bgColor)
 	{
-		return R"(
+		return QString(R"(
         QPushButton#CancelButton {
-            background-color: white;
-            color: black;
+            background-color: %2;
+            color: %1;
             border-radius: 4px;
-			border:1px solid darkGray;
+			border:1px solid %1;
         }
 
         QPushButton#CancelButton:hover {
-            color: #1677ff;
-			background-color: white;
-			border:1px solid #1677ff;
+            color: %1;
+			background-color: %2;
+			border:1px solid %1;
         }
 
         QPushButton#ConfirmButton {
-            background-color: #1677ff;
+            background-color: %1;
             color: white;
             border: none;
             border-radius: 4px;
         }
 
         QPushButton#ConfirmButton:hover {
-            background-color: #4096ff;
-        })";
+            background-color: %1;
+        })").arg(primaryColor.name())
+			.arg(bgColor.name());
 	}
 
-	inline QString notificationQss()
+	inline QString notificationQss(const QColor& color)
 	{
-		return "#Notification{ "
+		return QString("#Notification{ "
 			"border-radius: 8px; "
-			"background-color: white;}";
+			"background-color: %1;}").arg(color.name());
 	}
 
 	inline QString AntBaseSpinBox(
@@ -501,8 +505,7 @@ namespace StyleSheet
             border: 1px solid %2;
             border-radius: 6px;
             background: transparent;
-        }
-    )")
+        })")
 			.arg(hoverColor.name())
 			.arg(color.name());
 	}

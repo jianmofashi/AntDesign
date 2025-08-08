@@ -19,6 +19,11 @@ public:
 		m_textColor = DesignSystem::instance()->currentTheme().tableTextColor;
 	}
 
+	void updateBaseStyle()
+	{
+		m_headerBgColor = DesignSystem::instance()->currentTheme().widgetBgColor;
+		m_textColor = DesignSystem::instance()->currentTheme().tableTextColor;
+	}
 protected:
 	QSize sizeHint() const override
 	{
@@ -125,7 +130,9 @@ protected:
 	void updateColumnWidths();
 private:
 	TableColumnLayout m_columnLayout;
+	AntBaseHeaderView* customHeader = nullptr;
 	AntProfileItemDelegate* itemDelegate = nullptr;
+	AntProfileTableStyle* tableStyle = nullptr;
 
 	int m_rowsPerPage;
 	int m_rowHeight;

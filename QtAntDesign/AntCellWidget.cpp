@@ -36,6 +36,12 @@ AntCellWidget::AntCellWidget(const QString& btnName, QWidget* parent)
 	layout->setContentsMargins(8, 0, 0, 0);		// 设置左边距 8px
 	layout->addWidget(button);
 	layout->addStretch();
+
+	connect(DesignSystem::instance(), &DesignSystem::themeChanged, this, [this]()
+		{
+			auto theme = DesignSystem::instance()->currentTheme();
+			button->setStyleSheet(StyleSheet::textBtnQss("left", theme.primaryColor, theme.primaryHoverColor));
+		});
 }
 
 AntCellWidget::~AntCellWidget()

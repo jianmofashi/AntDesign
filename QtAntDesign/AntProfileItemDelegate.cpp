@@ -101,3 +101,12 @@ void AntProfileItemDelegate::setCurrentHoverRow(int row)
 {
 	m_currentHoverRow = row;
 }
+
+void AntProfileItemDelegate::updateStyle()
+{
+	m_bgColor = DesignSystem::instance()->backgroundColor();
+	m_textColor = DesignSystem::instance()->currentTheme().tableTextColor;
+	m_primaryColor = DesignSystem::instance()->primaryColor();
+	m_hoverColor = DesignSystem::instance()->currentTheme().widgetHoverBgColor;
+	m_hoverColor.setAlpha(80);
+}

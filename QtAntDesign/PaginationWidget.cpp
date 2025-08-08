@@ -12,14 +12,15 @@ PaginationWidget::PaginationWidget(QSize buttonSize, QWidget* parent)
 	m_layout->setContentsMargins(0, 0, 0, 0);
 	m_layout->setSpacing(10);
 
-	m_prevButton = createNavButton(":/Imgs/PreviousBtn.svg");
+	auto* ins = DesignSystem::instance();
+	m_prevButton = createNavButton(ins->prevBtnIcon(), ins->prevBtnDisableIcon());
 	connect(m_prevButton, &QPushButton::clicked, this, [this]()
 		{
 			if (m_currentPage > 1)
 				setCurrentPage(m_currentPage - 1);
 		});
 
-	m_nextButton = createNavButton(":/Imgs/nextBtn.svg");
+	m_nextButton = createNavButton(ins->nextBtnIcon(), ins->nextBtnDisableIcon());
 	connect(m_nextButton, &QPushButton::clicked, this, [this]()
 		{
 			if (m_currentPage < m_totalPages)
@@ -31,16 +32,56 @@ PaginationWidget::PaginationWidget(QSize buttonSize, QWidget* parent)
 	m_layout->addWidget(m_nextButton);
 
 	refreshButtons();
+
+	connect(DesignSystem::instance(), &DesignSystem::themeChanged, this, [this]()
+		{
+			auto theme = DesignSystem::instance()->currentTheme();
+			for (int i = 0; i < m_layout->count(); ++i)
+			{
+				QLayoutItem* item = m_layout->itemAt(i);
+				QWidget* widget = item->widget();
+				if (auto btn = qobject_cast<QPushButton*>(widget))
+				{
+					// 更新按钮样式
+					btn->setStyleSheet(StyleSheet::paginationWidgetQss(theme.primaryColor, theme.widgetHoverBgColor));
+
+					if (i == 0)
+					{
+						// 后退箭头
+						updateBtnIcon(btn, DesignSystem::instance()->prevBtnIcon(), DesignSystem::instance()->prevBtnDisableIcon());
+					}
+					else if (i == m_layout->count() - 1)
+					{
+						// 前进箭头
+						updateBtnIcon(btn, DesignSystem::instance()->nextBtnIcon(), DesignSystem::instance()->nextBtnDisableIcon());
+					}
+				}
+			}
+		});
 }
 
-QPushButton* PaginationWidget::createNavButton(const QString& iconPath)
+void PaginationWidget::updateBtnIcon(QPushButton* btn, const QString& iconPathNormal, const QString& iconPathDisabled)
 {
 	auto theme = DesignSystem::instance()->currentTheme();
-	QIcon icon(iconPath);
+	btn->setStyleSheet(StyleSheet::paginationWidgetQss(theme.primaryColor, theme.widgetHoverBgColor));
+	QIcon icon;
+	icon.addFile(iconPathNormal, QSize(), QIcon::Normal);
+	icon.addFile(iconPathDisabled, QSize(), QIcon::Disabled);
+	btn->setIcon(icon);
+}
+
+QPushButton* PaginationWidget::createNavButton(const QString& iconPathNormal, const QString& iconPathDisabled)
+{
+	auto theme = DesignSystem::instance()->currentTheme();
 	QPushButton* btn = new QPushButton(this);
 	btn->setFixedSize(btnSize);
 	btn->setCursor(Qt::PointingHandCursor);
+
+	QIcon icon;
+	icon.addFile(iconPathNormal, QSize(), QIcon::Normal);
+	icon.addFile(iconPathDisabled, QSize(), QIcon::Disabled);
 	btn->setIcon(icon);
+
 	btn->setIconSize(QSize(btnSize.width() - 17, btnSize.height() - 17));
 	btn->setStyleSheet(StyleSheet::paginationWidgetQss(theme.primaryColor, theme.widgetHoverBgColor));
 	return btn;
@@ -157,22 +198,5 @@ void PaginationWidget::refreshButtons()
 
 	// 更新上一页下一页按钮状态
 	m_prevButton->setEnabled(m_currentPage > 1);
-	if (m_currentPage > 1)
-	{
-		m_prevButton->setIcon(QIcon(":/Imgs/PreviousBtn.svg"));
-	}
-	else
-	{
-		m_prevButton->setIcon(QIcon(":/Imgs/previousBtnDisable.svg"));
-	}
-
 	m_nextButton->setEnabled(m_currentPage < m_totalPages);
-	if (m_currentPage < m_totalPages)
-	{
-		m_nextButton->setIcon(QIcon(":/Imgs/nextBtn.svg"));
-	}
-	else
-	{
-		m_nextButton->setIcon(QIcon(":/Imgs/nextBtnDisable.svg"));
-	}
 }

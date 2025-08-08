@@ -21,6 +21,7 @@ protected:
 private:
 	qreal m_rotationAngle = 0;
 	QPropertyAnimation* m_animation = nullptr;
+	QColor arcColor;
 };
 
 #endif // LOADINGARC_H

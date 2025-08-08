@@ -256,6 +256,9 @@
     <ClCompile Include="AntTreeView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ThemeSwitcher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StyleSheet.h">
@@ -474,6 +477,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="AntTreeView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="ThemeSwitcher.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

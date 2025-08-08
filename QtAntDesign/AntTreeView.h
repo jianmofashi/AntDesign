@@ -139,6 +139,12 @@ public:
 
 		return QSize(0, qMax(finalHeight, m_minimumHeight));
 	}
+
+	void updateStyle()
+	{
+		m_hoverColor = DesignSystem::instance()->widgetHoverBgColor();
+		m_hoverColor.setAlpha(80);
+	}
 public:
 	QModelIndex hoverIndex; // 当前悬浮的 index
 private:

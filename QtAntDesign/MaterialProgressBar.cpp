@@ -36,6 +36,13 @@ MaterialProgressBar::MaterialProgressBar(QWidget* parent)
 			m_indeterminatePosition = value.toReal();
 			update();
 		});
+
+	connect(DesignSystem::instance(), &DesignSystem::themeChanged, this, [this]()
+		{
+			m_backgroundColor = DesignSystem::instance()->currentTheme().progressBarBgColor;
+			m_chunkColor = DesignSystem::instance()->primaryColor();
+			update();
+		});
 }
 
 QSize MaterialProgressBar::sizeHint() const

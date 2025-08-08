@@ -18,6 +18,7 @@
 #include "TransparentMask.h"
 #include "MaskWidget.h"
 #include "AntInput.h"
+#include "ThemeSwitcher.h"
 
 QtAntDesign::QtAntDesign(QWidget* parent)
 	: QWidget(parent)
@@ -26,6 +27,7 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 
 	setObjectName("QtAntDesign");
 	setWindowFlags(Qt::FramelessWindowHint);
+	setAttribute(Qt::WA_NoSystemBackground);
 	setMinimumSize(1100, 750);
 
 	ui.main_widget->setStyleSheet(StyleSheet::mainQss(DesignSystem::instance()->backgroundColor()));
@@ -43,8 +45,10 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 	setContentsMargins(0, 0, 0, 0);
 
 	// 初始化全局设计系统 必须写在最前面 因为它会设置主题和主窗口指针注册一些全局变量
-	DesignSystem::instance()->setThemeMode(DesignSystem::Light);	// 默认亮主题
-	DesignSystem::instance()->setMainWindow(this);					// 获取主窗口指针
+	DesignSystem::instance()->setThemeMode(DesignSystem::Light);					// 默认亮主题
+	DesignSystem::instance()->setMainWindow(this);									// 获取主窗口指针
+	ThemeSwitcher* themeSwitcher = new ThemeSwitcher(this);
+	themeSwitcher->setThemeColor();
 	// 注册全局透明遮罩
 	TransparentMask* tpMask = new TransparentMask(this);
 	DesignSystem::instance()->setTransparentMask(tpMask);
@@ -74,9 +78,9 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 	btnMax = new QToolButton(ui.titleBar);
 	btnClose = new QToolButton(ui.titleBar);
 	// 设置图标
-	btnMin->setIcon(QIcon(":/Imgs/Minimize-2.svg"));
-	btnMax->setIcon(QIcon(":/Imgs/Maximize-1.svg"));
-	btnClose->setIcon(QIcon(":/Imgs/Shut down-2.svg"));
+	btnMin->setIcon(DesignSystem::instance()->btnMinIcon());
+	btnMax->setIcon(DesignSystem::instance()->btnMaxIcon());
+	btnClose->setIcon(DesignSystem::instance()->btnCloseIcon());
 	// 设置QSS
 	btnMin->setStyleSheet(StyleSheet::toolBtnQss());
 	btnMax->setStyleSheet(StyleSheet::toolBtnQss());
@@ -99,15 +103,6 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 	antInput->setFixedWidth(254);
 	antInput->setFixedHeight(46);
 	antInput->setPlaceholderText("搜索内容");
-
-	// 下拉框随着主窗口同步移动
-	connect(this, &QtAntDesign::windowMoved, this, [=](QPoint)
-		{
-			if (antInput && antInput->PopupView())
-			{
-				antInput->PopupView()->follow(antInput);
-			}
-		});
 
 	// 标题栏右侧所有控件的长宽转为物理像素后在native事件中限制标题栏的范围
 	qreal dpiScale = QApplication::primaryScreen()->devicePixelRatio();
@@ -156,10 +151,11 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 	CustomToolButton* btnSettings = new CustomToolButton(QSize(iconSize, iconSize), ui.navi_widget);
 	CustomToolButton* btnAbout = new CustomToolButton(QSize(iconSize, iconSize), ui.navi_widget);
 	// 设置导航按钮样式
+	auto* ins = DesignSystem::instance();
 	buttonInfos = {
-	{btnHome, ":/Imgs/home.svg", ":/Imgs/home_active.svg", homePage},
-	{btnSettings, ":/Imgs/settings.svg", ":/Imgs/settings_active.svg", settingsPage},
-	{btnAbout, ":/Imgs/about.svg", ":/Imgs/about_active.svg", aboutPage}
+	{btnHome, ins->btnHomeIconPath(), ins->btnHomeActiveIconPath(), homePage},
+	{btnSettings,ins->btnSettingsIconPath() ,ins->btnSettingsActiveIconPath() , settingsPage},
+	{btnAbout,ins->btnAboutIconPath() , ins->btnAboutActiveIconPath(), aboutPage}
 	};
 	// 设置统一样式和连接信号
 	buttonInfos[stackedWidget->currentIndex()].button->setBtnChecked(true); // 设置当前页面按钮为选中状态
@@ -196,6 +192,19 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 					});
 			});
 	}
+	// 主题切换按钮
+	QPushButton* themeBtn = new QPushButton(ui.navi_widget);
+	themeBtn->setStyleSheet("QPushButton { background-color: transparent; border: none; }");
+	themeBtn->setFixedSize(naviWidth * 0.35, naviWidth * 0.35);
+	themeBtn->setIcon(DesignSystem::instance()->setThemeIcon());
+	themeBtn->setIconSize(themeBtn->size());
+	connect(themeBtn, &QPushButton::clicked, this, [this, themeSwitcher, themeBtn]()
+		{
+			// 获取按钮中心点的全局坐标
+			themeSwitcher->startSwitchTheme(this->grab(), themeBtn, themeBtn->mapToGlobal(themeBtn->rect().center()));
+		});
+	connect(this, &QtAntDesign::resized, themeSwitcher, &ThemeSwitcher::resizeByMainWindow);
+
 	//  布局
 	naviLay->addSpacing(28);
 	naviLay->addWidget(avatar, 0, Qt::AlignHCenter);
@@ -204,6 +213,8 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 	naviLay->addWidget(btnSettings, 0, Qt::AlignHCenter);
 	naviLay->addWidget(btnAbout, 0, Qt::AlignHCenter);
 	naviLay->addStretch();
+	naviLay->addWidget(themeBtn, 0, Qt::AlignHCenter);
+	naviLay->addSpacing(70);
 
 	// 初始化全局管理器
 	AntMessageManager::instance();	// 全局消息
@@ -265,6 +276,27 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 			DesignSystem::instance()->getDarkMask()->resize(w, h);
 		});
 	connect(this, &QtAntDesign::windowMoved, homePage, &HomePage::windowMoved);
+
+	// 主题切换
+	connect(ins, &DesignSystem::themeChanged, this, [=]()
+		{
+			ui.main_widget->setStyleSheet(StyleSheet::mainQss(DesignSystem::instance()->backgroundColor()));
+			ui.navi_widget->setStyleSheet(StyleSheet::naviQss(DesignSystem::instance()->widgetBgColor()));
+			ui.titleBar->setStyleSheet(StyleSheet::titleBarQss(DesignSystem::instance()->backgroundColor()));
+			btnMin->setIcon(DesignSystem::instance()->btnMinIcon());
+			btnMax->setIcon(DesignSystem::instance()->btnMaxIcon());
+			btnClose->setIcon(DesignSystem::instance()->btnCloseIcon());
+			buttonInfos = {
+				{btnHome, ins->btnHomeIconPath(), ins->btnHomeActiveIconPath(), homePage},
+				{btnSettings,ins->btnSettingsIconPath() ,ins->btnSettingsActiveIconPath() , settingsPage},
+				{btnAbout,ins->btnAboutIconPath() , ins->btnAboutActiveIconPath(), aboutPage}
+			};
+			for (const ButtonInfo& info : buttonInfos)
+			{
+				CustomToolButton* btn = info.button;
+				btn->setSvgIcons(info.normalIcon, info.activeIcon);
+			}
+		});
 }
 
 QtAntDesign::~QtAntDesign()
@@ -399,6 +431,7 @@ void QtAntDesign::showEvent(QShowEvent* event)
 {
 	QWidget::showEvent(event);
 
+#ifdef Q_OS_WIN
 	m_hwnd = reinterpret_cast<HWND>(winId());
 	if (!m_hwnd) return;
 
@@ -408,11 +441,9 @@ void QtAntDesign::showEvent(QShowEvent* event)
 	style |= WS_CAPTION | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
 	SetWindowLong(m_hwnd, GWL_STYLE, style);
 
-	MARGINS margins = { 5,5,5,5 };
-	DwmExtendFrameIntoClientArea(m_hwnd, &margins);
-
 	DWORD cornerPref = 2;
 	DwmSetWindowAttribute(m_hwnd, 33, &cornerPref, sizeof(cornerPref));
+#endif // Q_OS_WIN
 }
 
 void QtAntDesign::moveEvent(QMoveEvent* event)
@@ -430,11 +461,11 @@ void QtAntDesign::changeEvent(QEvent* event)
 
 		if (isMaximized())
 		{
-			btnMax->setIcon(QIcon(":/Imgs/Maximize-3.svg"));
+			btnMax->setIcon(DesignSystem::instance()->btnRestoreIcon());
 		}
 		else if (stateEvent->oldState() & Qt::WindowMaximized)
 		{
-			btnMax->setIcon(QIcon(":/Imgs/Maximize-1.svg"));
+			btnMax->setIcon(DesignSystem::instance()->btnMaxIcon());
 		}
 	}
 

@@ -32,6 +32,7 @@ public:
 	int getCurrentHoverRow() const;
 	void setCurrentHoverRow(int row);
 
+	void updateStyle();
 signals:
 	void itemClicked(const QModelIndex& index);
 

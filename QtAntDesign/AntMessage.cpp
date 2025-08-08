@@ -100,7 +100,7 @@ void AntMessage::paintEvent(QPaintEvent* event)
 	painter.setOpacity(m_customOpacity);
 
 	// 背景圆角绘制
-	painter.setBrush(DesignSystem::instance()->backgroundColor());
+	painter.setBrush(DesignSystem::instance()->currentTheme().msgBgColor);
 	painter.setPen(Qt::NoPen);
 	painter.drawRoundedRect(rect(), 8, 8);
 

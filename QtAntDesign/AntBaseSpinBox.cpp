@@ -9,8 +9,7 @@
 AntBaseSpinBox::AntBaseSpinBox(QWidget* parent)
 	: QSpinBox(parent), m_buttonX(0),
 	borderColor(theme.borderColor),
-	primaryColor(theme.primaryColor),
-	shadowColor(theme.primaryColor)
+	primaryColor(theme.primaryColor)
 {
 	setObjectName("AntBaseSpinBox");
 	setButtonSymbols(QAbstractSpinBox::NoButtons);
@@ -34,6 +33,16 @@ AntBaseSpinBox::AntBaseSpinBox(QWidget* parent)
 	m_animation = new QPropertyAnimation(this, "buttonX", this);
 	m_animation->setDuration(300);
 	m_animation->setEasingCurve(QEasingCurve::InOutCubic);
+
+	QFont font;
+	font.setPointSizeF(10.5);
+	setFont(font);
+
+	connect(DesignSystem::instance(), &DesignSystem::themeChanged, this, [this]()
+		{
+			auto theme = DesignSystem::instance()->currentTheme();
+			setStyleSheet(StyleSheet::AntBaseSpinBox(theme.borderColor, theme.primaryColor));
+		});
 }
 
 void AntBaseSpinBox::enterEvent(QEnterEvent* event)

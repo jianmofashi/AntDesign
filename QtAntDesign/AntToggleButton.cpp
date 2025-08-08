@@ -4,7 +4,8 @@
 #include "DesignSystem.h"
 
 AntToggleButton::AntToggleButton(QSize size, QWidget* parent)
-	: QWidget(parent), m_checked(false), m_size(size), m_bgColor(DesignSystem::instance()->currentTheme().toggleButtonBgColor)
+	: QWidget(parent), m_checked(false), m_size(size), m_bgColor(DesignSystem::instance()->currentTheme().toggleButtonBgColor),
+	m_toggleButtonColor(DesignSystem::instance()->currentTheme().toggleButtonColor), m_textColor(DesignSystem::instance()->currentTheme().textColor)
 {
 	setFixedSize(m_size);
 
@@ -25,6 +26,14 @@ AntToggleButton::AntToggleButton(QSize size, QWidget* parent)
 	groupAnim = new QParallelAnimationGroup(this);
 	groupAnim->addAnimation(posAnim);
 	groupAnim->addAnimation(colorAnim);
+
+	connect(DesignSystem::instance(), &DesignSystem::themeChanged, this, [this]()
+		{
+			m_bgColor = DesignSystem::instance()->currentTheme().toggleButtonBgColor;
+			m_toggleButtonColor = DesignSystem::instance()->currentTheme().toggleButtonColor;
+			m_textColor = DesignSystem::instance()->currentTheme().textColor;
+			update();
+		});
 }
 
 AntToggleButton::~AntToggleButton() {}
@@ -49,13 +58,13 @@ void AntToggleButton::paintEvent(QPaintEvent*)
 	p.drawRoundedRect(rect(), height() / 2, height() / 2);
 
 	// 绘制滑块
-	p.setBrush(DesignSystem::instance()->currentTheme().toggleButtonColor);
+	p.setBrush(m_toggleButtonColor);
 	p.drawEllipse(m_circleX, 3, m_circleWidth, height() - 6);
 
 	// 如果需要显示文字
 	if (m_showText)
 	{
-		p.setPen(DesignSystem::instance()->currentTheme().textColor);
+		p.setPen(m_textColor);
 		QFont font = p.font();
 		font.setPointSizeF(9.4);
 		font.setBold(true);

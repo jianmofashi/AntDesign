@@ -28,6 +28,12 @@ AntTreeView::AntTreeView(int itemHeight, QWidget* parent)
 			m_delegate->setRotationMap(m_arrowRotations);
 			viewport()->update(visualRect(m_currentAnimationIndex)); // 只刷新当前项
 		});
+
+	connect(DesignSystem::instance(), &DesignSystem::themeChanged, this, [this]()
+		{
+			m_delegate->updateStyle();
+			update();
+		});
 }
 
 AntTreeView::~AntTreeView()

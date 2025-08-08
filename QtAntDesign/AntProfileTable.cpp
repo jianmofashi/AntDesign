@@ -15,7 +15,7 @@ AntProfileTable::AntProfileTable(int headerHeight, int rowsPerPage, int rowHeigh
 	verticalHeader()->setHighlightSections(false);
 
 	// 替换水平表头为自定义的
-	AntBaseHeaderView* customHeader = new AntBaseHeaderView(Qt::Horizontal, m_headerHeight, this);
+	customHeader = new AntBaseHeaderView(Qt::Horizontal, m_headerHeight, this);
 	setHorizontalHeader(customHeader);
 
 	// 禁止点击和拖动（如果需要）
@@ -39,12 +39,19 @@ AntProfileTable::AntProfileTable(int headerHeight, int rowsPerPage, int rowHeigh
 	this->setFixedHeight(idealHeight);
 
 	// 设置样式
-	AntProfileTableStyle* tableStyle = new AntProfileTableStyle(style());
+	tableStyle = new AntProfileTableStyle(style());
 	setStyle(tableStyle);
 
 	// 设置项代理
 	itemDelegate = new AntProfileItemDelegate(this, m_columnLayout, m_rowHeight, this);
 	setItemDelegate(itemDelegate);
+
+	connect(DesignSystem::instance(), &DesignSystem::themeChanged, this, [this]()
+		{
+			itemDelegate->updateStyle();
+			customHeader->updateBaseStyle();
+			update();
+		});
 }
 
 AntProfileTable::~AntProfileTable()

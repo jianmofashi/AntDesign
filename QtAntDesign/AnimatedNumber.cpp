@@ -1,6 +1,7 @@
 ﻿#include "AnimatedNumber.h"
 #include <QPainter>
 #include <QFontMetrics>
+#include "DesignSystem.h"
 
 AnimatedNumber::AnimatedNumber(QWidget* parent)
 	: QWidget(parent)
@@ -54,7 +55,7 @@ void AnimatedNumber::paintEvent(QPaintEvent* event)
 	font.setPointSize(m_fontSize);
 	font.setBold(true);
 	p.setFont(font);
-	p.setPen(Qt::black);
+	p.setPen(DesignSystem::instance()->textColor());
 
 	QString text = QString::number(m_displayedValue);
 	QFontMetrics fm(font);

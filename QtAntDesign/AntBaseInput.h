@@ -92,6 +92,14 @@ public:
 		QProxyStyle::drawPrimitive(element, option, painter, widget);
 	}
 
+	void updateStyle(QColor normalBg, QColor hoverBg, QColor focusBorderColor, QColor focusBg, QColor shadowColor)
+	{
+		m_normalBg = normalBg;
+		m_hoverBg = hoverBg;
+		m_focusBorderColor = focusBorderColor;
+		m_focusBg = focusBg;
+		m_shadowColor = shadowColor;
+	}
 private:
 	QColor m_normalBg;
 	QColor m_hoverBg;
@@ -107,8 +115,8 @@ class AntBaseInput : public QLineEdit
 
 public:
 	explicit AntBaseInput(QWidget* parent = nullptr);
-
 private:
+	AntBaseInputStyle* style;
 	QColor m_backgroundColor;		// 背景色
 	QColor m_hoverBackgroundColor;  // 鼠标悬停时背景色
 	QColor m_focusBackgroundColor;  // 聚焦时背景色

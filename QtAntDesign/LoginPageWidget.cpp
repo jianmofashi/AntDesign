@@ -18,15 +18,16 @@ LoginPageWidget::LoginPageWidget(QWidget* parent)
 	mainLayout->setSpacing(0);
 
 	// 标题
-	QWidget* titleWidget = new QWidget(this);
+	titleWidget = new QWidget(this);
 	titleWidget->setObjectName("dialogSubTitle");
-	titleWidget->setStyleSheet(StyleSheet::titleBottomLineQss());
+	titleWidget->setStyleSheet(StyleSheet::titleBottomLineQss(DesignSystem::instance()->borderColor()));
 	QHBoxLayout* titleLay = new QHBoxLayout(titleWidget);
 	QLabel* titleLab = new QLabel("TITLE", titleWidget);
 	QFont font;
 	font.setBold(true);
+	font.setPointSizeF(13.5);
 	titleLab->setFont(font);
-	titleLay->addSpacing(9);
+	titleLay->addSpacing(10);
 	titleLay->addWidget(titleLab);
 	titleLay->addStretch();
 
@@ -49,7 +50,7 @@ LoginPageWidget::LoginPageWidget(QWidget* parent)
 	subLab1->setFont(font);
 	registerButton->setFont(font);
 	registerButton->setCursor(Qt::PointingHandCursor);
-	registerButton->setStyleSheet(StyleSheet::noBorderBtnQss(QColor(24, 144, 255)));
+	registerButton->setStyleSheet(StyleSheet::noBorderBtnQss(DesignSystem::instance()->primaryColor()));
 	// 布局
 	centralLay->setContentsMargins(9, 9, 9, 9);
 	leftLay->setContentsMargins(9, 9, 9, 9);
@@ -68,12 +69,12 @@ LoginPageWidget::LoginPageWidget(QWidget* parent)
 	MaterialLineEdit* accountEdit = new MaterialLineEdit(leftWidget);
 	accountEdit->setFont(font);
 	accountEdit->setLabelText("邮箱");
-	accountEdit->setTextFontSize(10.8);
+	accountEdit->setTextFontSize(10.2);
 	accountEdit->setFixedHeight(40);  // 高度可自定义
 	MaterialLineEdit* passwordEdit = new MaterialLineEdit(leftWidget);
 	passwordEdit->setFont(font);
 	passwordEdit->setLabelText("密码");
-	passwordEdit->setTextFontSize(10.8);
+	passwordEdit->setTextFontSize(10.2);
 	passwordEdit->setFixedHeight(40);
 	passwordEdit->setPasswordToggleEnabled(leftWidget);
 	// 校验失败时调用
@@ -91,9 +92,9 @@ LoginPageWidget::LoginPageWidget(QWidget* parent)
 	// sub2
 	QWidget* subWidget2 = new QWidget(leftWidget);
 	QHBoxLayout* subLay2 = new QHBoxLayout(subWidget2);
-	QPushButton* subBtn2 = new QPushButton("忘记密码", subWidget2);
+	subBtn2 = new QPushButton("忘记密码", subWidget2);
 	subBtn2->setFont(font);
-	subBtn2->setStyleSheet(StyleSheet::noBorderBtnQss(QColor(0, 0, 0)));
+	subBtn2->setStyleSheet(StyleSheet::noBorderBtnQss(DesignSystem::instance()->primaryColor()));
 	subLay2->addWidget(radioBtn);
 	subLay2->addStretch();
 	subLay2->addWidget(subBtn2);
@@ -158,4 +159,11 @@ LoginPageWidget::LoginPageWidget(QWidget* parent)
 
 LoginPageWidget::~LoginPageWidget()
 {
+}
+
+void LoginPageWidget::updateTheme()
+{
+	titleWidget->setStyleSheet(StyleSheet::titleBottomLineQss(DesignSystem::instance()->borderColor()));
+	registerButton->setStyleSheet(StyleSheet::noBorderBtnQss(DesignSystem::instance()->primaryColor()));
+	subBtn2->setStyleSheet(StyleSheet::noBorderBtnQss(DesignSystem::instance()->primaryColor()));
 }

@@ -46,6 +46,8 @@ private:
 	int m_circleWidth;
 	QSize m_size;
 	QColor m_bgColor;
+	QColor m_toggleButtonColor;
+	QColor m_textColor;
 
 	QPropertyAnimation* posAnim;
 	QPropertyAnimation* colorAnim;

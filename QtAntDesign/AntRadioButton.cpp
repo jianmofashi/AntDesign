@@ -13,6 +13,14 @@ AntRadioButton::AntRadioButton(QWidget* parent)
 	m_animation->setEasingCurve(QEasingCurve::OutCubic);
 
 	connect(this, &QRadioButton::toggled, this, &AntRadioButton::onToggled);
+
+	connect(DesignSystem::instance(), &DesignSystem::themeChanged, this, [this]()
+		{
+			m_borderColorDefault = DesignSystem::instance()->borderColor();
+			m_borderColorHover = DesignSystem::instance()->borderColorHover();
+			m_fillColor = DesignSystem::instance()->primaryColor();
+			update();
+		});
 }
 
 void AntRadioButton::setInnerRatio(qreal ratio)

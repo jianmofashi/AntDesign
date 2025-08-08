@@ -40,6 +40,11 @@ AntSlider::AntSlider(int min, int max, int value, QWidget* parent)
 		m_tooltip->move(global.x() - m_tooltip->width() / 2,
 			global.y() - m_tooltip->height() - 15);
 		});
+
+	connect(DesignSystem::instance(), &DesignSystem::themeChanged, this, [this]()
+		{
+			update();
+		});
 }
 
 void AntSlider::setHandleRadius(qreal radius)

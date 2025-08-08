@@ -17,10 +17,26 @@ AntButton::AntButton(QString btnText, qreal textSize, QWidget* parent)
 	font.setPointSizeF(textSize);
 	setFont(font);
 	setText(btnText);
+
+	connect(DesignSystem::instance(), &DesignSystem::themeChanged, this, [this]()
+		{
+			baseColor = DesignSystem::instance()->primaryColor();
+			update();
+		});
 }
 
 AntButton::~AntButton()
 {
+	if (m_svgRenderer)
+	{
+		delete m_svgRenderer; // 清理SVG渲染器
+	}
+}
+
+void AntButton::setSvgIcon(const QString& iconPath)
+{
+	m_svgRenderer = new QSvgRenderer(iconPath, this);
+	update(); // 更新按钮显示
 }
 
 void AntButton::mousePressEvent(QMouseEvent* event)
@@ -118,27 +134,59 @@ void AntButton::paintEvent(QPaintEvent* event)
 	QPainter painter(this);
 	painter.setRenderHint(QPainter::Antialiasing);
 
-	// 1. 绘制按钮背景（圆角矩形）
-	QRectF buttonRect = QRectF(m_margin, m_margin,
-		width() - 2 * m_margin,
-		height() - 2 * m_margin);
-	QColor fillColor = baseColor;
-	if (m_pressed)
-		fillColor = baseColor.darker(120);	// 值越大越暗
-	else if (m_hovered)
-		fillColor = baseColor.lighter(110);	// 值越大越亮
+	// 1. 定义按钮矩形区域
+	QRectF buttonRect;
 
-	painter.setBrush(fillColor);
-	painter.setPen(Qt::NoPen);
-	painter.drawRoundedRect(buttonRect, m_radius, m_radius);
+	// 2. 判断是否设置了图标
+	bool hasIcon = (m_svgRenderer != nullptr); // 如果有图标，背景是圆形
 
-	// 2. 绘制文字
-	painter.setPen(DesignSystem::instance()->currentTheme().textColor);
-	painter.setFont(font());
-	painter.drawText(buttonRect, Qt::AlignCenter, text());
+	if (hasIcon)
+	{
+		// 2.1 绘制按钮背景（圆形）
+		int diameter = qMin(width(), height()); // 使用宽度或高度中的较小值来确保按钮是圆形的
+		buttonRect = QRectF(m_margin, m_margin, diameter - 2 * m_margin, diameter - 2 * m_margin);
+		QColor fillColor = baseColor;
+		if (m_pressed)
+			fillColor = baseColor.darker(120); // 按下时变暗
+		else if (m_hovered)
+			fillColor = baseColor.lighter(110); // 悬停时变亮
+		painter.setBrush(fillColor);
+		painter.setPen(Qt::NoPen);
+		painter.drawEllipse(buttonRect); // 绘制圆形背景
+	}
+	else
+	{
+		// 2.2 绘制按钮背景（圆角矩形）
+		buttonRect = QRectF(m_margin, m_margin, width() - 2 * m_margin, height() - 2 * m_margin);
+		QColor fillColor = baseColor;
+		if (m_pressed)
+			fillColor = baseColor.darker(120); // 按下时变暗
+		else if (m_hovered)
+			fillColor = baseColor.lighter(110); // 悬停时变亮
+		painter.setBrush(fillColor);
+		painter.setPen(Qt::NoPen);
+		painter.drawRoundedRect(buttonRect, m_radius, m_radius); // 绘制圆角矩形背景
+	}
 
-	// 3. 如果正在播放波纹动画，就只绘制“外环”部分
-	// 3.1 配置半透明的波纹颜色
+	// 3. 绘制图标或文字
+	if (hasIcon)
+	{
+		// 如果有图标，绘制SVG图标
+		QSizeF iconSize = buttonRect.size() * m_scaleFactor;
+		QRectF iconRect = buttonRect;
+		iconRect.setSize(iconSize);
+		iconRect.moveCenter(buttonRect.center());
+		m_svgRenderer->render(&painter, iconRect.toRect());
+	}
+	else
+	{
+		// 如果没有图标，绘制文本
+		painter.setPen(DesignSystem::instance()->currentTheme().textColor);
+		painter.setFont(font());
+		painter.drawText(buttonRect, Qt::AlignCenter, text()); // 绘制文字
+	}
+
+	// 4. 如果正在播放波纹动画，绘制涟漪效果
 	QColor rippleColor = baseColor;
 	painter.setPen(Qt::NoPen);
 	for (Ripple* ripple : m_ripples)
@@ -146,7 +194,7 @@ void AntButton::paintEvent(QPaintEvent* event)
 		rippleColor.setAlphaF(ripple->opacity());
 		painter.setBrush(rippleColor);
 
-		// 3.2 计算“外部圆角矩形”和“内部圆角矩形”
+		// 4.1 绘制涟漪“环形”路径
 		int rippleOffset = ripple->offset();
 		QRectF outerRect = buttonRect.adjusted(
 			-rippleOffset, -rippleOffset,
@@ -155,16 +203,22 @@ void AntButton::paintEvent(QPaintEvent* event)
 
 		QRectF innerRect = buttonRect;
 
-		// 3.3 构造 QPainterPath 做路径相减：outer - inner 得到按钮本体外圈这部分
+		// 4.2 计算外环与内环路径
 		QPainterPath outerPath;
-		outerPath.addRoundedRect(outerRect, m_radius + 4, m_radius + 4);
+		if (hasIcon)
+			outerPath.addEllipse(outerRect); // 如果是圆形背景，使用圆形路径
+		else
+			outerPath.addRoundedRect(outerRect, m_radius, m_radius); // 否则使用圆角矩形
 
 		QPainterPath innerPath;
-		innerPath.addRoundedRect(innerRect, m_radius, m_radius);
+		if (hasIcon)
+			innerPath.addEllipse(innerRect); // 内环路径为圆形
+		else
+			innerPath.addRoundedRect(innerRect, m_radius, m_radius); // 内环路径为圆角矩形
 
 		QPainterPath ringPath = outerPath.subtracted(innerPath);
 
-		// 3.4 填充这段“环形路径”
+		// 4.3 填充涟漪环形路径
 		painter.drawPath(ringPath);
 	}
 }

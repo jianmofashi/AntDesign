@@ -8,6 +8,7 @@
 #include "StyleSheet.h"
 #include "AntButton.h"
 #include "LoadingArc.h"
+#include "DesignSystem.h"
 
 int NotificationWidget::taskCount = 0;
 
@@ -20,9 +21,9 @@ NotificationWidget::NotificationWidget(const QString& title, QSize size, QWidget
 	resize(size);
 
 	// 背景控件
-	QWidget* bg = new QWidget(this);
+	bg = new QWidget(this);
 	bg->setObjectName("Notification");
-	bg->setStyleSheet(StyleSheet::notificationQss());
+	bg->setStyleSheet(StyleSheet::notificationQss(DesignSystem::instance()->currentTheme().notifBgColor));
 
 	// 外层 layout 负责撑满
 	QVBoxLayout* outerLayout = new QVBoxLayout(this);
@@ -41,7 +42,7 @@ NotificationWidget::NotificationWidget(const QString& title, QSize size, QWidget
 	font.setBold(true);
 	// 标题
 	QHBoxLayout* titleLay = new QHBoxLayout();
-	QToolButton* closeBtn = new QToolButton(bg);
+	closeBtn = new QToolButton(bg);
 	closeBtn->setIcon(QIcon(":/Imgs/Shut down-2.svg"));
 	closeBtn->setStyleSheet(StyleSheet::toolBtnQss());
 	QLabel* titleLab = new QLabel(title, bg);
@@ -84,6 +85,12 @@ NotificationWidget::NotificationWidget(const QString& title, QSize size, QWidget
 	connect(closeBtn, &QToolButton::clicked, this, [this]()
 		{
 			emit exitAnim();
+		});
+
+	connect(DesignSystem::instance(), &DesignSystem::themeChanged, this, [this]()
+		{
+			bg->setStyleSheet(StyleSheet::notificationQss(DesignSystem::instance()->currentTheme().notifBgColor));
+			closeBtn->setStyleSheet(StyleSheet::toolBtnQss());
 		});
 }
 

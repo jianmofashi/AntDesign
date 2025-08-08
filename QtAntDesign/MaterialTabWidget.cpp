@@ -43,6 +43,12 @@ MaterialTabBar::MaterialTabBar(QWidget* parent)
 			m_animation->setEndValue(targetX);
 			m_animation->start();
 		});
+
+	connect(DesignSystem::instance(), &DesignSystem::themeChanged, this, [this]()
+		{
+			auto theme = DesignSystem::instance()->currentTheme();
+			setStyleSheet(StyleSheet::hTabQss(theme.primaryColor, theme.tabTextColor));
+		});
 }
 
 MaterialTabBar::~MaterialTabBar()

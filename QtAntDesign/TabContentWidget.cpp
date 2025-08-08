@@ -23,6 +23,11 @@ TabContentWidget::TabContentWidget(const QString& text, QWidget* parent)
 	QVBoxLayout* layout = new QVBoxLayout(this);
 	layout->addWidget(label);
 	layout->setContentsMargins(0, 0, 0, 0);
+
+	connect(DesignSystem::instance(), &DesignSystem::themeChanged, this, [this]()
+		{
+			setStyleSheet(QString("background-color: %1;").arg(DesignSystem::instance()->backgroundColor().name()));
+		});
 }
 
 TabContentWidget::~TabContentWidget()
