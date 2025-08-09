@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
 	{
 		QString family = QFontDatabase::applicationFontFamilies(fontId).at(0);
 		QFont font(family);
-		font.setHintingPreference(QFont::PreferNoHinting);	// 禁用字体微调渲染保证字体清晰
+		font.setHintingPreference(QFont::PreferNoHinting);
 		QApplication::setFont(font);
 	}
 	else
@@ -22,5 +22,6 @@ int main(int argc, char* argv[])
 
 	QtAntDesign w;
 	w.show();
+
 	return a.exec();
 }

@@ -40,7 +40,7 @@ AntTabWidget::AntTabWidget(const QString& title, const QString& icon, int tabwid
 			m_closeButton->hide();
 			emit requestClose(this);  // 通知父组件
 		});
-	
+
 	connect(DesignSystem::instance(), &DesignSystem::themeChanged, this, [this]()
 		{
 			QIcon closeBtnIcon = DesignSystem::instance()->themeMode() == DesignSystem::ThemeMode::Light ?

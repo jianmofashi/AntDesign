@@ -55,7 +55,7 @@ void AnimatedNumber::paintEvent(QPaintEvent* event)
 	font.setPointSize(m_fontSize);
 	font.setBold(true);
 	p.setFont(font);
-	p.setPen(DesignSystem::instance()->textColor());
+	p.setPen(DesignSystem::instance()->currentTheme().msgTextColor);
 
 	QString text = QString::number(m_displayedValue);
 	QFontMetrics fm(font);

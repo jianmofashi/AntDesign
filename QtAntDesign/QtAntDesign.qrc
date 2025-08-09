@@ -1,12 +1,15 @@
 <RCC>
     <qresource prefix="/">
+        <file>fonts/NotoSansSC-Bold.ttf</file>
+        <file>fonts/NotoSansSC-Medium.ttf</file>
+        <file>fonts/NotoSansSC-Regular.ttf</file>
+        <file>Imgs/moon.svg</file>
+        <file>Imgs/sun.svg</file>
         <file>Imgs/previousBtnDisableDark.svg</file>
         <file>Imgs/nextBtnDisableDark.svg</file>
         <file>Imgs/nextBtnDark.svg</file>
         <file>Imgs/PreviousBtnDark.svg</file>
         <file>Imgs/smallRightArrow.svg</file>
-        <file>Imgs/light.svg</file>
-        <file>Imgs/dark.svg</file>
         <file>Imgs/homeDark.svg</file>
         <file>Imgs/settingsDark.svg</file>
         <file>Imgs/aboutDark.svg</file>
@@ -71,8 +74,5 @@
         <file>Imgs/cat.svg</file>
         <file>Imgs/github.svg</file>
         <file>Imgs/nav_icon_avatar_nor.svg</file>
-        <file>fonts/NotoSansSC-Bold.ttf</file>
-        <file>fonts/NotoSansSC-Medium.ttf</file>
-        <file>fonts/NotoSansSC-Regular.ttf</file>
     </qresource>
 </RCC>

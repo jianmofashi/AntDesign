@@ -3,11 +3,9 @@
 #include <QLinearGradient>
 #include "DesignSystem.h"
 
-SkeletonWidget::SkeletonWidget(QSize size, int rectRadius, QWidget* parent)
+SkeletonWidget::SkeletonWidget(int rectRadius, QWidget* parent)
 	: QWidget(parent), m_rectRadius(rectRadius)
 {
-	setMinimumSize(size);
-
 	int barWidth = 140;
 	m_animation = new QPropertyAnimation(this, "gradientX");
 	m_animation->setDuration(1000);

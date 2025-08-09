@@ -11,7 +11,7 @@ class SkeletonWidget : public QWidget
 		Q_PROPERTY(int gradientX READ gradientX WRITE setGradientX)
 
 public:
-	explicit SkeletonWidget(QSize size, int rectRadius, QWidget* parent = nullptr);
+	explicit SkeletonWidget(int rectRadius, QWidget* parent = nullptr);
 	int gradientX() const { return m_gradientX; }
 	void setGradientX(int x);
 public:

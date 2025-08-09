@@ -171,11 +171,11 @@ QIcon& DesignSystem::setThemeIcon()
 {
 	if (m_mode == Light)
 	{
-		m_themeIcon = QIcon(":/Imgs/light.svg");
+		m_themeIcon = QIcon(":/Imgs/sun.svg");
 	}
 	else
 	{
-		m_themeIcon = QIcon(":/Imgs/dark.svg");
+		m_themeIcon = QIcon(":/Imgs/moon.svg");
 	}
 	return m_themeIcon;
 }

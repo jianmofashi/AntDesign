@@ -1,7 +1,6 @@
 ﻿#include "HomePage.h"
 #include <QVBoxLayout>
 #include <QLabel>
-#include "MaterialTabWidget.h"
 #include "AntToggleButton.h"
 #include "SlideStackedWidget.h"
 #include "MaterialProgressBar.h"
@@ -9,19 +8,18 @@
 #include <QTimer>
 #include <QScrollArea>
 #include <QRegularExpression>
+#include <QApplication>
 #include "MaterialSpinner.h"
 #include "AntRadioButton.h"
 #include "AntSlider.h"
 #include "NoDataWidget.h"
 #include "AnimatedNumber.h"
-#include "SkeletonWidget.h"
 #include "AntButton.h"
 #include "NotificationManager.h"
 #include "AntNumberInput.h"
 #include "AntDoubleNumberInput.h"
 #include "AntComboBox.h"
 #include "TagWidget.h"
-#include "CarouselWidget.h"
 #include "CardWidget.h"
 #include "QrCodeWidget.h"
 #include "FlowLayout.h"
@@ -30,7 +28,6 @@
 #include "AntChatListView.h"
 #include "AntCellWidget.h"
 #include "StyleSheet.h"
-#include "AntTabWidgetContainer.h"
 #include "PaginationWidget.h"
 #include "AntTreeView.h"
 
@@ -38,9 +35,10 @@ HomePage::HomePage(QWidget* parent)
 	: QWidget(parent)
 {
 	setFocusPolicy(Qt::ClickFocus);  // 设置焦点策略 点击空白处可以获取焦点
+
 	// 标签页
-	MaterialTabWidget* tabWidget = new MaterialTabWidget(this);
-	tabWidget->getLayout()->setContentsMargins(10, 0, 5, 0);
+	tabWidget = new MaterialTabWidget(this);
+	tabWidget->getLayout()->setContentsMargins(15, 0, 5, 0);
 
 	// 滚动区域
 	scrollArea1 = new AntScrollArea(AntScrollArea::ScrollVertical, this);
@@ -95,7 +93,7 @@ HomePage::HomePage(QWidget* parent)
 	":/Imgs/amd.jpg"
 	};
 
-	CarouselWidget* carousel = new CarouselWidget(QSize(1150, 330), 5, imagePaths, this);
+	carousel = new CarouselWidget(QSize(1150, 330), 5, imagePaths, this);
 	// 启用标签
 	carousel->getCards()[0]->addTab("新发布", QColor(255, 50, 49));					// 鲜红，新品强调
 	carousel->getCards()[1]->addTab("限时折扣", QColor(255, 136, 0));					// 橙色，促销活动
@@ -140,7 +138,7 @@ HomePage::HomePage(QWidget* parent)
 
 	// 添加标题 + 开关按钮
 	QHBoxLayout* row1Layout = new QHBoxLayout();
-	row1Layout->setSpacing(10); // label 和按钮之间的间距
+	row1Layout->setSpacing(20); // label 和按钮之间的间距
 
 	QHBoxLayout* row2Layout = new QHBoxLayout();
 	row2Layout->setSpacing(10);
@@ -188,33 +186,34 @@ HomePage::HomePage(QWidget* parent)
 	skeletonDescBtn->setFixedSize(120, 50);
 	QHBoxLayout* row3Layout = new QHBoxLayout();
 	row3Layout->setSpacing(8);
-	row3Layout->setContentsMargins(0, 0, 0, 6);
+	row3Layout->setContentsMargins(0, 0, 0, 16);
 
 	QList<QIcon> icons = {
 		QIcon(":/Imgs/undraw_book-lover_f1dq.svg"),
 		QIcon(":/Imgs/undraw_developer-avatar_f6ac.svg"),
-		QIcon(":/Imgs/undraw_loving-it_hspq.svg"),
-		QIcon(":/Imgs/undraw_stock-prices_8nuz.svg")
+		QIcon(":/Imgs/undraw_loving-it_hspq.svg")
 	};
 
 	QList<QLabel*> iconLabels;
-	QList<SkeletonWidget*> skeletons;
 
 	for (const QIcon& icon : icons)
 	{
-		SkeletonWidget* skeleton = new SkeletonWidget(QSize(240, 195), 8, this);
+		SkeletonWidget* skeleton = new SkeletonWidget(8, this);
+		skeleton->setFixedSize(300, 200);
 		row3Layout->addWidget(skeleton);
 		skeletons.append(skeleton);  // 保存骨架指针
 
 		QLabel* iconLabel = new QLabel(this);
 		iconLabel->setAlignment(Qt::AlignCenter);
-		iconLabel->setPixmap(icon.pixmap(300, 200));
+		iconLabel->setPixmap(icon.pixmap(350, 250));
 		iconLabel->hide();  // 初始隐藏
 		iconLabels.append(iconLabel);
 		row3Layout->addWidget(iconLabel);
 	}
 
-	connect(skeletonDescBtn, &AntButton::clicked, this, [this, skeletonDescBtn, iconLabels, skeletons]()
+	row3Layout->addStretch();
+
+	connect(skeletonDescBtn, &AntButton::clicked, this, [this, skeletonDescBtn, iconLabels]()
 		{
 			skeletonDescBtn->setEnabled(false);  // 禁用按钮，防止重复点击
 			// 启动骨架动画
@@ -271,6 +270,10 @@ HomePage::HomePage(QWidget* parent)
 	doubleSpinBox->input()->setRange(0.0, 100.0);			// 范围设置
 	doubleSpinBox->input()->setValue(0.0);					// 初始值设置
 
+	QHBoxLayout* row5Layout = new QHBoxLayout();
+	row5Layout->setSpacing(18);
+	row5Layout->setContentsMargins(0, 0, 0, 0);
+
 	// 单层级下拉框
 	QLabel* comboLabel1 = new QLabel("下拉框", this);
 	QStringList topItems1 = { "水果", "蔬菜", "饮料", "汤", "零食", "烘焙", "速食" };
@@ -319,9 +322,9 @@ HomePage::HomePage(QWidget* parent)
 		});
 
 	// 标签
-	QHBoxLayout* row5Layout = new QHBoxLayout();
-	row5Layout->setSpacing(10);
-	row5Layout->setContentsMargins(0, 22, 0, 22);
+	QHBoxLayout* row6Layout = new QHBoxLayout();
+	row6Layout->setSpacing(10);
+	row6Layout->setContentsMargins(0, 22, 0, 22);
 
 	QLabel* tagLabel = new QLabel("标签", this);
 
@@ -340,28 +343,29 @@ HomePage::HomePage(QWidget* parent)
 		{"taobao",   "", QColor(255, 140, 0)},
 	};
 
-	row5Layout->addWidget(tagLabel);
+	row6Layout->addWidget(tagLabel);
 
 	for (const TagWidget::TagInfo& info : tagList1)
 	{
 		TagWidget* tag = new TagWidget(info.name, 11.5, info.color, this, true, info.svgPath);
-		row5Layout->addWidget(tag);
+		row6Layout->addWidget(tag);
 	}
 
 	for (const TagWidget::TagInfo& info : tagList2)
 	{
 		TagWidget* tag = new TagWidget(info.name, 11.5, info.color, this, false);
-		row5Layout->addWidget(tag);
+		row6Layout->addWidget(tag);
 	}
 
 	// 卡片控件
+	QHBoxLayout* row7Layout = new QHBoxLayout();
+	row7Layout->setSpacing(10);
+	row7Layout->setContentsMargins(0, 22, 0, 22);
+
 	CardWidget* card = new CardWidget("上次登录：xxxx-xx-xx", "总运行时间：xxx小时", this);
 	card->setImageFile(":/Imgs/gpt.jpg");
 	card->setFixedSize(320, 200);
 	QLabel* cardLabel = new QLabel("卡片", this);
-	QHBoxLayout* row6Layout = new QHBoxLayout();
-	row6Layout->setSpacing(10);
-	row6Layout->setContentsMargins(0, 8, 0, 8);
 
 	// 二维码
 	QrCodeWidget* qrCode = new QrCodeWidget(this);
@@ -370,6 +374,8 @@ HomePage::HomePage(QWidget* parent)
 	QLabel* qrCodeLabel = new QLabel("二维码", this);
 
 	// 抽屉 注意父对象要设置为主窗口
+	QHBoxLayout* row8Layout = new QHBoxLayout();
+	row8Layout->setSpacing(10);
 	DrawerWidget* drawer = new DrawerWidget(280, DesignSystem::instance()->getMainWindow());
 	AntButton* drawerBtn = new AntButton("打开左侧抽屉", 12, w1);
 	drawerBtn->setFixedSize(140, 50);
@@ -423,40 +429,39 @@ HomePage::HomePage(QWidget* parent)
 		new QLabel("默认", this)
 	};
 
-	// 创建一个横向布局来包含标签和徽章
-	QHBoxLayout* row7Layout = new QHBoxLayout();
-	row7Layout->setContentsMargins(0, 0, 0, 20);
-	row7Layout->setSpacing(10);
+	// 第九行布局
+	QHBoxLayout* row9Layout = new QHBoxLayout();
+	row9Layout->setContentsMargins(0, 0, 0, 20);
+	row9Layout->setSpacing(10);
 
 	// 循环添加标签和徽章
 	for (int i = 0; i < badgeLabelList.size(); ++i)
 	{
-		row7Layout->addWidget(badgeLabelList[i]);
-		row7Layout->addWidget(badgeWidgets[i]);
+		row9Layout->addWidget(badgeLabelList[i]);
+		row9Layout->addWidget(badgeWidgets[i]);
 	}
 
-	row7Layout->addStretch();  // 添加伸缩项
+	row9Layout->addStretch();  // 添加伸缩项
 
 	// 标签选项卡
-	AntTabWidgetContainer* antTabContainer = new AntTabWidgetContainer(200, 42, true, w1);
+	antTabContainer = new AntTabWidgetContainer(200, 42, true, w1);
 	TabContentWidget* testWidget = new TabContentWidget("标签内容Tab 0", w1);
 	antTabContainer->addTab("Tab 0", ":/Imgs/git.svg", testWidget);
-	antTabContainer->setMinimumHeight(800);
-	QVBoxLayout* row8Layout = new QVBoxLayout();
+	QVBoxLayout* row10Layout = new QVBoxLayout();
 	QLabel* antTabLabel = new QLabel("标签选项卡", this);
 	// 外部包裹的容器
-	QWidget* container = new QWidget(w1);
+	container = new QWidget(w1);
 	container->setObjectName("TabContainer");
 	container->setStyleSheet(QString("#TabContainer{background-color: %1;}")
 		.arg(DesignSystem::instance()->currentTheme().tabContainerColor.name()));
-	connect(DesignSystem::instance(), &DesignSystem::themeChanged, this, [container]()
+	connect(DesignSystem::instance(), &DesignSystem::themeChanged, this, [this]()
 		{
 			container->setStyleSheet(QString("#TabContainer{background-color: %1;}")
 				.arg(DesignSystem::instance()->currentTheme().tabContainerColor.name()));
 		});
-	QVBoxLayout* cLayout = new QVBoxLayout(container);
+	QHBoxLayout* cLayout = new QHBoxLayout(container);
 	cLayout->setContentsMargins(20, 20, 20, 20);
-	cLayout->addLayout(row8Layout);
+	cLayout->addLayout(row10Layout);
 
 	// 轮播图布局
 	carouselLayout->addStretch();
@@ -465,25 +470,19 @@ HomePage::HomePage(QWidget* parent)
 
 	// 第一行布局
 	row1Layout->addWidget(labelList[0]);
-	row1Layout->addSpacing(20);
 	row1Layout->addWidget(toggleBtn);
-	row1Layout->addSpacing(20);
 	row1Layout->addWidget(labelList[1]);
-	row1Layout->addSpacing(20);
 	row1Layout->addWidget(progress);
-	row1Layout->addSpacing(20);
 	row1Layout->addWidget(spinner);
-	row1Layout->addSpacing(20);
-	row1Layout->addWidget(radioBtn1);
-	row1Layout->addWidget(radioBtn2);
-	row1Layout->addSpacing(20);
-	row1Layout->addWidget(labelList[2]);
-	row1Layout->addWidget(slider);
 	row1Layout->addStretch();  // 让它贴左边
 
 	// 第二行布局
 	row2Layout->addWidget(labelList[3]);
 	row2Layout->addWidget(animNum);
+	row2Layout->addWidget(radioBtn1);
+	row2Layout->addWidget(radioBtn2);
+	row2Layout->addWidget(labelList[2]);
+	row2Layout->addWidget(slider);
 	row2Layout->addStretch();
 
 	// 第四行布局
@@ -492,30 +491,32 @@ HomePage::HomePage(QWidget* parent)
 	row4Layout->addWidget(spinbox);
 	row4Layout->addWidget(spinBoxLabel2);
 	row4Layout->addWidget(doubleSpinBox);
-	row4Layout->addWidget(comboLabel1);
-	row4Layout->addWidget(combo1);
-	row4Layout->addWidget(comboLabel2);
-	row4Layout->addWidget(combo2);
 	row4Layout->addStretch();
 
 	// 第五行布局
+	row5Layout->addWidget(comboLabel1);
+	row5Layout->addWidget(combo1);
+	row5Layout->addWidget(comboLabel2);
+	row5Layout->addWidget(combo2);
 	row5Layout->addStretch();
 
 	// 第六行布局
-	row6Layout->addWidget(cardLabel);
-	row6Layout->addWidget(card);
-	row6Layout->addSpacing(10);
-	row6Layout->addWidget(qrCodeLabel);
-	row6Layout->addWidget(qrCode);
-	row6Layout->addSpacing(10);
-	row6Layout->addWidget(drawerBtn);
-	row6Layout->addSpacing(10);
-	row6Layout->addWidget(antIconBtn);
 	row6Layout->addStretch();
 
-	// 第八行布局
-	row8Layout->addWidget(antTabLabel);
-	row8Layout->addWidget(antTabContainer);
+	// 第七行布局
+	row7Layout->addWidget(cardLabel);
+	row7Layout->addWidget(card);
+	row7Layout->addWidget(qrCodeLabel);
+	row7Layout->addWidget(qrCode);
+	row7Layout->addStretch();
+
+	row8Layout->addWidget(drawerBtn);
+	row8Layout->addWidget(antIconBtn);
+	row8Layout->addStretch();
+
+	// 第十行布局
+	row10Layout->addWidget(antTabLabel);
+	row10Layout->addWidget(antTabContainer);
 
 	// 添加到页面布局
 	pageLay->addLayout(carouselLayout);
@@ -527,12 +528,20 @@ HomePage::HomePage(QWidget* parent)
 	pageLay->addLayout(row5Layout);
 	pageLay->addLayout(row6Layout);
 	pageLay->addLayout(row7Layout);
+	pageLay->addLayout(row8Layout);
+	pageLay->addLayout(row9Layout);
 	pageLay->addWidget(container);
 	pageLay->addStretch();
 }
 
 HomePage::~HomePage()
 {
+}
+
+void HomePage::resizeEvent(QResizeEvent* event)
+{
+	container->setFixedWidth(width() - 40);
+	container->setMinimumHeight(static_cast<int>(width() * 9.0 / 16.0));
 }
 
 void HomePage::initViewPage()

@@ -18,7 +18,7 @@ NotificationWidget::NotificationWidget(const QString& title, QSize size, QWidget
 	// 透明+无边框
 	setWindowFlags(Qt::FramelessWindowHint);
 	setAttribute(Qt::WA_TranslucentBackground);
-	resize(size);
+	resize(m_size);
 
 	// 背景控件
 	bg = new QWidget(this);

@@ -24,7 +24,7 @@ public:
 	}
 
 	// 显示通知
-	void showNotification(const QString& title, QSize size = QSize(350, 200), int duration = 2500);
+	void showNotification(const QString& title, QSize size = QSize(360, 220), int duration = 2500);
 	// 重新布局通知
 	void relayoutNotifications(int parentWidth, int parentHeight);
 private:

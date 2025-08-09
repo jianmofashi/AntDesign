@@ -28,7 +28,8 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 	setObjectName("QtAntDesign");
 	setWindowFlags(Qt::FramelessWindowHint);
 	setAttribute(Qt::WA_NoSystemBackground);
-	setMinimumSize(1100, 750);
+	QSize miniSize(1100, 780);
+	setMinimumSize(miniSize);
 
 	ui.main_widget->setStyleSheet(StyleSheet::mainQss(DesignSystem::instance()->backgroundColor()));
 
@@ -37,9 +38,14 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 	QScreen* screen = QGuiApplication::primaryScreen();
 	if (screen)
 	{
-		QSize screenSize = screen->availableGeometry().size();		// 可用屏幕大小，不包括任务栏
+		QSize screenSize = screen->availableSize();		// 可用屏幕大小，不包括任务栏
 		w = int(screenSize.width() * 0.50);  // % 宽度
 		h = int(screenSize.height() * 0.60); // % 高度
+		if (w < miniSize.width() && h < miniSize.height())
+		{
+			w = miniSize.width();
+			h = miniSize.height();
+		}
 		resize(w, h);
 	}
 	setContentsMargins(0, 0, 0, 0);
@@ -135,7 +141,7 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 	contentLay->setSpacing(0);
 	SlideStackedWidget* stackedWidget = new SlideStackedWidget(ui.central);
 	contentLay->addWidget(stackedWidget);
-	HomePage* homePage = new HomePage(ui.main_widget);
+	HomePage* homePage = new HomePage(stackedWidget);
 	SettingsPage* settingsPage = new SettingsPage(stackedWidget);
 	AboutPage* aboutPage = new AboutPage(stackedWidget);
 	stackedWidget->addWidget(homePage);
@@ -195,7 +201,7 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 	// 主题切换按钮
 	QPushButton* themeBtn = new QPushButton(ui.navi_widget);
 	themeBtn->setStyleSheet("QPushButton { background-color: transparent; border: none; }");
-	themeBtn->setFixedSize(naviWidth * 0.35, naviWidth * 0.35);
+	themeBtn->setFixedSize(naviWidth * 0.38, naviWidth * 0.38);
 	themeBtn->setIcon(DesignSystem::instance()->setThemeIcon());
 	themeBtn->setIconSize(themeBtn->size());
 	connect(themeBtn, &QPushButton::clicked, this, [this, themeSwitcher, themeBtn]()
@@ -462,10 +468,12 @@ void QtAntDesign::changeEvent(QEvent* event)
 		if (isMaximized())
 		{
 			btnMax->setIcon(DesignSystem::instance()->btnRestoreIcon());
+			ui.main_widget->layout()->setContentsMargins(0, 0, 5, 0);
 		}
 		else if (stateEvent->oldState() & Qt::WindowMaximized)
 		{
 			btnMax->setIcon(DesignSystem::instance()->btnMaxIcon());
+			ui.main_widget->layout()->setContentsMargins(0, 0, 0, 0);
 		}
 	}
 
