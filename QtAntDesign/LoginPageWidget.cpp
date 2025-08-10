@@ -102,7 +102,7 @@ LoginPageWidget::LoginPageWidget(QWidget* parent)
 	subLay2->setSpacing(0);
 	// 按钮
 	AntButton* antBtn = new AntButton("登录", 11.5, leftWidget);
-	antBtn->setMinimumHeight(50);
+	antBtn->setFixedHeight(50);
 	connect(antBtn, &AntButton::clicked, this, [this, errorTips, accountEdit, passwordEdit]()
 		{
 			bool hasError = false;
@@ -155,6 +155,12 @@ LoginPageWidget::LoginPageWidget(QWidget* parent)
 	// 因为是圆形 宽高一定要相同
 	rightLay->addWidget(logo);
 	logo->show();
+
+	// 自适应调整窗口大小
+	adjustSize();
+
+	w = (size().height() + 10) * 1.5;
+	h = (size().height() + 10);
 }
 
 LoginPageWidget::~LoginPageWidget()

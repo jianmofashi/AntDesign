@@ -18,11 +18,12 @@ public:
 	enum PageIndex
 	{
 		Login,
+		Register,
 		Profile,
 		Standard
 	};
 
-	MaterialDialog(bool loginState, QWidget* parent);
+	MaterialDialog(bool loginState, std::function<void(MaterialDialog::PageIndex)> callback, QWidget* parent);
 	~MaterialDialog();
 public:
 	void showIndexPage(PageIndex index);
@@ -30,13 +31,15 @@ public:
 signals:
 	void setStandardDialogText(QString title, QString text);
 	void successLogin(bool loginState);
+public:
+	LoginPageWidget* loginPage;
+	RegisterPageWidget* registerPage;
+	ProfilePage* profilePage;
+	StandardDialogPage* standardPage;
 private:
 	// 用户登录状态
 	bool m_loginState = false;
 	// 页面管理
 	SlideStackedWidget* stackedWidget;
-	LoginPageWidget* loginPage;
-	RegisterPageWidget* registerPage;
-	ProfilePage* profilePage;
-	StandardDialogPage* standardPage;
+	std::function<void(MaterialDialog::PageIndex)> m_callback;
 };

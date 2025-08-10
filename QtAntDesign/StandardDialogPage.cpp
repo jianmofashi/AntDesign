@@ -17,8 +17,8 @@ StandardDialogPage::StandardDialogPage(QWidget* parent)
 
 	// 主垂直布局
 	QVBoxLayout* mainLay = new QVBoxLayout(this);
-	mainLay->setContentsMargins(18, 28, 18, 28);
-	mainLay->setSpacing(0);
+	mainLay->setContentsMargins(20, 20, 20, 20);
+	mainLay->setSpacing(20);
 
 	// ========== 1. 标题栏 ==========
 	titleLabel = new QLabel("TITLE");
@@ -27,25 +27,23 @@ StandardDialogPage::StandardDialogPage(QWidget* parent)
 	font.setBold(true);
 	titleLabel->setFont(font);
 	titleLabel->setFixedHeight(30);
-	mainLay->addWidget(titleLabel);
 
 	// ========== 2. 内容区（可滚动） ==========
 	contentLabel = new QLabel("?");
 	font.setPointSize(12.5);
 	font.setBold(false);
-	mainLay->addWidget(contentLabel);
 
 	// ========== 3. 底部操作区 ==========
 	QHBoxLayout* buttonLayout = new QHBoxLayout;
-	buttonLayout->addStretch(); // 推到右侧
+	buttonLayout->setSpacing(12);
 	font.setPointSize(11.5);
 	font.setBold(false);
 	cancelBtn = new QPushButton("取消");
 	confirmBtn = new QPushButton("确定");
 	cancelBtn->setCursor(Qt::PointingHandCursor);
 	confirmBtn->setCursor(Qt::PointingHandCursor);
-	cancelBtn->setFixedSize(70, 36);
-	confirmBtn->setFixedSize(70, 36);
+	cancelBtn->setFixedSize(60, 32);
+	confirmBtn->setFixedSize(60, 32);
 
 	cancelBtn->setFont(font);
 	confirmBtn->setFont(font);
@@ -55,15 +53,22 @@ StandardDialogPage::StandardDialogPage(QWidget* parent)
 	cancelBtn->setStyleSheet(StyleSheet::standardDialogBtnQss(DesignSystem::instance()->primaryColor(), DesignSystem::instance()->backgroundColor()));
 	confirmBtn->setStyleSheet(StyleSheet::standardDialogBtnQss(DesignSystem::instance()->primaryColor(), DesignSystem::instance()->backgroundColor()));
 
+	buttonLayout->addStretch();			// 推到右侧
 	buttonLayout->addWidget(cancelBtn);
-	buttonLayout->addSpacing(10);
 	buttonLayout->addWidget(confirmBtn);
 
+	mainLay->addWidget(titleLabel);
+	mainLay->addWidget(contentLabel);
 	mainLay->addLayout(buttonLayout);
 
 	// ===== 连接信号和槽：点击“确定”退出程序 =====
 	connect(confirmBtn, &QPushButton::clicked, qApp, &QApplication::quit);
 	connect(cancelBtn, &QPushButton::clicked, this, &StandardDialogPage::exitDialog);
+
+	adjustSize();
+
+	h = size().height() * 1.15;
+	w = h * 1.8;
 }
 
 StandardDialogPage::~StandardDialogPage()

@@ -40,7 +40,7 @@ protected:
 signals:
 	void resized(int parentW, int parentH);
 	void playMaximizeAnim();
-	void showStandardDialog(int parentW, int parentH, int dialogW, int dialogH, QString title, QString text);
+	void showStandardDialog(QString title, QString text);
 	void windowMoved(QPoint globalPos); // 窗口移动时发出信号
 private:
 	Ui::QtAntDesignClass ui;

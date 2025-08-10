@@ -164,6 +164,11 @@ RegisterPageWidget::RegisterPageWidget(QWidget* parent)
 	// 因为是圆形 宽高一定要相同
 	rightLay->addWidget(logo);
 	logo->show();
+
+	adjustSize();
+
+	h = size().height();
+	w = (size().height() + 10) * 1.5;
 }
 
 RegisterPageWidget::~RegisterPageWidget()

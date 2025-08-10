@@ -5,8 +5,8 @@
 #include "AntMessageManager.h"
 #include "DesignSystem.h"
 
-MaterialDialog::MaterialDialog(bool loginState, QWidget* parent)
-	: QWidget(parent), m_loginState(loginState)
+MaterialDialog::MaterialDialog(bool loginState, std::function<void(MaterialDialog::PageIndex)> callback, QWidget* parent)
+	: QWidget(parent), m_loginState(loginState), m_callback(callback)
 {
 	setWindowFlags(Qt::FramelessWindowHint);
 	setAttribute(Qt::WA_TranslucentBackground);
@@ -47,11 +47,15 @@ MaterialDialog::MaterialDialog(bool loginState, QWidget* parent)
 	connect(loginPage->registerButton, &QPushButton::clicked, this, [this]()
 		{
 			// 登录页 → 注册页（向左滑动）
+			if (m_callback)
+				m_callback(MaterialDialog::Register);
 			stackedWidget->slideToPage(registerPage, SlideStackedWidget::RightToLeft);
 		});
 	connect(registerPage->loginButton, &QPushButton::clicked, this, [this]()
 		{
 			// 注册页 → 登录页（向右滑动）
+			if (m_callback)
+				m_callback(MaterialDialog::Login);
 			stackedWidget->slideToPage(loginPage, SlideStackedWidget::LeftToRight);
 		});
 
@@ -67,6 +71,8 @@ MaterialDialog::MaterialDialog(bool loginState, QWidget* parent)
 		{
 			// 注册页 → 登录页（向右滑动）
 			AntMessageManager::instance()->showMessage(AntMessage::Success, "成功注册");
+			if (m_callback)
+				m_callback(MaterialDialog::Login);
 			stackedWidget->slideToPage(loginPage, SlideStackedWidget::LeftToRight);
 		});
 

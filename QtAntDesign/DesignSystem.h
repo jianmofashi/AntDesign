@@ -106,6 +106,19 @@ public:
 	// 获取主窗口指针
 	void setMainWindow(QWidget* mainWindow) { m_mainWindow = mainWindow; }
 	QWidget* getMainWindow() const { return m_mainWindow; }
+	int dialogWidth() const
+	{
+		if (!m_mainWindow)
+			return 0;
+		return static_cast<int>(m_mainWindow->width() * 0.42);
+	}
+
+	int dialogHeight() const
+	{
+		if (!m_mainWindow)
+			return 0;
+		return static_cast<int>(m_mainWindow->height() * 0.43);
+	}
 
 	// 快捷获取颜色等
 	QColor primaryColor() const;

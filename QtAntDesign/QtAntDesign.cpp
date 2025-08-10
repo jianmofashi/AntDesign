@@ -28,7 +28,7 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 	setObjectName("QtAntDesign");
 	setWindowFlags(Qt::FramelessWindowHint);
 	setAttribute(Qt::WA_NoSystemBackground);
-	QSize miniSize(1100, 780);
+	QSize miniSize(1120, 725);
 	setMinimumSize(miniSize);
 
 	ui.main_widget->setStyleSheet(StyleSheet::mainQss(DesignSystem::instance()->backgroundColor()));
@@ -236,9 +236,8 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 		});
 
 	// 对话框
-	DialogViewController* mDialog = new DialogViewController(avatar->loginState(), w, h, this);	// 实际登录状态要服务器给予
+	DialogViewController* mDialog = new DialogViewController(avatar->loginState(), this);	// 实际登录状态要服务器给予
 	avatar->addDialog(mDialog);
-	connect(this, &QtAntDesign::resized, mDialog, &DialogViewController::getParentSize);
 	connect(mDialog, &DialogViewController::successLogin, avatar, &CircularAvatar::allowLogin);
 
 	// 信号连接
@@ -270,7 +269,7 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 
 	connect(btnClose, &QToolButton::clicked, this, [this, w, h]()
 		{
-			emit showStandardDialog(ui.main_widget->width(), ui.main_widget->height(), w / 3, h / 4, "TITLE", "是否关闭应用程序?");
+			emit showStandardDialog("TITLE", "是否关闭应用程序?");
 		});
 
 	connect(this, &QtAntDesign::showStandardDialog, mDialog, &DialogViewController::buildStandardDialog);
@@ -314,7 +313,9 @@ void QtAntDesign::resizeEvent(QResizeEvent* event)
 	QWidget::resizeEvent(event);
 
 	// 调整对话框尺寸
-	emit resized(ui.main_widget->width(), ui.main_widget->height());
+	emit resized(width(), height());
+
+	qDebug() << "width()" << width() << "height()" << height();
 }
 
 bool QtAntDesign::nativeEvent(const QByteArray& eventType, void* message, qintptr* result)

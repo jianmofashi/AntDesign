@@ -13,7 +13,7 @@ class DialogViewController : public QGraphicsView
 	Q_OBJECT
 		Q_PROPERTY(qreal scaleFactor READ scaleFactor WRITE setScaleFactor)
 public:
-	DialogViewController(bool loginState, int parentW, int parentH, QWidget* parent);
+	DialogViewController(bool loginState, QWidget* parent);
 	~DialogViewController();
 signals:
 	void playMask(bool isAddMask);
@@ -22,8 +22,7 @@ public slots:
 	void updateDialogPositionAndSize(MaterialDialog::PageIndex index);
 	void showAnim(MaterialDialog::PageIndex index);
 	void hideAnim();
-	void buildStandardDialog(int parentW, int parentH, int dialogW, int dialogH, QString title, QString text);
-	void getParentSize(int parentW, int parentH);
+	void buildStandardDialog(QString title, QString text);
 private:
 	void onMaskClicked();
 private:
@@ -33,12 +32,6 @@ private:
 	QPropertyAnimation* opacityAnim = nullptr;
 	QParallelAnimationGroup* groupAnim = nullptr;
 	MaterialDialog* dialog = nullptr;
-
-	int contentDialogW;
-	int contentDialogH;
-	int standardDialogW;
-	int standardDialogH;
-	QSize mainWindowSize;
 
 	bool m_isHide = false;
 private:

@@ -1,7 +1,7 @@
 ﻿#include "DialogViewController.h"
 #include "DesignSystem.h"
 
-DialogViewController::DialogViewController(bool loginState, int parentW, int parentH, QWidget* parent)
+DialogViewController::DialogViewController(bool loginState, QWidget* parent)
 	: QGraphicsView(parent)
 {
 	setWindowFlags(Qt::FramelessWindowHint);
@@ -20,11 +20,12 @@ DialogViewController::DialogViewController(bool loginState, int parentW, int par
 	// 创建对话框
 	// 一旦你打算把一个 QWidget 放到场景中包装成 QGraphicsItem（比如通过 QGraphicsProxyWidget），那么这个 QWidget 就不能有父对象（parent），必须传 nullptr。
 	// Qt 大坑
-	dialog = new MaterialDialog(loginState, nullptr);
-	contentDialogW = parentW * 0.40;
-	contentDialogH = parentH * 0.41;
-	setFixedSize(contentDialogW, contentDialogH);
-	setSceneRect(QRectF(0, 0, contentDialogW, contentDialogH));
+	dialog = new MaterialDialog(loginState,
+		[this](MaterialDialog::PageIndex index)
+		{
+			this->updateDialogPositionAndSize(index);
+		},
+		nullptr);
 
 	// 设置图形代理
 	proxy = scene->addWidget(dialog);
@@ -128,22 +129,28 @@ void DialogViewController::updateDialogPositionAndSize(MaterialDialog::PageIndex
 {
 	if (scene && proxy && DesignSystem::instance()->getDarkMask() && dialog)
 	{
-		int parentW = mainWindowSize.width(), parentH = mainWindowSize.height(), dialogW = 0, dialogH = 0;
+		QWidget* mainWindow = DesignSystem::instance()->getMainWindow();
+		int parentW = mainWindow->width(), parentH = mainWindow->height(), dialogW = 0, dialogH = 0;
 
 		if (index == MaterialDialog::Login)
 		{
-			dialogW = contentDialogW;
-			dialogH = contentDialogH;
+			dialogW = dialog->loginPage->pageWidth();
+			dialogH = dialog->loginPage->pageHeight();
+		}
+		else if (index == MaterialDialog::Register)
+		{
+			dialogW = dialog->registerPage->pageWidth();
+			dialogH = dialog->registerPage->pageHeight();
 		}
 		else if (index == MaterialDialog::Profile)
 		{
-			dialogW = contentDialogW;
-			dialogH = contentDialogH;
+			dialogW = dialog->profilePage->pageWidth();
+			dialogH = dialog->profilePage->pageHeight();
 		}
 		else if (index == MaterialDialog::Standard)
 		{
-			dialogW = standardDialogW;
-			dialogH = standardDialogH;
+			dialogW = dialog->standardPage->pageWidth();
+			dialogH = dialog->standardPage->pageHeight();
 		}
 
 		//  1. 正确设置 stackedWidget 的尺寸
@@ -165,19 +172,11 @@ void DialogViewController::updateDialogPositionAndSize(MaterialDialog::PageIndex
 	}
 }
 
-void DialogViewController::buildStandardDialog(int parentW, int parentH, int dialogW, int dialogH, QString title, QString text)
+void DialogViewController::buildStandardDialog(QString title, QString text)
 {
 	if (scene && proxy && DesignSystem::instance()->getDarkMask() && dialog)
 	{
-		mainWindowSize = QSize(parentW, parentH);
-		standardDialogW = dialogW;
-		standardDialogH = dialogH;
 		emit dialog->setStandardDialogText(title, text);
 		showAnim(MaterialDialog::PageIndex::Standard);
 	}
-}
-
-void DialogViewController::getParentSize(int parentW, int parentH)
-{
-	mainWindowSize = QSize(parentW, parentH);
 }
