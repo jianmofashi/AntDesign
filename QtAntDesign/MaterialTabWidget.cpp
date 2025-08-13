@@ -126,7 +126,7 @@ void MaterialTabWidget::setCurrentIndex(int index)
 	m_tabBar->setCurrentIndex(index);
 	m_stackedWidget->setCurrentIndex(index);
 	m_currentIndex = index;
-	emit currentChanged(index);
+	emit itemIndexChanged(index);
 }
 
 void MaterialTabWidget::onTabClicked(int index)
@@ -147,7 +147,7 @@ void MaterialTabWidget::onTabClicked(int index)
 			m_currentIndex = index;
 			m_tabBar->setCurrentIndex(index);
 			m_isAnimating = false;
-			emit currentChanged(index);
+			emit itemIndexChanged(index);
 		});
 }
 

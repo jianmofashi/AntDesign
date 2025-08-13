@@ -19,10 +19,10 @@ namespace StyleSheet
 					border-bottom-left-radius: 8px;})").arg(bgColor.name());
 	}
 
-	inline QString titleBarQss(const QColor& bgColor)
+	inline QString titleBarQss()
 	{
-		return QString(R"(#titleBar{background-color: %1;
-					border-top-right-radius: 8px;})").arg(bgColor.name());
+		return QString(R"(#titleBar{background-color: transparent;
+					border-top-right-radius: 8px;})");
 	}
 
 	inline QString centralQss()

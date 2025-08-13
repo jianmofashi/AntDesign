@@ -8,6 +8,7 @@
 #include "AntTooltipManager.h"
 #include "DialogViewController.h"
 #include "HomePage.h"
+#include "FunctionPage.h"
 #include "SettingsPage.h"
 #include "AboutPage.h"
 #include <QToolButton>
@@ -66,9 +67,9 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 	ui.navi_widget->setFixedWidth(m_naviWidth); // 希望的宽度
 	ui.navi_widget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);	// 水平方向缩放策略固定
 	ui.navi_widget->setStyleSheet(StyleSheet::naviQss(DesignSystem::instance()->widgetBgColor()));
-	ui.titleBar->setStyleSheet(StyleSheet::titleBarQss(DesignSystem::instance()->backgroundColor()));
+	ui.titleBar->setStyleSheet(StyleSheet::titleBarQss());
 	ui.central->setStyleSheet(StyleSheet::centralQss());
-	ui.titleBar->setFixedHeight(m_titleBarHeight);
+	ui.titleBar->setFixedHeight(0);	//首页隐藏标题栏 实现沉浸感
 
 	// 标题栏
 	QHBoxLayout* titleLay = new QHBoxLayout(ui.titleBar);
@@ -135,16 +136,19 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 	QVBoxLayout* naviLay = new QVBoxLayout(ui.navi_widget);;
 	ui.navi_widget->layout()->setContentsMargins(0, 0, 0, 0);
 	CircularAvatar* avatar = new CircularAvatar(QSize(42, 42), ":/Imgs/noLogin.svg", ":/Imgs/github.svg", ui.navi_widget);
-	// 添加页面
+	// 添加页面布局
 	QVBoxLayout* contentLay = new QVBoxLayout(ui.central);
 	contentLay->setContentsMargins(0, 0, 0, 0);
 	contentLay->setSpacing(0);
-	SlideStackedWidget* stackedWidget = new SlideStackedWidget(ui.central);
+	stackedWidget = new SlideStackedWidget(ui.central);
 	contentLay->addWidget(stackedWidget);
+	// 添加页面
 	HomePage* homePage = new HomePage(stackedWidget);
+	FunctionPage* functionPage = new FunctionPage(stackedWidget);
 	SettingsPage* settingsPage = new SettingsPage(stackedWidget);
 	AboutPage* aboutPage = new AboutPage(stackedWidget);
 	stackedWidget->addWidget(homePage);
+	stackedWidget->addWidget(functionPage);
 	stackedWidget->addWidget(settingsPage);
 	stackedWidget->addWidget(aboutPage);
 	stackedWidget->setCurrentIndex(0);				// 默认显示首页
@@ -154,12 +158,14 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 	const int buttonSize = naviWidth;
 	const int iconSize = static_cast<int>(buttonSize * iconSizeRatio);
 	CustomToolButton* btnHome = new CustomToolButton(QSize(iconSize, iconSize), ui.navi_widget);
+	CustomToolButton* btnFunc = new CustomToolButton(QSize(iconSize, iconSize), ui.navi_widget);
 	CustomToolButton* btnSettings = new CustomToolButton(QSize(iconSize, iconSize), ui.navi_widget);
 	CustomToolButton* btnAbout = new CustomToolButton(QSize(iconSize, iconSize), ui.navi_widget);
 	// 设置导航按钮样式
 	auto* ins = DesignSystem::instance();
 	buttonInfos = {
-	{btnHome, ins->btnHomeIconPath(), ins->btnHomeActiveIconPath(), homePage},
+	{btnHome,ins->btnHomeIconPath(), ins->btnHomeActiveIconPath(), homePage},
+	{btnFunc, ins->btnFuncIconPath(), ins->btnFuncActiveIconPath(), functionPage},
 	{btnSettings,ins->btnSettingsIconPath() ,ins->btnSettingsActiveIconPath() , settingsPage},
 	{btnAbout,ins->btnAboutIconPath() , ins->btnAboutActiveIconPath(), aboutPage}
 	};
@@ -171,8 +177,17 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 		btn->setSvgIcons(info.normalIcon, info.activeIcon);
 		btn->setFixedSize(QSize(naviWidth - 4, naviWidth - 4));
 		// 连接信号，捕获图标路径
-		connect(btn, &QToolButton::clicked, [btn, stackedWidget, this]()
+		connect(btn, &QToolButton::clicked, [btn, btnHome, contentLay, this]()
 			{
+				if (btn == btnHome)
+				{
+					ui.titleBar->setFixedHeight(0);
+				}
+				else
+				{
+					ui.titleBar->setFixedHeight(m_titleBarHeight);
+				}
+
 				// 禁用所有按钮，防止视觉反馈+误点
 				for (ButtonInfo& infos : buttonInfos)
 					infos.button->setEnabled(false);
@@ -211,11 +226,12 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 		});
 	connect(this, &QtAntDesign::resized, themeSwitcher, &ThemeSwitcher::resizeByMainWindow);
 
-	//  布局
+	//  导航栏布局
 	naviLay->addSpacing(28);
 	naviLay->addWidget(avatar, 0, Qt::AlignHCenter);
 	naviLay->addSpacing(16);
 	naviLay->addWidget(btnHome, 0, Qt::AlignHCenter);
+	naviLay->addWidget(btnFunc, 0, Qt::AlignHCenter);
 	naviLay->addWidget(btnSettings, 0, Qt::AlignHCenter);
 	naviLay->addWidget(btnAbout, 0, Qt::AlignHCenter);
 	naviLay->addStretch();
@@ -274,25 +290,26 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 
 	connect(this, &QtAntDesign::showStandardDialog, mDialog, &DialogViewController::buildStandardDialog);
 
-	// 主页的信号连接
-	connect(this, &QtAntDesign::resized, homePage, &HomePage::resized);
+	// 页面的信号连接
+	connect(this, &QtAntDesign::resized, functionPage, &FunctionPage::resized);
 	connect(this, &QtAntDesign::resized, this, [this](int w, int h)
 		{
 			DesignSystem::instance()->getDarkMask()->resize(w, h);
 		});
-	connect(this, &QtAntDesign::windowMoved, homePage, &HomePage::windowMoved);
+	connect(this, &QtAntDesign::windowMoved, functionPage, &FunctionPage::windowMoved);
 
 	// 主题切换
 	connect(ins, &DesignSystem::themeChanged, this, [=]()
 		{
 			ui.main_widget->setStyleSheet(StyleSheet::mainQss(DesignSystem::instance()->backgroundColor()));
 			ui.navi_widget->setStyleSheet(StyleSheet::naviQss(DesignSystem::instance()->widgetBgColor()));
-			ui.titleBar->setStyleSheet(StyleSheet::titleBarQss(DesignSystem::instance()->backgroundColor()));
+			ui.titleBar->setStyleSheet(StyleSheet::titleBarQss());
 			btnMin->setIcon(DesignSystem::instance()->btnMinIcon());
 			btnMax->setIcon(DesignSystem::instance()->btnMaxIcon());
 			btnClose->setIcon(DesignSystem::instance()->btnCloseIcon());
 			buttonInfos = {
-				{btnHome, ins->btnHomeIconPath(), ins->btnHomeActiveIconPath(), homePage},
+				{btnHome,ins->btnHomeIconPath(), ins->btnHomeActiveIconPath(), homePage},
+				{btnFunc, ins->btnFuncIconPath(), ins->btnFuncActiveIconPath(), functionPage},
 				{btnSettings,ins->btnSettingsIconPath() ,ins->btnSettingsActiveIconPath() , settingsPage},
 				{btnAbout,ins->btnAboutIconPath() , ins->btnAboutActiveIconPath(), aboutPage}
 			};
@@ -315,7 +332,8 @@ void QtAntDesign::resizeEvent(QResizeEvent* event)
 	// 调整对话框尺寸
 	emit resized(width(), height());
 
-	qDebug() << "width()" << width() << "height()" << height();
+	// 保存内容区域尺寸
+	DesignSystem::instance()->setContentSize(QSize(width() - m_naviWidth, height()));
 }
 
 bool QtAntDesign::nativeEvent(const QByteArray& eventType, void* message, qintptr* result)
@@ -417,8 +435,11 @@ bool QtAntDesign::nativeEvent(const QByteArray& eventType, void* message, qintpt
 			*result = HTBOTTOM;
 			return true;
 		}
+		// 如果当前是首页, 标题栏隐藏, 因此不需要带上标题栏右侧全部控件的宽度 重置系统标题栏拖动区域
+		bool isHomePage = stackedWidget->currentIndex() == 0; // 判断是否是首页
+		int rightBoundary = isHomePage ? winRect.right : winRect.right - m_widgetTotalWidthPhysicalPixels;
 		// 设置标题栏拖动区域 只有该区域内才允许拖动窗口
-		if (x > winRect.left + m_titleLeftTotalWidthPhysicalPixels && x < winRect.right - m_widgetTotalWidthPhysicalPixels
+		if (x > winRect.left + m_titleLeftTotalWidthPhysicalPixels && x < rightBoundary
 			&& y > winRect.top && y < winRect.top + m_titleBarHeightPhysicalPixels)
 		{
 			*result = HTCAPTION;

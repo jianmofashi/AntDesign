@@ -50,9 +50,8 @@ public:
 	QVBoxLayout* getLayout();
 public slots:
 	void setCurrentIndex(int index);
-
 signals:
-	void currentChanged(int index);
+	void itemIndexChanged(int index);
 
 private slots:
 	void onTabClicked(int index);

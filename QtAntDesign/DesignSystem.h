@@ -150,9 +150,11 @@ public:
 
 	// 导航栏图标
 	QString& btnHomeIconPath();
+	QString& btnFuncIconPath();
 	QString& btnSettingsIconPath();
 	QString& btnAboutIconPath();
 	QString& btnHomeActiveIconPath();
+	QString& btnFuncActiveIconPath();
 	QString& btnSettingsActiveIconPath();
 	QString& btnAboutActiveIconPath();
 
@@ -161,6 +163,13 @@ public:
 	QString& nextBtnIcon();
 	QString& prevBtnDisableIcon();
 	QString& nextBtnDisableIcon();
+
+	// 多媒体文件路径
+	QString& homeVideoFilePath();
+
+	// 内容区域尺寸
+	void setContentSize(QSize size);
+	QSize contentSize() const;
 signals:
 	void themeChanged();
 
@@ -177,6 +186,7 @@ private:
 	Theme m_currentTheme;
 	ThemeMode m_mode;
 	QWidget* m_mainWindow = nullptr;		// 用于获取主窗口
+	QSize m_contentSzie;					// 内容区域尺寸
 	TransparentMask* m_tpMask = nullptr;	// 全局透明遮罩
 	MaskWidget* m_darkMask = nullptr;		// 全局深色遮罩
 	QIcon m_themeIcon;
@@ -186,6 +196,8 @@ private:
 	QIcon btnRestore;
 	QString btnHome;
 	QString btnHomeActive;
+	QString btnFunc;
+	QString btnFuncActive;
 	QString btnSettings;
 	QString btnSettingsActive;
 	QString btnAbout;
@@ -194,4 +206,6 @@ private:
 	QString nextBtn;
 	QString prevDisBtn;
 	QString nextDisBtn;
+	// 多媒体文件路径
+	QString homeVideoPath;
 };

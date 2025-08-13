@@ -97,7 +97,7 @@
     <ClCompile Include="RegisterPageWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HomePage.cpp">
+    <ClCompile Include="FunctionPage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SettingsPage.cpp">
@@ -178,9 +178,6 @@
     <ClCompile Include="CardWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CarouselCard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -259,6 +256,21 @@
     <ClCompile Include="ThemeSwitcher.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GaussianBlur.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GlassWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HomePage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FramelessVideoWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StyleSheet.h">
@@ -266,6 +278,12 @@
     </ClInclude>
     <ClInclude Include="ThirdParty\QR-Code-generator-master\qrcodegen.hpp">
       <Filter>ThirdParty</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\FastGaussianBlur-main\fast_gaussian_blur_template.h">
+      <Filter>ThirdParty</Filter>
+    </ClInclude>
+    <ClInclude Include="GaussianBlur.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -329,7 +347,7 @@
     <QtMoc Include="RegisterPageWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="HomePage.h">
+    <QtMoc Include="FunctionPage.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="SettingsPage.h">
@@ -480,6 +498,15 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="ThemeSwitcher.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="GlassWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="HomePage.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="FramelessVideoWindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

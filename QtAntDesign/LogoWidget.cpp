@@ -5,7 +5,7 @@ LogoWidget::LogoWidget(QWidget* parent)
     : QWidget(parent)
 {
     // 加载图片资源
-    m_logoPixmap.load(":/Imgs/logo.png");
+    m_logoPixmap.load(":/Imgs/github.png");
 }
 
 LogoWidget::~LogoWidget()

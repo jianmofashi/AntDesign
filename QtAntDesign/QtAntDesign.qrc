@@ -3,8 +3,12 @@
         <file>fonts/NotoSansSC-Bold.ttf</file>
         <file>fonts/NotoSansSC-Medium.ttf</file>
         <file>fonts/NotoSansSC-Regular.ttf</file>
-        <file>Imgs/moon.svg</file>
+        <file>Imgs/functionDark_active.svg</file>
+        <file>Imgs/functionDark.svg</file>
+        <file>Imgs/function_active.svg</file>
+        <file>Imgs/function.svg</file>
         <file>Imgs/sun.svg</file>
+        <file>Imgs/moon.svg</file>
         <file>Imgs/previousBtnDisableDark.svg</file>
         <file>Imgs/nextBtnDisableDark.svg</file>
         <file>Imgs/nextBtnDark.svg</file>
@@ -63,7 +67,6 @@
         <file>Imgs/home.svg</file>
         <file>Imgs/settings.svg</file>
         <file>Imgs/about.svg</file>
-        <file>Imgs/logo.png</file>
         <file>Imgs/eye-slash-filled.svg</file>
         <file>Imgs/eye-filled.svg</file>
         <file>Imgs/noLogin.svg</file>
@@ -74,5 +77,7 @@
         <file>Imgs/cat.svg</file>
         <file>Imgs/github.svg</file>
         <file>Imgs/nav_icon_avatar_nor.svg</file>
+        <file>Imgs/github.png</file>
+        <file>Imgs/goTo.svg</file>
     </qresource>
 </RCC>

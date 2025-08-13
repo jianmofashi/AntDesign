@@ -1,4 +1,6 @@
 ﻿#include "DesignSystem.h"
+#include <QApplication>
+#include <QDir>
 
 DesignSystem* DesignSystem::m_instance = nullptr;
 
@@ -7,6 +9,15 @@ DesignSystem::DesignSystem()
 {
 	loadThemes();
 	m_currentTheme = m_lightTheme;
+
+	// 获取项目路径
+	QString projectPath = QDir::currentPath();
+
+	// 文件名
+	QString fileName = "homeBg.mp4";
+
+	// 拼接上 Video 文件夹路径和文件名
+	homeVideoPath = projectPath + "/QtAntDesign/Video/" + fileName;
 }
 
 void DesignSystem::loadThemes()
@@ -270,6 +281,20 @@ QString& DesignSystem::btnHomeIconPath()
 	return btnHome;
 }
 
+QString& DesignSystem::btnFuncIconPath()
+{
+	if (m_mode == Light)
+	{
+		btnFunc = ":/Imgs/function.svg";
+	}
+	else
+	{
+		btnFunc = ":/Imgs/functionDark.svg";
+	}
+
+	return btnFunc;
+}
+
 QString& DesignSystem::btnSettingsIconPath()
 {
 	if (m_mode == Light)
@@ -310,6 +335,20 @@ QString& DesignSystem::btnHomeActiveIconPath()
 	}
 
 	return btnHomeActive;
+}
+
+QString& DesignSystem::btnFuncActiveIconPath()
+{
+	if (m_mode == Light)
+	{
+		btnFuncActive = ":/Imgs/function_active.svg";
+	}
+	else
+	{
+		btnFuncActive = ":/Imgs/functionDark_active.svg";
+	}
+
+	return btnFuncActive;
 }
 
 QString& DesignSystem::btnSettingsActiveIconPath()
@@ -394,6 +433,21 @@ QString& DesignSystem::nextBtnDisableIcon()
 	}
 
 	return nextDisBtn;
+}
+
+QString& DesignSystem::homeVideoFilePath()
+{
+	return homeVideoPath;
+}
+
+void DesignSystem::setContentSize(QSize size)
+{
+	m_contentSzie = size;
+}
+
+QSize DesignSystem::contentSize() const
+{
+	return m_contentSzie;
 }
 
 const Theme& DesignSystem::currentTheme() const

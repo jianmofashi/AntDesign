@@ -46,8 +46,8 @@ private:
 	Ui::QtAntDesignClass ui;
 	HWND m_hwnd;
 	QPoint dragPos;
-	int m_titleBarHeight = 60;	// 标题栏高度
-	int m_naviWidth = 62;		// 导航栏宽度
+	int m_titleBarHeight = 60;		// 标题栏高度
+	int m_naviWidth = 62;			// 导航栏宽度
 	int m_widgetTotalWidth = 0;		// 标题栏上控件总宽度
 	bool	m_disableShadow = false;
 	bool	m_beforeMax = false;	// 最小化之前是最大化的窗口状态
@@ -72,6 +72,9 @@ private:
 	QPropertyAnimation* maxScaleAnim = nullptr;
 	QPropertyAnimation* miniScaleAnim = nullptr;
 	QRect m_windowStartRect;			// 动画开始前的位置
+
+	// 堆叠窗口
+	SlideStackedWidget* stackedWidget = nullptr;
 
 	// 最小化 最大化 关闭 按钮
 	QToolButton* btnMin = nullptr;

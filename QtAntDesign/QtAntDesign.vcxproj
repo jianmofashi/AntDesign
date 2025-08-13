@@ -37,12 +37,12 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>6.6.3_msvc2019_64</QtInstall>
-    <QtModules>core;gui;widgets;svg</QtModules>
+    <QtModules>core;gui;widgets;openglwidgets;multimedia;multimediawidgets;svg</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
     <QtInstall>6.6.3_msvc2019_64</QtInstall>
-    <QtModules>core;gui;widgets;svg</QtModules>
+    <QtModules>core;gui;widgets;openglwidgets;multimedia;multimediawidgets;svg</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
   <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
@@ -61,17 +61,18 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\Code\QtAntDesign\QtAntDesign\ThirdParty\QR-Code-generator-master;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Code\QtAntDesign\QtAntDesign\ThirdParty\QR-Code-generator-master;D:\Code\QtAntDesign\QtAntDesign\ThirdParty\FastGaussianBlur-main;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <Link />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\Code\QtAntDesign\QtAntDesign\ThirdParty\QR-Code-generator-master;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Code\QtAntDesign\QtAntDesign\ThirdParty\QR-Code-generator-master;D:\Code\QtAntDesign\QtAntDesign\ThirdParty\FastGaussianBlur-main;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <Link />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ClCompile>
@@ -143,6 +144,10 @@
     <ClCompile Include="CarouselWidget.cpp" />
     <ClCompile Include="DrawerWidget.cpp" />
     <ClCompile Include="FlowLayout.cpp" />
+    <ClCompile Include="FramelessVideoWindow.cpp" />
+    <ClCompile Include="GaussianBlur.cpp" />
+    <ClCompile Include="GlassWidget.cpp" />
+    <ClCompile Include="HomePage.cpp" />
     <ClCompile Include="PaginationWidget.cpp" />
     <ClCompile Include="QrCodeWidget.cpp" />
     <ClCompile Include="TabContentWidget.cpp" />
@@ -151,7 +156,7 @@
     <ClCompile Include="TransparentMask.cpp" />
     <ClCompile Include="CustomToolButton.cpp" />
     <ClCompile Include="DesignSystem.cpp" />
-    <ClCompile Include="HomePage.cpp" />
+    <ClCompile Include="FunctionPage.cpp" />
     <ClCompile Include="LoadingArc.cpp" />
     <ClCompile Include="LogoWidget.cpp" />
     <ClCompile Include="DialogViewController.cpp" />
@@ -212,6 +217,11 @@
     <QtMoc Include="PaginationWidget.h" />
     <QtMoc Include="AntTreeView.h" />
     <QtMoc Include="ThemeSwitcher.h" />
+    <QtMoc Include="FramelessVideoWindow.h" />
+    <ClInclude Include="GaussianBlur.h" />
+    <QtMoc Include="GlassWidget.h" />
+    <QtMoc Include="HomePage.h" />
+    <ClInclude Include="ThirdParty\FastGaussianBlur-main\fast_gaussian_blur_template.h" />
     <ClInclude Include="ThirdParty\QR-Code-generator-master\qrcodegen.hpp" />
     <QtMoc Include="TagWidget.h" />
     <QtMoc Include="Win11CheckButton.h" />
@@ -234,7 +244,7 @@
     <QtMoc Include="BubbleViewController.h" />
     <QtMoc Include="LogoWidget.h" />
     <QtMoc Include="RegisterPageWidget.h" />
-    <QtMoc Include="HomePage.h" />
+    <QtMoc Include="FunctionPage.h" />
     <QtMoc Include="SettingsPage.h" />
     <QtMoc Include="AboutPage.h" />
     <QtMoc Include="CustomToolButton.h" />
