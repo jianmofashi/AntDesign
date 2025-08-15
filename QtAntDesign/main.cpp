@@ -5,6 +5,9 @@
 
 int main(int argc, char* argv[])
 {
+#ifdef Q_OS_LINUX
+	qputenv("QT_QPA_PLATFORM", "xcb"); // 避免 Wayland
+#endif
 	QApplication a(argc, argv);
 
 	// 获取当前可执行文件所在的路径（通常是 Debug 或 Release 目录）

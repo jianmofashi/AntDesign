@@ -14,11 +14,11 @@
 #include <QToolButton>
 #include <QLabel>
 #include <QShowEvent>
+#include <QWindow>
 #include "NotificationManager.h"
 #include "DesignSystem.h"
 #include "TransparentMask.h"
 #include "MaskWidget.h"
-#include "AntInput.h"
 #include "ThemeSwitcher.h"
 
 QtAntDesign::QtAntDesign(QWidget* parent)
@@ -27,8 +27,17 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 	ui.setupUi(this);
 
 	setObjectName("QtAntDesign");
+#ifdef Q_OS_LINUX
+	setWindowFlags(Qt::FramelessWindowHint);
+	// 开启悬浮事件处理鼠标边界样式变化
+	setAttribute(Qt::WA_Hover, true);
+	installEventFilter(this);
+#endif
+
+#ifdef Q_OS_WIN
 	setWindowFlags(Qt::FramelessWindowHint);
 	setAttribute(Qt::WA_NoSystemBackground);
+#endif
 	QSize miniSize(1120, 725);
 	setMinimumSize(miniSize);
 
@@ -106,7 +115,7 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 	"百度",  "小米", "三星", "英特尔",
 	"高通", "索尼", "拼多多", "OpenAI", "美团"
 	};
-	AntInput* antInput = new AntInput(300, listItems, ui.titleBar);
+	antInput = new AntInput(300, listItems, ui.titleBar);
 	antInput->setFixedWidth(254);
 	antInput->setFixedHeight(46);
 	antInput->setPlaceholderText("搜索内容");
@@ -259,6 +268,7 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 	// 信号连接
 	connect(btnMax, &QToolButton::clicked, this, [this]()
 		{
+#ifdef Q_OS_WIN
 			// 每次使用时重新获取窗口句柄，可以确保你拿到的是当前最新、有效的窗口句柄。避免使用缓存失效的句柄造成崩溃。
 			HWND hwnd = reinterpret_cast<HWND>(winId());
 
@@ -275,12 +285,24 @@ QtAntDesign::QtAntDesign(QWidget* parent)
 			{
 				ShowWindow(hwnd, SW_MAXIMIZE);
 			}
+#endif
+
+#ifdef Q_OS_LINUX
+			if (isMaximized()) showNormal();
+			else showMaximized();
+#endif
 		});
 
 	connect(btnMin, &QToolButton::clicked, this, [this]()
 		{
+#ifdef Q_OS_WIN
 			HWND hwnd = reinterpret_cast<HWND>(winId());
 			ShowWindow(hwnd, SW_MINIMIZE);
+#endif
+
+#ifdef Q_OS_LINUX
+			showMinimized();
+#endif
 		});
 
 	connect(btnClose, &QToolButton::clicked, this, [this, w, h]()
@@ -501,3 +523,106 @@ void QtAntDesign::changeEvent(QEvent* event)
 
 	QWidget::changeEvent(event);
 }
+
+#ifdef Q_OS_LINUX
+
+bool QtAntDesign::eventFilter(QObject* obj, QEvent* event)
+{
+	if (event->type() == QEvent::HoverMove && !m_isLockCursor)
+	{
+		QHoverEvent* hoverEvent = static_cast<QHoverEvent*>(event);
+		QPoint pos = hoverEvent->position().toPoint();
+		updateCursor(pos);
+		return true; // 表示事件已处理
+	}
+	if (event->type() == QEvent::MouseButtonRelease)
+	{
+		QMouseEvent* me = static_cast<QMouseEvent*>(event);
+		m_isLockCursor = false; // 释放鼠标锁定状态
+		return true;
+	}
+
+	return QObject::eventFilter(obj, event);
+}
+
+void QtAntDesign::mousePressEvent(QMouseEvent* event)
+{
+	if (event->button() != Qt::LeftButton) return;
+
+	m_isLockCursor = true;
+	updateCursor(event->pos());
+
+	if (currentEdge != Qt::Edges())
+	{
+		// 鼠标在窗口边缘/角落，启动系统缩放
+		window()->windowHandle()->startSystemResize(currentEdge);
+	}
+	else if (event->pos().x() > rect().left() + m_naviWidth && event->pos().x() < rect().right()
+		&& event->pos().y() > rect().top() && event->pos().y() < m_titleBarHeight)
+	{
+		// 鼠标在标题栏，拖动窗口
+		window()->windowHandle()->startSystemMove();
+	}
+}
+
+void QtAntDesign::mouseDoubleClickEvent(QMouseEvent* event)
+{
+	if (event->button() == Qt::LeftButton && event->pos().y() > rect().top() && event->pos().y() < m_titleBarHeight)
+	{
+		if (isMaximized()) showNormal();
+		else showMaximized();
+	}
+}
+
+void QtAntDesign::updateCursor(const QPoint& pos)
+{
+	QRectF r = rect();
+	Qt::Edges newEdge = Qt::Edges();
+
+	const bool left = pos.x() < r.left() + edgeWidth;
+	const bool right = pos.x() > r.right() - edgeWidth;
+	const bool top = pos.y() < r.top() + edgeWidth;
+	const bool bottom = pos.y() > r.bottom() - edgeWidth;
+
+	// 四角
+	if (top && left)        newEdge = Qt::TopEdge | Qt::LeftEdge;
+	else if (top && right)  newEdge = Qt::TopEdge | Qt::RightEdge;
+	else if (bottom && left) newEdge = Qt::BottomEdge | Qt::LeftEdge;
+	else if (bottom && right) newEdge = Qt::BottomEdge | Qt::RightEdge;
+	// 边
+	else if (top)    newEdge = Qt::TopEdge;
+	else if (bottom) newEdge = Qt::BottomEdge;
+	else if (left)   newEdge = Qt::LeftEdge;
+	else if (right)  newEdge = Qt::RightEdge;
+
+	// 避免重复 setCursor
+	if (newEdge != currentEdge)
+	{
+		currentEdge = newEdge;
+
+		switch (newEdge)
+		{
+		case Qt::TopEdge | Qt::LeftEdge:
+		case Qt::BottomEdge | Qt::RightEdge:
+			setCursor(Qt::SizeFDiagCursor);
+			break;
+		case Qt::TopEdge | Qt::RightEdge:
+		case Qt::BottomEdge | Qt::LeftEdge:
+			setCursor(Qt::SizeBDiagCursor);
+			break;
+		case Qt::TopEdge:
+		case Qt::BottomEdge:
+			setCursor(Qt::SizeVerCursor);
+			break;
+		case Qt::LeftEdge:
+		case Qt::RightEdge:
+			setCursor(Qt::SizeHorCursor);
+			break;
+		default:
+			setCursor(Qt::ArrowCursor);
+			break;
+		}
+	}
+}
+
+#endif

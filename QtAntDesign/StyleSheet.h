@@ -7,7 +7,6 @@ namespace StyleSheet
 	inline QString mainQss(const QColor& bgColor)
 	{
 		return QString(R"(#main_widget {
-					border-radius: 8px;
 					background-color: %1;
 				})").arg(bgColor.name());
 	}
@@ -15,20 +14,19 @@ namespace StyleSheet
 	inline QString naviQss(const QColor& bgColor)
 	{
 		return QString(R"(#navi_widget{background-color: %1;
-					border-top-left-radius: 8px;
-					border-bottom-left-radius: 8px;})").arg(bgColor.name());
+					})").arg(bgColor.name());
 	}
 
 	inline QString titleBarQss()
 	{
 		return QString(R"(#titleBar{background-color: transparent;
-					border-top-right-radius: 8px;})");
+					})");
 	}
 
 	inline QString centralQss()
 	{
 		return QString(R"(#central{background-color: transparent;
-					border-bottom-right-radius: 8px;})");
+					})");
 	}
 
 	inline QString gradientQss(const QColor& color1, const QColor& color2, const QColor& color3)

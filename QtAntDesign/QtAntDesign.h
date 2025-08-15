@@ -7,6 +7,8 @@
 #include "CustomToolButton.h"
 #include <QLabel>
 #include <QTimer>
+#include <QEvent>
+#include "AntInput.h"
 
 // 判断是否在windows平台
 #ifdef Q_OS_WIN
@@ -37,11 +39,29 @@ protected:
 	void showEvent(QShowEvent* event) override;
 	void moveEvent(QMoveEvent* event) override;
 	void changeEvent(QEvent* event) override;
+
+#ifdef Q_OS_LINUX
+	bool eventFilter(QObject* obj, QEvent* event);
+	void mousePressEvent(QMouseEvent* event) override;
+	void mouseDoubleClickEvent(QMouseEvent* event) override;
+#endif
+
 signals:
 	void resized(int parentW, int parentH);
 	void playMaximizeAnim();
 	void showStandardDialog(QString title, QString text);
 	void windowMoved(QPoint globalPos); // 窗口移动时发出信号
+
+#ifdef Q_OS_LINUX
+private:
+	void updateCursor(const QPoint& pos);
+private:
+	int edgeWidth = 10;
+	QSize originalSize;
+	QRect normalGeometry;
+	Qt::Edges currentEdge; // 鼠标当前所在边/角
+#endif
+
 private:
 	Ui::QtAntDesignClass ui;
 	HWND m_hwnd;
@@ -93,4 +113,6 @@ private:
 	int m_widgetTotalWidthPhysicalPixels = 0;
 	int m_titleLeftTotalWidthPhysicalPixels = 0;
 	int m_titleBarHeightPhysicalPixels = 0;
+
+	AntInput* antInput = nullptr;
 };

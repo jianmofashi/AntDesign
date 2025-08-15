@@ -62,5 +62,5 @@ void MaskWidget::paintEvent(QPaintEvent*)
 	color.setAlphaF(m_alpha);
 	p.setBrush(color);
 
-	p.drawRoundedRect(rect(), 8, 8);
+	p.drawRect(rect());
 }

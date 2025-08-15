@@ -2,6 +2,8 @@
 
 #include <QWidget>
 #include <QEvent>
+#include <QResizeEvent>
+#include <QMouseEvent>
 #include <QGraphicsView>
 #include <QGraphicsVideoItem>
 #include <QMediaPlayer>

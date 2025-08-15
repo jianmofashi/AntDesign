@@ -18,6 +18,7 @@ FramelessVideoWindow::FramelessVideoWindow(const QString& videoPath, QWidget* pa
 	m_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	m_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	m_view->setStyleSheet("background-color: transparent;");
+	m_view->viewport()->setAttribute(Qt::WA_TransparentForMouseEvents, true);
 
 	m_player = new QMediaPlayer(this);
 	m_player->setVideoOutput(m_videoItem);
