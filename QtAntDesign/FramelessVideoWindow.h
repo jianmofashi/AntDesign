@@ -25,6 +25,8 @@ protected:
 	void showEvent(QShowEvent* event) override;
 	void hideEvent(QHideEvent* event) override;
 private:
+	bool isVirtualGPU();
+private:
 	QRect m_rect;
 	QGraphicsScene* m_scene;
 	QGraphicsView* m_view;

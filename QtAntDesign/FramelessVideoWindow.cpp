@@ -1,5 +1,7 @@
 ﻿#include "FramelessVideoWindow.h"
 #include "DesignSystem.h"
+#include <QFile>
+#include <QProcess>
 
 FramelessVideoWindow::FramelessVideoWindow(const QString& videoPath, QWidget* parent)
 	: QWidget(parent)
@@ -13,7 +15,16 @@ FramelessVideoWindow::FramelessVideoWindow(const QString& videoPath, QWidget* pa
 	m_scene->addItem(m_videoItem);
 
 	m_view = new QGraphicsView(m_scene, this);
-	m_view->setViewport(new QOpenGLWidget);  // 使用 OpenGL 视口
+	// 判断是否使用 OpenGL 视口
+	if (!isVirtualGPU())
+	{
+		m_view->setViewport(new QOpenGLWidget);
+		qDebug() << "OpenGL viewport enabled";
+	}
+	else
+	{
+		qDebug() << "Virtual GPU detected, using default viewport";
+	}
 	m_view->setFrameShape(QFrame::NoFrame);
 	m_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	m_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -88,4 +99,21 @@ void FramelessVideoWindow::hideEvent(QHideEvent* event)
 		m_player->stop();
 		m_blurTimer->stop();
 	}
+}
+
+bool FramelessVideoWindow::isVirtualGPU()
+{
+#ifdef Q_OS_LINUX
+	QProcess proc;
+	proc.start("lspci");
+	proc.waitForFinished();
+	QString output = proc.readAllStandardOutput();
+
+	// 常见虚拟 GPU 标识
+	if (output.contains("VMware") || output.contains("VirtualBox") || output.contains("QXL") || output.contains("SVGA"))
+		return true;
+	return false;
+#else
+	return false;
+#endif
 }
