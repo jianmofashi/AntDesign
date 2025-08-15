@@ -5,7 +5,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # 禁止 Windows 控制台弹出
-set(CMAKE_WIN32_EXECUTABLE TRUE)
+if(WIN32)
+    set(CMAKE_WIN32_EXECUTABLE TRUE)
+endif()
 
 # -------------------------------
 # 启用解决方案文件夹 (VS/IDE 分组)
