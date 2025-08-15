@@ -113,7 +113,7 @@ void AntTabBarWidget::addTab(const QString& title, const QString& icon)
 	updateAddButtonPositionAnimated();
 
 	// 关闭逻辑
-	connect(tab, &AntTabWidget::requestClose, this, [this, tab](AntTabWidget* tab)
+	connect(tab, &AntTabWidget::requestClose, this, [this](AntTabWidget* tab)
 		{
 			int index = m_tabs.indexOf(tab);
 			if (index == -1)

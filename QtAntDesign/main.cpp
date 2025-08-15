@@ -1,5 +1,5 @@
 ﻿#include <QApplication>
-#include <QtAntDesign.h>
+#include "QtAntDesign.h"
 #include <QFontDatabase>
 #include <QDir>
 

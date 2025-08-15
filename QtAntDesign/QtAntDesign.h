@@ -64,7 +64,9 @@ private:
 
 private:
 	Ui::QtAntDesignClass ui;
+#ifdef Q_OS_WIN
 	HWND m_hwnd;
+#endif
 	QPoint dragPos;
 	int m_titleBarHeight = 60;		// 标题栏高度
 	int m_naviWidth = 62;			// 导航栏宽度

@@ -3,6 +3,7 @@
 #include <QWidget>
 #include <QEvent>
 #include <QLabel>
+#include <QToolButton>
 
 class NotificationWidget : public QWidget
 {

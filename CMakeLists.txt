@@ -76,8 +76,11 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 
 # 设置 include 目录，让 VS IntelliSense 能找到 ui_*.h
 target_include_directories(${PROJECT_NAME} PRIVATE
-    "${CMAKE_CURRENT_BINARY_DIR}"
+    "${CMAKE_CURRENT_BINARY_DIR}"                               # ui_*.h
+    "${SRC_DIR}/ThirdParty/QR-Code-generator-master"            # qrcodegen.hpp
+    "${SRC_DIR}/ThirdParty/FastGaussianBlur-main"               # 其他第三方库
 )
+
 
 # -------------------------------
 # IDE 分组 (Visual Studio / Qt Creator)
