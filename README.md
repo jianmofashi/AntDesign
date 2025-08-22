@@ -9,14 +9,10 @@
 ---
 
 <p align="center">
+  **支持平台**  
+  <br>
   <img src="https://img.shields.io/badge/platform-Windows-blue?logo=windows" alt="Windows support">
   <img src="https://img.shields.io/badge/platform-Linux-green?logo=linux" alt="Linux support">
-</p>
-
-<p align="center">
-  <a href="https://github.com/yourname/QtAntDesign/stargazers"><img src="https://img.shields.io/github/stars/yourname/QtAntDesign?style=social" alt="Stars"></a>
-  <a href="https://github.com/yourname/QtAntDesign/network/members"><img src="https://img.shields.io/github/forks/yourname/QtAntDesign?style=social" alt="Forks"></a>
-  <a href="https://github.com/yourname/QtAntDesign/blob/main/LICENSE"><img src="https://img.shields.io/github/license/yourname/QtAntDesign" alt="License"></a>
 </p>
 
 ---
