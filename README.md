@@ -7,14 +7,11 @@
 ![screenshot2](QtAntDesign/Imgs/6cd14ab521ff52f17253867ba464f844.png)
 
 ---
-
 <p align="center">
-  **支持平台**  
-  <br>
+  <b>支持平台</b><br>
   <img src="https://img.shields.io/badge/platform-Windows-blue?logo=windows" alt="Windows support">
   <img src="https://img.shields.io/badge/platform-Linux-green?logo=linux" alt="Linux support">
 </p>
-
 ---
 
 ## ✨ 特性
