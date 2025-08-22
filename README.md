@@ -1,4 +1,4 @@
-# 🎨 QtAntDesign - Ant Design 风格的 Qt/C++ UI 库
+# 🎨 QtAntDesign - Ant Design 风格的 跨平台Qt/C++ UI 库
 
 让 **Qt 应用** 拥有现代化的 **Ant Design 风格**。  
 纯 C++ 实现，无需前端技术栈，直接集成到 Qt 项目中。  
@@ -9,9 +9,13 @@
 ---
 
 <p align="center">
+  <img src="https://img.shields.io/badge/platform-Windows-blue?logo=windows" alt="Windows support">
+  <img src="https://img.shields.io/badge/platform-Linux-green?logo=linux" alt="Linux support">
+</p>
+
+<p align="center">
   <a href="https://github.com/yourname/QtAntDesign/stargazers"><img src="https://img.shields.io/github/stars/yourname/QtAntDesign?style=social" alt="Stars"></a>
   <a href="https://github.com/yourname/QtAntDesign/network/members"><img src="https://img.shields.io/github/forks/yourname/QtAntDesign?style=social" alt="Forks"></a>
-  <a href="https://github.com/yourname/QtAntDesign/issues"><img src="https://img.shields.io/github/issues/yourname/QtAntDesign" alt="Issues"></a>
   <a href="https://github.com/yourname/QtAntDesign/blob/main/LICENSE"><img src="https://img.shields.io/github/license/yourname/QtAntDesign" alt="License"></a>
 </p>
 
@@ -19,16 +23,10 @@
 
 ## ✨ 特性
 - 🎯 **Ant Design 风格**：遵循 Ant Design 设计规范，高度还原视觉与交互  
+- ⚡ **高性能**：优化渲染和交互，保证应用流畅体验  
 - ⚡ **纯 C++ / Qt**：无需 QML、JS 或 Web 技术，零依赖前端栈  
-- 🧩 **丰富的组件**：按钮、输入框、菜单、标签页、表格……不断扩展中  
+- 🧩 **丰富的组件**：拥有大部分常用的 Ant Design 组件
 - 🎨 **主题可定制**：支持浅色 / 暗色主题，以及个性化配色  
-- 📦 **跨平台支持**：Windows / Linux / macOS
+- 📦 **跨平台支持**：Windows / Linux
 
 ---
-
-## 🚀 快速开始
-
-### 1. 克隆仓库
-```bash
-git clone https://github.com/yourname/QtAntDesign.git
-cd QtAntDesign
