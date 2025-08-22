@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include <QWidget>
-#include <QPushbutton>
+#include <QPushButton>
 
 class RegisterPageWidget : public QWidget
 {

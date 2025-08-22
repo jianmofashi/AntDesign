@@ -1,4 +1,4 @@
-﻿#include "Skeletonwidget.h"
+﻿#include "SkeletonWidget.h"
 #include <QPainter>
 #include <QLinearGradient>
 #include "DesignSystem.h"
