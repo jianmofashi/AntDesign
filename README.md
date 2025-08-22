@@ -25,3 +25,6 @@
 - 📦 **跨平台支持**：Windows / Linux
 
 ---
+
+## 📺 演示视频
+- B站观看：[点击这里](https://www.bilibili.com/video/BV1X3ebzTEet/?spm_id_from=333.1387.homepage.video_card.click&vd_source=089d2d18cfa501d509f145660b8bd1e4)
