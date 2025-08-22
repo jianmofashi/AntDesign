@@ -7,16 +7,18 @@
 ![screenshot2](QtAntDesign/Imgs/6cd14ab521ff52f17253867ba464f844.png)
 
 ---
+
 <p align="center">
   <b>支持平台</b><br>
   <img src="https://img.shields.io/badge/platform-Windows-blue?logo=windows" alt="Windows support">
   <img src="https://img.shields.io/badge/platform-Linux-green?logo=linux" alt="Linux support">
 </p>
+
 ---
 
 ## ✨ 特性
 - 🎯 **Ant Design 风格**：遵循 Ant Design 设计规范，高度还原视觉与交互  
-- ⚡ **高性能**：优化渲染和交互，保证应用流畅体验  
+- ⚡ **高性能**：优化渲染和交互，保证 Qt 应用流畅体验  
 - ⚡ **纯 C++ / Qt**：无需 QML、JS 或 Web 技术，零依赖前端栈  
 - 🧩 **丰富的组件**：拥有大部分常用的 Ant Design 组件
 - 🎨 **主题可定制**：支持浅色 / 暗色主题，以及个性化配色  
