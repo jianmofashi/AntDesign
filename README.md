@@ -26,5 +26,3 @@
 
 ---
 
-## 📺 演示视频
-- B站观看：[点击这里](https://www.bilibili.com/video/BV1X3ebzTEet)
