@@ -74,6 +74,13 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt6::Svg
 )
 
+# 根据平台判断是否需要链接 Dwmapi
+if(WIN32)  # Windows 平台
+    target_link_libraries(${PROJECT_NAME} PRIVATE Dwmapi)
+elseif(UNIX)  # Linux 或其他 UNIX-like 系统
+    # 如果需要在 Linux 上链接其他库，可以在这里添加
+endif()
+
 # 设置 include 目录，让 VS IntelliSense 能找到 ui_*.h
 target_include_directories(${PROJECT_NAME} PRIVATE
     "${CMAKE_CURRENT_BINARY_DIR}"                               # ui_*.h
