@@ -1,5 +1,7 @@
 # 🎨 QtAntDesign - Ant Design Style Cross-Platform Qt/C++ UI Library
 
+🌐 [English](README.en.md) | [中文](README.md)
+
 Bring **Ant Design style** to your **Qt applications** with a modern look and feel.  
 Pure C++ implementation — no frontend stack required, integrate directly into your Qt project.  
 
