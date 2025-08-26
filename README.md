@@ -1,5 +1,7 @@
 # 🎨 QtAntDesign - Ant Design 风格的 跨平台Qt/C++ UI 库
 
+🌐 [中文](README.md) | [English](README.en.md)
+
 让 **Qt 应用** 拥有现代化的 **Ant Design 风格**。  
 纯 C++ 实现，无需前端技术栈，直接集成到 Qt 项目中。  
 
