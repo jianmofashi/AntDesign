@@ -33,12 +33,7 @@ find_package(Qt6 REQUIRED COMPONENTS
     Svg
 )
 
-# 根据平台判断是否需要链接 Dwmapi
-if(WIN32)  # Windows 平台
-    target_link_libraries(${PROJECT_NAME} PRIVATE Dwmapi)
-elseif(UNIX)  # Linux 或其他 UNIX-like 系统
 
-endif()
 
 # -------------------------------
 # 文件分组
