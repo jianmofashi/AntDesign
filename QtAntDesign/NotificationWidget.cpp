@@ -43,7 +43,7 @@ NotificationWidget::NotificationWidget(const QString& title, QSize size, QWidget
 	// 标题
 	QHBoxLayout* titleLay = new QHBoxLayout();
 	closeBtn = new QToolButton(bg);
-	closeBtn->setIcon(QIcon(":/Imgs/Shut down-2.svg"));
+	closeBtn->setIcon(DesignSystem::instance()->btnCloseIcon());
 	closeBtn->setStyleSheet(StyleSheet::toolBtnQss());
 	QLabel* titleLab = new QLabel(title, bg);
 	titleLab->setFont(font);
