@@ -165,6 +165,7 @@ public:
 	QString& nextBtnDisableIcon();
 
 	// 多媒体文件路径
+	void setHomeVideoFilePath(const QString& path);
 	QString& homeVideoFilePath();
 
 	// 内容区域尺寸

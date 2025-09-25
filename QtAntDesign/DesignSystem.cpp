@@ -10,21 +10,7 @@ DesignSystem::DesignSystem()
 	loadThemes();
 	m_currentTheme = m_lightTheme;
 
-	// 获取项目路径
-	QString projectPath = QDir::currentPath();
 
-	// 文件名
-	QString fileName = "homeBg.mp4";
-
-	// 默认路径，优先检查 项目根目录下的文件
-	homeVideoPath = projectPath + "/QtAntDesign/Video/" + fileName;
-
-	// 检查文件是否存在
-	if (!QFile::exists(homeVideoPath))
-	{
-		// 如果文件不存在，检查工作目录下的 Video 文件夹
-		homeVideoPath = QCoreApplication::applicationDirPath() + "/Video/" + fileName;
-	}
 }
 
 void DesignSystem::loadThemes()
@@ -441,7 +427,10 @@ QString& DesignSystem::nextBtnDisableIcon()
 
 	return nextDisBtn;
 }
-
+void DesignSystem::setHomeVideoFilePath(const QString& path)
+{
+	homeVideoPath = path;
+}
 QString& DesignSystem::homeVideoFilePath()
 {
 	return homeVideoPath;
